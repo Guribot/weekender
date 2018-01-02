@@ -18,10 +18,12 @@ import android.util.Log;
 public abstract class SingleFragmentActivity extends AppCompatActivity {
     protected abstract Fragment createFragment();
 
+    private static final String TAG = "SingleFragmentActivity";
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        Log.i("SingleFragmentActivity", "in onCreate()");
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "in onCreate()");
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
 
         // TODO: wrap head around what's happening below (better understand FragmentManager)

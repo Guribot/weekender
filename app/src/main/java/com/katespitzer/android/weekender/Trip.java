@@ -16,4 +16,32 @@ public class Trip {
 //    private Route mRoute;
 //    private PlaceList mPlaces;
 
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
+    public UUID getId() {
+        return mId;
+    }
+
+    public Date getStartDate() {
+        return mStartDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        mStartDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return mEndDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        mEndDate = endDate;
+    }
 }
