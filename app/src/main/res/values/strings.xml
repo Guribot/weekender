@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Weekender</string>
+
+    <string name="my_trips">My Trips</string>
+    <string name="new_trip">New Trip</string>
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>
