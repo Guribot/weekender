@@ -1,7 +1,10 @@
 package com.katespitzer.android.weekender;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.katespitzer.android.weekender.database.TripBaseHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,10 +18,16 @@ import java.util.UUID;
 public class TripList {
     private static TripList sTripList;
     private List<Trip> mTrips;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
     private static final String TAG = "TripList";
 
     private TripList(Context context) {
+        mContext = context.getApplicationContext();
+        mDatabase = new TripBaseHelper(mContext)
+                .getWritableDatabase();
+        
         mTrips = new ArrayList<>();
 //
         populateTrip(10);
