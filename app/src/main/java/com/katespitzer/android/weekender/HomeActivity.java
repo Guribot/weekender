@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class HomeActivity extends AppCompatActivity {
     private Button mMyTripsButton;
     private Button mNewTripButton;
+    private Button mFindTripsButton;
 
     private static final int NEW_TRIP_REQUEST = 0;
 
@@ -36,6 +38,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startNewTrip();
+            }
+        });
+
+        mFindTripsButton = findViewById(R.id.find_trip_button);
+        mFindTripsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(HomeActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
             }
         });
 
