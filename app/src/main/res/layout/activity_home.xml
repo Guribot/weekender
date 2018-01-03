@@ -31,9 +31,9 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:cropToPadding="false"
-            android:paddingStart="48dp"
             android:paddingEnd="48dp"
-            android:scaleType="fitXY"
+            android:paddingStart="48dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_005_surf_van" />
 
         <!-- This FrameLayout insets its children based on system windows using
