@@ -4,6 +4,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +35,22 @@ public class TripCreateActivity extends AppCompatActivity implements DatePickerF
         mTrip = new Trip();
 
         mTitleEditText = findViewById(R.id.new_trip_title);
+        mTitleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // all three of these callbacks are triggered after keypress, before character is displayed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mTrip.setTitle(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //
+            }
+        });
 
         mStartEditText = findViewById(R.id.new_trip_start);
         mStartEditText.setOnClickListener(new View.OnClickListener() {
@@ -69,20 +87,4 @@ public class TripCreateActivity extends AppCompatActivity implements DatePickerF
                 break;
         }
     }
-
-    // Has extracting this method actually made the code more DRY, or just more complicated?
-        // conclusion: way more complicated
-
-//    private void setOnClickDatePick(View v, final int titleStringId, final String tag, Boolean isStart) {
-//        final Date date = isStart ? mTrip.getStartDate() : mTrip.getEndDate();
-//        v.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//                String title = getString(titleStringId);
-//                DatePickerFragment dialog = DatePickerFragment.newInstance(title, date);
-//                dialog.show(fragmentManager, tag);
-//            }
-//        });
-//    }
 }
