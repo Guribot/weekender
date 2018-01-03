@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".TripListActivity" />
-        <activity android:name=".NewTripActivity"></activity>
+        <activity android:name=".TripCreateActivity"></activity>
     </application>
 
 </manifest>
