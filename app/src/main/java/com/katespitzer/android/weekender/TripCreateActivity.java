@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -69,6 +70,14 @@ public class TripCreateActivity extends AppCompatActivity implements DatePickerF
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 DatePickerFragment dialog = DatePickerFragment.newInstance(getString(R.string.trip_end_label), mTrip.getEndDate());
                 dialog.show(fragmentManager, DIALOG_END_DATE);
+            }
+        });
+
+        mSubmitButton = findViewById(R.id.new_trip_button);
+        mSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TripCreateActivity.this, "Coming soon!", Toast.LENGTH_SHORT).show();
             }
         });
     }
