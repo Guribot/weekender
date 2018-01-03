@@ -3,8 +3,11 @@
 
     <string name="my_trips">My Trips</string>
     <string name="new_trip">New Trip</string>
-
+    <string name="trip_title_label">Trip Name</string>
+    <string name="trip_start_label">Start Date</string>
+    <string name="trip_end_label">End Date</string>
     <string name="trip_dates_format">%1$s - %2$s</string>
+    <string name="submit_button">Submit</string>
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
