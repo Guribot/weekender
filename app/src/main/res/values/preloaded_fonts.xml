@@ -4,6 +4,8 @@
         <item>@font/arizonia</item>
         <item>@font/lobster</item>
         <item>@font/lobster_two</item>
+        <item>@font/open_sans_condensed_bold</item>
+        <item>@font/ubuntu</item>
         <item>@font/vast_shadow</item>
     </array>
 </resources>

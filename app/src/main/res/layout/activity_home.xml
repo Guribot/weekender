@@ -33,6 +33,7 @@
             android:cropToPadding="false"
             android:paddingEnd="48dp"
             android:paddingStart="48dp"
+            android:contentDescription="@string/van_content_desc"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_005_surf_van" />
 
@@ -52,33 +53,39 @@
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/my_trips"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/new_trip_button"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/ubuntu"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/new_trip"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/find_trip_button"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_condensed_bold"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/find_trips"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </LinearLayout>
