@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.Date;
+
 public class TripCreateActivity extends AppCompatActivity {
 
     private EditText mTitleEditText;
@@ -16,6 +18,7 @@ public class TripCreateActivity extends AppCompatActivity {
     private Button mSubmitButton;
 
     private Trip mTrip;
+    private Date returnedDate;
 
     private static final String TAG = "TripCreateActivity";
     private static final String DIALOG_START_DATE = "DialogStartDate";
@@ -42,7 +45,7 @@ public class TripCreateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 String title = getString(titleStringId);
-                DatePickerFragment dialog = DatePickerFragment.newInstance(title);
+                DatePickerFragment dialog = DatePickerFragment.newInstance(title, null);
                 dialog.show(fragmentManager, tag);
             }
         });
