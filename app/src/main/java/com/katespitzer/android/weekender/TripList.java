@@ -27,7 +27,7 @@ public class TripList {
         mContext = context.getApplicationContext();
         mDatabase = new TripBaseHelper(mContext)
                 .getWritableDatabase();
-        
+
         mTrips = new ArrayList<>();
 //
         populateTrip(10);
