@@ -6,10 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.katespitzer.android.weekender.database.TripBaseHelper;
+import com.katespitzer.android.weekender.database.DatabaseHelper;
 import com.katespitzer.android.weekender.database.TripCursorWrapper;
-import com.katespitzer.android.weekender.database.TripDbSchema;
-import com.katespitzer.android.weekender.database.TripDbSchema.TripTable;
+import com.katespitzer.android.weekender.database.DbSchema.TripTable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +34,7 @@ public class TripList {
      */
     private TripList(Context context) {
         mContext = context.getApplicationContext();
-        mDatabase = new TripBaseHelper(mContext)
+        mDatabase = new DatabaseHelper(mContext)
                 .getWritableDatabase();
     }
 

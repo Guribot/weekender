@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 
 import com.katespitzer.android.weekender.Trip;
-import com.katespitzer.android.weekender.database.TripDbSchema.TripTable;
+import com.katespitzer.android.weekender.database.DbSchema.TripTable;
 
 import java.util.Date;
 import java.util.UUID;
