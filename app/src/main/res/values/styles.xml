@@ -20,6 +20,6 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
-    <color name="tomato">#FF6347</color>
+    <color name="tomato">#ff6347</color>
 
 </resources>

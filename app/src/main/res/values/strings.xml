@@ -13,6 +13,14 @@
     <string name="trip_dates_format">%1$s - %2$s</string>
     <string name="submit_button">Submit</string>
 
+    <string name="view_route_button">View Route</string>
+    <string name="destinations_title">Destinations</string>
+    <string name="view_destinations_button">See Destinations</string>
+    <string name="places_title">Places</string>
+    <string name="view_places_button">See Places</string>
+    <string name="notes_title">Notes</string>
+    <string name="view_notes_button">See Notes</string>
+
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
