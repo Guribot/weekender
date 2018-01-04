@@ -43,8 +43,13 @@ public class TripListFragment extends Fragment {
         TripList tripList = TripList.get(getActivity());
         List<Trip> trips = tripList.getTrips();
 
-        mAdapter = new TripAdapter(trips);
-        mTripRecyclerView.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new TripAdapter(trips);
+            mTripRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setTrips(trips);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -101,6 +106,10 @@ public class TripListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mTrips.size();
+        }
+
+        public void setTrips(List<Trip> trips) {
+            mTrips = trips;
         }
     }
 }

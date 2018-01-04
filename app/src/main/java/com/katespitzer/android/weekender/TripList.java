@@ -1,10 +1,15 @@
 package com.katespitzer.android.weekender;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.katespitzer.android.weekender.database.TripBaseHelper;
+import com.katespitzer.android.weekender.database.TripCursorWrapper;
+import com.katespitzer.android.weekender.database.TripDbSchema;
+import com.katespitzer.android.weekender.database.TripDbSchema.TripTable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,22 +22,29 @@ import java.util.UUID;
 
 public class TripList {
     private static TripList sTripList;
-    private List<Trip> mTrips;
+    // it may be unnecessary to declare the context, this is for potential future features
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
     private static final String TAG = "TripList";
 
+    /**
+     * Constructor: takes in Context and initializes database
+     *
+     * @param context
+     */
     private TripList(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new TripBaseHelper(mContext)
                 .getWritableDatabase();
-
-        mTrips = new ArrayList<>();
-//
-        populateTrip(10);
     }
 
+    /**
+     * returns singular TripList
+     *
+     * @param context
+     * @return
+     */
     public static TripList get(Context context) {
         Log.i(TAG, "in get()");
 
@@ -42,6 +54,145 @@ public class TripList {
         return sTripList;
     }
 
+
+    /**
+     * Takes in a UUID and returns the corresponding Trip
+     *
+     * @param id
+     * @return
+     */
+    public Trip getTrip(UUID id) {
+        Log.i(TAG, "in getTrip()");
+        TripCursorWrapper cursor = queryTrips(
+                TripTable.Cols.UUID + " = ?",
+                new String[] { id.toString() }
+        );
+
+        try {
+            if (cursor.getCount() == 0) {
+                // if there are no results, return null
+                return null;
+            }
+            // if there are results, return the first one
+            // (since search param is UUID, There Can Only Be One
+            cursor.moveToFirst();
+            return cursor.getTrip();
+        } finally {
+            // close cursor!
+            cursor.close();
+        }
+
+        // You Should Not Be Here
+    }
+
+    /**
+     * Takes in a trip and adds it to the db
+     *
+     * @param trip
+     */
+    public void addTrip(Trip trip) {
+        Log.i(TAG, "in addTrip()");
+        ContentValues values = getContentValues(trip);
+
+        mDatabase.insert(TripTable.NAME, null, values);
+    }
+
+    /**
+     * Takes in a trip and updates the corresponding entry in the db
+     *
+     * @param trip
+     */
+    public void updateTrip(Trip trip) {
+        String uuidString = trip.getId().toString();
+        ContentValues values = getContentValues(trip);
+
+        mDatabase.update(TripTable.NAME, values,
+                TripTable.Cols.UUID + " = ?",
+                new String[]{uuidString});
+    }
+
+    /**
+     * Queries db with null query params (retrieving entire db)
+     * iterates through db, parses row into Trip, and adds to
+     * returned List<Trip>
+     *
+     * @return
+     */
+    public List<Trip> getTrips() {
+        List<Trip> trips = new ArrayList<>();
+
+        // querying with null args = returns everything
+        TripCursorWrapper cursor = queryTrips(null, null);
+
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                trips.add(cursor.getTrip());
+                cursor.moveToNext();
+            }
+        } finally {
+            // always close your cursors!
+            cursor.close();
+        }
+
+        return trips;
+    }
+
+    /**
+     * Returns the size of the database
+     * does this work?
+     *
+     * @return
+     */
+    public int size() {
+        return getTrips().size();
+    }
+
+    /**
+     * Converts provided Trip into equivalent ContentValues (for use in SQLite operations)
+     *
+     * @param trip
+     * @return
+     */
+    private static ContentValues getContentValues(Trip trip) {
+        ContentValues values = new ContentValues();
+        values.put(TripTable.Cols.UUID, trip.getId().toString());
+        values.put(TripTable.Cols.TITLE, trip.getTitle());
+        values.put(TripTable.Cols.START_DATE, trip.getStartDate().getTime());
+        values.put(TripTable.Cols.END_DATE, trip.getEndDate().getTime());
+
+        return values;
+    }
+
+    /**
+     * Takes in query parameters and returns a
+     * cursor wrapped in a TripCursorWrapper
+     * effectively searching the db
+     *
+     * @param whereClause
+     * @param whereArgs
+     * @return
+     */
+    private TripCursorWrapper queryTrips(String whereClause, String[] whereArgs) {
+        Cursor cursor = mDatabase.query(
+                TripTable.NAME,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+        return new TripCursorWrapper(cursor);
+    }
+
+    /**
+     * Seeds database with qty # of fake trips
+     * (currently needs to be updated to work w/ db?)
+     *
+     * @param qty
+     */
     private void populateTrip(int qty) {
         Log.i(TAG, "in populateTrip()");
 
@@ -51,30 +202,7 @@ public class TripList {
             trip.setStartDate(new Date());
             trip.setEndDate(new Date());
 
-            mTrips.add(trip);
+            addTrip(trip);
         }
     }
-
-    public Trip getTrip(UUID id) {
-        Log.i(TAG, "in getTrip()");
-        for (Trip trip: mTrips) {
-            if (trip.getId() == id) {
-                return trip;
-            }
-        }
-        return null;
-    }
-
-    public List<Trip> getTrips() {
-        return mTrips;
-    }
-
-//    public int size(){
-//        return mTrips.size();
-//    }
-
-//    public void addTrip(Trip trip) {
-//        Log.i(TAG, "in addTrip()");
-//        mTrips.add(trip);
-//    }
 }

@@ -1,5 +1,7 @@
 package com.katespitzer.android.weekender;
 
+import android.util.Log;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -13,9 +15,18 @@ public class Trip {
     private String mTitle;
     private Date mStartDate;
     private Date mEndDate;
+
+    private static final String TAG = "Trip";
 //    private Route mRoute;
 //    private PlaceList mPlaces;
 
+    public Trip() {
+        this(UUID.randomUUID());
+    }
+
+    public Trip(UUID id) {
+        mId = id;
+    }
 
     public String getTitle() {
         return mTitle;

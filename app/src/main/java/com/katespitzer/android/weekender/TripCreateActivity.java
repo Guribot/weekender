@@ -27,6 +27,16 @@ public class TripCreateActivity extends AppCompatActivity implements DatePickerF
     private static final String DIALOG_START_DATE = "DialogStartDate";
     private static final String DIALOG_END_DATE = "DialogEndDate";
 
+    /**
+     * Overall logic for this Create Trip form.
+     * - calls super, renders view, instantiates mTrip
+     * - sets TextChangedListener for Title EditText to update the mTrip title as it's changed
+     * - sets OnClickListener for Start Date EditText to update mTrip StartDate
+     * - sets OnClickListener for End Date EditText to update mTrip EndDate
+     * - sets OnClickListener for Submit Button to add mTrip to db and finish the activity
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "in onCreate()");
@@ -73,11 +83,15 @@ public class TripCreateActivity extends AppCompatActivity implements DatePickerF
             }
         });
 
+
         mSubmitButton = findViewById(R.id.new_trip_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TripCreateActivity.this, "Coming soon!", Toast.LENGTH_SHORT).show();
+                // putting getApplicationContext() here is a guess on my part, does it work?
+                TripList.get(getApplicationContext())
+                        .addTrip(mTrip);
+                finish();
             }
         });
     }
