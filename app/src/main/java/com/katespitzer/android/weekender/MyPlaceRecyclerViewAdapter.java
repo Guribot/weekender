@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.TripPlaceFragment.OnListFragmentInteractionListener;
-import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
+//import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
@@ -18,11 +18,11 @@ import java.util.List;
  */
 public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Place> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyPlaceRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public MyPlaceRecyclerViewAdapter(List<Place> places, OnListFragmentInteractionListener listener) {
+        mValues = places;
         mListener = listener;
     }
 
@@ -35,9 +35,9 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mPlace = mValues.get(position);
+        holder.mIdView.setText(mValues.get(position).getName());
+        holder.mContentView.setText(mValues.get(position).getAddress());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +45,7 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mPlace);
                 }
             }
         });
@@ -60,7 +60,7 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Place mPlace;
 
         public ViewHolder(View view) {
             super(view);

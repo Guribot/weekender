@@ -80,8 +80,8 @@ public class TripActivity extends AppCompatActivity implements TripPlaceFragment
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        Log.i(TAG, "onListFragmentInteraction: " + item);
+    public void onListFragmentInteraction(Place place) {
+        Log.i(TAG, "onListFragmentInteraction: " + place);
     }
 
     @Override

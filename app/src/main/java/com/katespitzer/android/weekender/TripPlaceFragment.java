@@ -80,7 +80,7 @@ public class TripPlaceFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyPlaceRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new MyPlaceRecyclerViewAdapter(mPlaces, mListener));
         }
         return view;
     }
@@ -115,6 +115,6 @@ public class TripPlaceFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Place place);
     }
 }
