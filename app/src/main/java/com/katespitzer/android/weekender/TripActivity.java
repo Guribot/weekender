@@ -2,8 +2,8 @@ package com.katespitzer.android.weekender;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,11 +22,9 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import com.katespitzer.android.weekender.dummy.DummyContent;
-
 import java.util.UUID;
 
-public class TripActivity extends AppCompatActivity implements TripPlaceFragment.OnListFragmentInteractionListener {
+public class TripActivity extends AppCompatActivity implements TripPlaceFragment.OnListFragmentInteractionListener, TripRouteFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "TripActivity";
     private static final String EXTRA_TRIP_UUID = "com.katespitzer.android.weekender.trip_uuid";
@@ -77,6 +75,11 @@ public class TripActivity extends AppCompatActivity implements TripPlaceFragment
         intent.putExtra(EXTRA_TRIP_UUID, tripId);
 
         return intent;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        Log.i(TAG, "onListFragmentInteraction: " + uri);
     }
 
     @Override
@@ -155,8 +158,20 @@ public class TripActivity extends AppCompatActivity implements TripPlaceFragment
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-
             Fragment fragment = TripPlaceFragment.newInstance(mTrip.getId());
+
+            switch (position) {
+                case 0:
+                    fragment = TripRouteFragment.newInstance("Dummy String 1", "Dummy String 2");
+                    break;
+                case 1:
+                    fragment = TripPlaceFragment.newInstance(mTrip.getId());
+                    break;
+                case 2:
+                    break;
+                default:
+                    break;
+            }
 
 //            return PlaceholderFragment.newInstance(position + 1);
 

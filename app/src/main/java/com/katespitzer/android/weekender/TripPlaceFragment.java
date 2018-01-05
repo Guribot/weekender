@@ -11,9 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.katespitzer.android.weekender.dummy.DummyContent;
-import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
-
 import java.util.List;
 import java.util.UUID;
 
