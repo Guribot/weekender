@@ -27,6 +27,10 @@ public class Trip {
     public Trip(UUID id) {
         mId = id;
     }
+    
+    public void addPlace(Place place) {
+        Log.i(TAG, "addPlace() - " + place);
+    }
 
     public String getTitle() {
         return mTitle;

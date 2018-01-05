@@ -1,5 +1,6 @@
 package com.katespitzer.android.weekender;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.UUID;
 
@@ -17,6 +19,7 @@ import java.util.UUID;
 
 public class TripFragment extends Fragment {
     private Trip mTrip;
+    private Button mAddPlaceButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,12 +30,22 @@ public class TripFragment extends Fragment {
         mTrip = TripList.get(getActivity()).getTrip(tripId);
 
         getActivity().setTitle(mTrip.getTitle());
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_trip_details, container, false);
+
+        mAddPlaceButton = view.findViewById(R.id.add_place_button);
+        mAddPlaceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = PlaceCreateActivity.newIntent(getActivity(), mTrip.getId());
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
