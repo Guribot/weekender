@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.katespitzer.android.weekender.dummy.DummyContent;
 import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A fragment representing a list of Items.
@@ -24,10 +26,16 @@ import java.util.List;
 public class TripPlaceFragment extends Fragment {
 
     // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String TAG = "TripPlaceFragment";
+//    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_TRIP_ID = "trip-id";
+
     // TODO: Customize parameters
     private int mColumnCount = 2;
     private OnListFragmentInteractionListener mListener;
+
+    private Trip mTrip;
+    private List<Place> mPlaces;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -38,10 +46,10 @@ public class TripPlaceFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static TripPlaceFragment newInstance(int columnCount) {
+    public static TripPlaceFragment newInstance(UUID tripId) {
         TripPlaceFragment fragment = new TripPlaceFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putSerializable(ARG_TRIP_ID, tripId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,7 +59,10 @@ public class TripPlaceFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            UUID tripId = (UUID) getArguments().getSerializable(ARG_TRIP_ID);
+            mTrip = TripList.get(getActivity()).getTrip(tripId);
+            Log.i(TAG, "onCreate: Trip Found: " + mTrip);
+            mPlaces = PlaceList.get(getActivity()).getPlacesForTrip(mTrip);
         }
     }
 

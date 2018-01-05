@@ -41,6 +41,8 @@ public class TripActivity extends AppCompatActivity implements TripPlaceFragment
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+    private Trip mTrip;
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -50,6 +52,9 @@ public class TripActivity extends AppCompatActivity implements TripPlaceFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip);
+
+        UUID tripId = (UUID) getIntent().getSerializableExtra(EXTRA_TRIP_UUID);
+        mTrip = TripList.get(this).getTrip(tripId);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,16 +70,6 @@ public class TripActivity extends AppCompatActivity implements TripPlaceFragment
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
     }
 
     public static Intent newIntent(Context context, UUID tripId) {
@@ -161,7 +156,7 @@ public class TripActivity extends AppCompatActivity implements TripPlaceFragment
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 
-            Fragment fragment = TripPlaceFragment.newInstance(2);
+            Fragment fragment = TripPlaceFragment.newInstance(mTrip.getId());
 
 //            return PlaceholderFragment.newInstance(position + 1);
 
