@@ -18,20 +18,11 @@
     <string name="place_address_label">Address</string>
     <string name="place_address_hint">123 Street Rd, City, ST</string>
 
-    <string name="view_route_button">View Route</string>
-    <string name="destinations_title">Destinations</string>
-    <string name="view_destinations_button">See Destinations</string>
-    <string name="places_title">Places</string>
-    <string name="add_place_button">Add Place</string>
-    <string name="notes_title">Notes</string>
-    <string name="add_note_button">Add Note</string>
+    <string name="trip_tab_route">Route</string>
+    <string name="trip_tab_places">Places</string>
+    <string name="trip_tab_notes">Notes</string>
 
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_trip">TripActivity</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
