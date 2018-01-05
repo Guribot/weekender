@@ -22,9 +22,15 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.katespitzer.android.weekender.dummy.DummyContent;
+
 import java.util.UUID;
 
-public class TripActivity extends AppCompatActivity implements TripPlaceFragment.OnListFragmentInteractionListener, TripRouteFragment.OnFragmentInteractionListener {
+public class TripActivity 
+        extends AppCompatActivity 
+        implements TripPlaceFragment.OnListFragmentInteractionListener,
+        TripRouteFragment.OnFragmentInteractionListener, 
+        TripNoteFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "TripActivity";
     private static final String EXTRA_TRIP_UUID = "com.katespitzer.android.weekender.trip_uuid";
@@ -85,6 +91,11 @@ public class TripActivity extends AppCompatActivity implements TripPlaceFragment
     @Override
     public void onListFragmentInteraction(Place place) {
         Log.i(TAG, "onListFragmentInteraction: " + place);
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.i(TAG, "onListFragmentInteraction: dummy");
     }
 
     @Override
@@ -168,6 +179,7 @@ public class TripActivity extends AppCompatActivity implements TripPlaceFragment
                     fragment = TripPlaceFragment.newInstance(mTrip.getId());
                     break;
                 case 2:
+                    fragment = TripNoteFragment.newInstance(1);
                     break;
                 default:
                     break;
