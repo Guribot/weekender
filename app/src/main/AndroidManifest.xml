@@ -21,9 +21,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".TripListActivity" />
-        <activity android:name=".TripCreateActivity"></activity>
-        <activity android:name=".TripActivity"></activity>
-        <activity android:name=".PlaceCreateActivity"></activity>
+        <activity android:name=".TripCreateActivity" />
+        <activity
+            android:name=".TripActivity"
+            android:label="@string/title_activity_trip"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PlaceCreateActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
