@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public class Place {
     private UUID mId;
+    private int dbId;
     private String mName;
     private String mAddress;
     private double mLatitude;
@@ -35,6 +36,10 @@ public class Place {
 
     public void setId(UUID id) {
         mId = id;
+    }
+
+    public void setDbId(int dbId) {
+        this.dbId = dbId;
     }
 
     public String getName() {

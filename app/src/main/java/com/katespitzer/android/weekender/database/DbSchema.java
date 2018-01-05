@@ -41,13 +41,13 @@ public class DbSchema {
         public static final String CREATE = "create table " + PlaceTable.NAME + "(" +
                 " _id integer primary key autoincrement, " +
                 Cols.UUID + ", " +
-                Cols.TRIP_ID + " integer foreign key, " +
+                Cols.TRIP_ID + " integer, " +
                 Cols.NAME + ", " +
                 Cols.ADDRESS + ", " +
                 Cols.LONG + ", " +
                 Cols.LAT + ", " +
-                Cols.IMG +
-                ")";
+                Cols.IMG + ", " +
+                "FOREIGN KEY (" + Cols.TRIP_ID + ") REFERENCES " + TripTable.NAME + "(_id) )";
 
     }
 }

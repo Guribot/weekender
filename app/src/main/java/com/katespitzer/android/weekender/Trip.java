@@ -12,6 +12,7 @@ import java.util.UUID;
 
 public class Trip {
     private UUID mId;
+    private int dbId;
     private String mTitle;
     private Date mStartDate;
     private Date mEndDate;
@@ -27,10 +28,6 @@ public class Trip {
     public Trip(UUID id) {
         mId = id;
     }
-    
-    public void addPlace(Place place) {
-        Log.i(TAG, "addPlace() - " + place);
-    }
 
     public String getTitle() {
         return mTitle;
@@ -42,6 +39,14 @@ public class Trip {
 
     public UUID getId() {
         return mId;
+    }
+
+    public int getDbId() {
+        return dbId;
+    }
+
+    public void setDbId(int dbId) {
+        this.dbId = dbId;
     }
 
     public Date getStartDate() {
