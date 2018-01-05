@@ -44,6 +44,7 @@ public class TripFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_trip_details, container, false);
 
         mTripPlaces = PlaceList.get(getActivity()).getPlacesForTrip(mTrip);
+//        mTripPlaces = PlaceList.get(getActivity()).getPlaces();
 
         mAddPlaceButton = view.findViewById(R.id.add_place_button);
         mAddPlaceButton.setOnClickListener(new View.OnClickListener() {

@@ -94,7 +94,7 @@ public class PlaceList {
         Log.i(TAG, "in addPlace()");
         ContentValues values = getContentValues(place);
 
-        mDatabase.insert(PlaceTable.NAME, null, values);
+        long r = mDatabase.insert(PlaceTable.NAME, null, values);
     }
 
     /**
@@ -142,16 +142,15 @@ public class PlaceList {
 
     /**
      * Takes a trip as a parameters and returns List of all of its Places it has
+     * ALSO, WORKS!!!!
      * @param trip
      * @return
      */
     public List<Place> getPlacesForTrip(Trip trip){
-        Log.i(TAG, "getPlacesForTrip()");
         List<Place> places = new ArrayList<>();
-
-        PlaceCursorWrapper cursor = queryPlaces(PlaceTable.Cols.TRIP_ID + " = ?",
-                new String[] { "" + trip.getDbId() });
-
+        String whereClause = PlaceTable.Cols.TRIP_ID + " = " + trip.getDbId();
+//        String[] whereArgs = new String[] {String.valueOf(trip.getDbId())};
+        PlaceCursorWrapper cursor = queryPlaces(whereClause, null);
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -161,7 +160,6 @@ public class PlaceList {
         } finally {
             cursor.close();
         }
-
         return places;
     }
 
@@ -193,6 +191,10 @@ public class PlaceList {
         values.put(PlaceTable.Cols.UUID, place.getId().toString());
         values.put(PlaceTable.Cols.NAME, place.getName());
         values.put(PlaceTable.Cols.ADDRESS, place.getAddress());
+        values.put(PlaceTable.Cols.LAT, place.getLatitude());
+        values.put(PlaceTable.Cols.LONG, place.getLongitude());
+        values.put(PlaceTable.Cols.IMG, place.getImageUrl());
+        values.put(PlaceTable.Cols.TRIP_ID, place.getTripId());
 
         return values;
     }
