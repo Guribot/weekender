@@ -20,8 +20,8 @@ public class Place {
     private static final String TAG = "Place.java";
 
     public Place() {
-        Log.i(TAG, "Place: in constructor");
         this(UUID.randomUUID());
+        Log.i(TAG, "Place: in constructor");
     }
 
     public Place(UUID id) {

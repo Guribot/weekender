@@ -33,7 +33,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        mNewTripButton = findViewById(R.id.new_trip_button);
+        mNewTripButton = findViewById(R.id.trip_submit_button);
         mNewTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

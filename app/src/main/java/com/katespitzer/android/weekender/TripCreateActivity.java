@@ -82,7 +82,7 @@ public class TripCreateActivity extends AppCompatActivity implements DatePickerF
         });
 
 
-        mSubmitButton = findViewById(R.id.new_trip_button);
+        mSubmitButton = findViewById(R.id.trip_submit_button);
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

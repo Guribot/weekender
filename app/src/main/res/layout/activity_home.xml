@@ -62,7 +62,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/new_trip_button"
+                android:id="@+id/trip_submit_button"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
