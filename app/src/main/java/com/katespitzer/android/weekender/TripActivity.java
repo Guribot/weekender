@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,9 +22,11 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.katespitzer.android.weekender.dummy.DummyContent;
+
 import java.util.UUID;
 
-public class TripActivity extends AppCompatActivity {
+public class TripActivity extends AppCompatActivity implements TripPlaceFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "TripActivity";
     private static final String EXTRA_TRIP_UUID = "com.katespitzer.android.weekender.trip_uuid";
@@ -81,6 +84,10 @@ public class TripActivity extends AppCompatActivity {
         return intent;
     }
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Log.i(TAG, "onListFragmentInteraction: " + item);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,7 +160,12 @@ public class TripActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+
+            Fragment fragment = TripPlaceFragment.newInstance(2);
+
+//            return PlaceholderFragment.newInstance(position + 1);
+
+            return fragment;
         }
 
         @Override
