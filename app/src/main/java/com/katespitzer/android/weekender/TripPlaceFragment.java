@@ -1,7 +1,9 @@
 package com.katespitzer.android.weekender;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,14 +24,13 @@ import java.util.UUID;
  */
 public class TripPlaceFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String TAG = "TripPlaceFragment";
 //    private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String ARG_TRIP_ID = "trip-id";
 
-    // TODO: Customize parameters
     private int mColumnCount = 2;
     private OnListFragmentInteractionListener mListener;
+    private PlaceRecyclerViewAdapter mAdapter;
 
     private Trip mTrip;
     private List<Place> mPlaces;
@@ -41,8 +42,6 @@ public class TripPlaceFragment extends Fragment {
     public TripPlaceFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static TripPlaceFragment newInstance(UUID tripId) {
         TripPlaceFragment fragment = new TripPlaceFragment();
         Bundle args = new Bundle();
@@ -53,6 +52,7 @@ public class TripPlaceFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
@@ -61,30 +61,48 @@ public class TripPlaceFragment extends Fragment {
             Log.i(TAG, "onCreate: Trip Found: " + mTrip);
             mPlaces = PlaceList.get(getActivity()).getPlacesForTrip(mTrip);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_place_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+
+        final Context context = view.getContext();
+        RecyclerView recyclerView = view.findViewById(R.id.trip_place_list);
+        recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        mAdapter = new PlaceRecyclerViewAdapter(mPlaces, mListener);
+        recyclerView.setAdapter(mAdapter);
+
+        FloatingActionButton addButton = view.findViewById(R.id.trip_place_add_button);
+        addButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = PlaceCreateActivity.newIntent(context, mTrip.getId());
+                startActivity(intent);
             }
-            recyclerView.setAdapter(new MyPlaceRecyclerViewAdapter(mPlaces, mListener));
-        }
+        });
+
         return view;
     }
 
+    @Override
+    public void onResume() {
+        Log.i(TAG, "onResume()");
+        super.onResume();
+
+        mPlaces = PlaceList.get(getActivity()).getPlacesForTrip(mTrip);
+        mAdapter.setPlaces(mPlaces);
+        mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onAttach(Context context) {
+        Log.i(TAG, "onAttach()");
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
@@ -96,6 +114,7 @@ public class TripPlaceFragment extends Fragment {
 
     @Override
     public void onDetach() {
+        Log.i(TAG, "onDetach()");
         super.onDetach();
         mListener = null;
     }

@@ -10,13 +10,13 @@ import com.katespitzer.android.weekender.TripPlaceFragment.OnListFragmentInterac
 
 import java.util.List;
 
-public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecyclerViewAdapter.ViewHolder> {
+public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Place> mValues;
+    private List<Place> mPlaces;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyPlaceRecyclerViewAdapter(List<Place> places, OnListFragmentInteractionListener listener) {
-        mValues = places;
+    public PlaceRecyclerViewAdapter(List<Place> places, OnListFragmentInteractionListener listener) {
+        mPlaces = places;
         mListener = listener;
     }
 
@@ -29,9 +29,9 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mPlace = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getName());
-        holder.mContentView.setText(mValues.get(position).getAddress());
+        holder.mPlace = mPlaces.get(position);
+        holder.mIdView.setText(mPlaces.get(position).getName());
+        holder.mContentView.setText(mPlaces.get(position).getAddress());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +47,7 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mPlaces.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -67,5 +67,9 @@ public class MyPlaceRecyclerViewAdapter extends RecyclerView.Adapter<MyPlaceRecy
         public String toString() {
             return super.toString() + " '" + mContentView.getText() + "'";
         }
+    }
+
+    public void setPlaces(List<Place> places) {
+        mPlaces = places;
     }
 }
