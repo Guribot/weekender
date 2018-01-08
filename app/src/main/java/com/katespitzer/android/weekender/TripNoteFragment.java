@@ -1,7 +1,9 @@
 package com.katespitzer.android.weekender;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,10 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.katespitzer.android.weekender.dummy.DummyContent;
-import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
-
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A fragment representing a list of Items.
@@ -23,9 +23,11 @@ import java.util.List;
  */
 public class TripNoteFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+    private List<Note> mNotes;
+    private Trip mTrip;
+
+    private static final String ARG_TRIP_ID = "trip-id";
+
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -36,12 +38,10 @@ public class TripNoteFragment extends Fragment {
     public TripNoteFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static TripNoteFragment newInstance(int columnCount) {
+    public static TripNoteFragment newInstance(UUID tripId) {
         TripNoteFragment fragment = new TripNoteFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putSerializable(ARG_TRIP_ID, tripId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,9 +50,13 @@ public class TripNoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
+        UUID tripId = (UUID) getArguments().getSerializable(ARG_TRIP_ID);
+
+        TripList tripList = TripList.get(getActivity());
+        NoteList noteList = NoteList.get(getActivity());
+
+        mTrip = tripList.getTrip(tripId);
+        mNotes = noteList.getNotesForTrip(mTrip);
     }
 
     @Override
@@ -60,17 +64,28 @@ public class TripNoteFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
 
+        final Context context = view.getContext();
+
         // Set the adapter
         if (view instanceof RecyclerView) {
-            Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new NoteRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new NoteRecyclerViewAdapter(mNotes, mListener));
         }
+
+        FloatingActionButton addButton = view.findViewById(R.id.trip_note_add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = NoteCreateActivity.newIntent(context, mTrip);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -104,6 +119,6 @@ public class TripNoteFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Note note);
     }
 }

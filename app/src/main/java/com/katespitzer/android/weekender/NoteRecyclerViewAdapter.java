@@ -7,22 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.TripNoteFragment.OnListFragmentInteractionListener;
-import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
+import com.katespitzer.android.weekender.dummy.DummyContent;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link Note} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Note> mNotes;
     private final OnListFragmentInteractionListener mListener;
 
-    public NoteRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public NoteRecyclerViewAdapter(List<Note> notes, OnListFragmentInteractionListener listener) {
+        mNotes = notes;
         mListener = listener;
     }
 
@@ -35,9 +35,10 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mNote = mNotes.get(position);
+        holder.mTitleView.setText(mNotes.get(position).getTitle());
+        // TODO: implement getContentSnippet()
+        holder.mContentView.setText(mNotes.get(position).getContent());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +46,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mNote);
                 }
             }
         });
@@ -53,20 +54,20 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mNotes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
+        public final TextView mTitleView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Note mNote;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mTitleView = (TextView) view.findViewById(R.id.note_title);
+            mContentView = (TextView) view.findViewById(R.id.note_content_summary);
         }
 
         @Override

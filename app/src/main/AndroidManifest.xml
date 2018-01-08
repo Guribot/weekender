@@ -32,7 +32,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".NoteFormActivity"></activity>
+        <activity android:name=".NoteCreateActivity"></activity>
     </application>
 
 </manifest>

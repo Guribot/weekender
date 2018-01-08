@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import java.util.UUID;
 
-public class NoteFormActivity extends AppCompatActivity {
+public class NoteCreateActivity extends AppCompatActivity {
 
     private Note mNote;
     private Trip mTrip;
@@ -30,6 +30,8 @@ public class NoteFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_form);
+
+        mNote = new Note();
 
         UUID placeId = (UUID) getIntent().getSerializableExtra(EXTRA_PLACE_ID);
         UUID tripId = (UUID) getIntent().getSerializableExtra(EXTRA_TRIP_ID);
@@ -93,10 +95,10 @@ public class NoteFormActivity extends AppCompatActivity {
 
     }
 
-    public Intent newIntent(Place place) {
-        Intent intent = new Intent();
+    public static Intent newIntent(Context context, Place place) {
+        Intent intent = new Intent(context, NoteCreateActivity.class);
 
-        Trip trip = PlaceList.get(this).getTripFor(place);
+        Trip trip = PlaceList.get(context).getTripFor(place);
 
         intent.putExtra(EXTRA_PLACE_ID, place.getId());
         intent.putExtra(EXTRA_TRIP_ID, trip.getId());
@@ -104,8 +106,8 @@ public class NoteFormActivity extends AppCompatActivity {
         return intent;
     }
 
-    public Intent newIntent(Trip trip) {
-        Intent intent = new Intent();
+    public static Intent newIntent(Context context, Trip trip) {
+        Intent intent = new Intent(context, NoteCreateActivity.class);
         intent.putExtra(EXTRA_TRIP_ID, trip.getId());
 
         return intent;

@@ -95,7 +95,7 @@ public class TripActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(Note note) {
         Log.i(TAG, "onListFragmentInteraction: dummy");
     }
 
@@ -180,7 +180,7 @@ public class TripActivity
                     fragment = TripPlaceFragment.newInstance(mTrip.getId());
                     break;
                 case 2:
-                    fragment = TripNoteFragment.newInstance(1);
+                    fragment = TripNoteFragment.newInstance(mTrip.getId());
                     break;
                 default:
                     break;
