@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.katespitzer.android.weekender.TripNoteFragment.OnListFragmentInteractionListener;
 import com.katespitzer.android.weekender.dummy.DummyContent;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +41,9 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         holder.mTitleView.setText(mNotes.get(position).getTitle());
         // TODO: implement getContentSnippet()
         holder.mContentView.setText(mNotes.get(position).getContent());
+        Date noteDate = mNotes.get(position).getCreatedDate();
+        String stringDate = DateFormat.getDateInstance(DateFormat.SHORT).format(noteDate);
+        holder.mDateView.setText(stringDate);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +52,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mNote);
-                }
+                }g
             }
         });
     }
@@ -61,6 +66,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         public final View mView;
         public final TextView mTitleView;
         public final TextView mContentView;
+        public final TextView mDateView;
         public Note mNote;
 
         public ViewHolder(View view) {
@@ -68,6 +74,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
             mView = view;
             mTitleView = (TextView) view.findViewById(R.id.note_title);
             mContentView = (TextView) view.findViewById(R.id.note_content_summary);
+            mDateView = (TextView) view.findViewById(R.id.note_date);
         }
 
         @Override
