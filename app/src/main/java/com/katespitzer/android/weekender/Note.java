@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public class Note {
     private UUID mId;
+    private int mDbId;
     private String mTitle;
     private String mContent;
     private int mTripId;
@@ -30,6 +31,14 @@ public class Note {
 
     public void setId(UUID id) {
         mId = id;
+    }
+
+    public int getDbId() {
+        return mDbId;
+    }
+
+    public void setDbId(int dbId) {
+        mDbId = dbId;
     }
 
     public String getTitle() {

@@ -38,6 +38,10 @@ public class Place {
         mId = id;
     }
 
+    public int getDbId() {
+        return dbId;
+    }
+
     public void setDbId(int dbId) {
         this.dbId = dbId;
     }

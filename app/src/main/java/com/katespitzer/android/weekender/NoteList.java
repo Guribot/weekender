@@ -180,6 +180,13 @@ public class NoteList {
         addNote(note);
     }
 
+    public void addNoteToPlace(Note note, Place place) {
+        Log.i(TAG, "addNoteToPlace()");
+        note.setTripId(place.getTripId());
+        note.setPlaceId(place.getDbId());
+        addNote(note);
+    }
+
     /**
      * Converts provided Note into equivalent ContentValues (for use in SQLite operations)
      *

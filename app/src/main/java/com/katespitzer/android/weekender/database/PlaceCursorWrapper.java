@@ -36,12 +36,14 @@ public class PlaceCursorWrapper extends CursorWrapper {
         String name = getString(getColumnIndex(PlaceTable.Cols.NAME));
         String address = getString(getColumnIndex(PlaceTable.Cols.ADDRESS));
         int tripId = getInt(getColumnIndex(PlaceTable.Cols.TRIP_ID));
+        int dbId = getInt(getColumnIndex("_id"));
 
         Place place = new Place();
         place.setId(UUID.fromString(uuidString));
         place.setName(name);
         place.setAddress(address);
         place.setTripId(tripId);
+        place.setDbId(dbId);
 
         return place;
     }
