@@ -86,6 +86,36 @@ public class TripList {
     }
 
     /**
+     * Takes in a DB id and returns the corresponding Trip
+     *
+     * @param id
+     * @return
+     */
+    public Trip getTrip(int id) {
+        Log.i(TAG, "in getTrip()");
+        TripCursorWrapper cursor = queryTrips(
+                TripTable.Cols.UUID + " = ?",
+                new String[] { "" + id }
+        );
+
+        try {
+            if (cursor.getCount() == 0) {
+                // if there are no results, return null
+                return null;
+            }
+            // if there are results, return the first one
+            // (since search param is UUID, There Can Only Be One
+            cursor.moveToFirst();
+            return cursor.getTrip();
+        } finally {
+            // close cursor!
+            cursor.close();
+        }
+
+        // You Should Not Be Here
+    }
+
+    /**
      * Takes in a trip and adds it to the db
      *
      * @param trip

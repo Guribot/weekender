@@ -141,8 +141,8 @@ public class NoteList {
     }
 
     /**
-     * Takes a trip as a parameters and returns List of all of its Notes it has
-     * ALSO, WORKS!!!!
+     * Takes a trip as a parameters and returns List of all of its Notes
+     * NOTE: This includes notes belonging to child Places
      * @param trip
      * @return
      */
@@ -150,6 +150,25 @@ public class NoteList {
         List<Note> notes = new ArrayList<>();
         String whereClause = NoteTable.Cols.TRIP_ID + " = " + trip.getDbId();
 //        String[] whereArgs = new String[] {String.valueOf(trip.getDbId())};
+        NoteCursorWrapper cursor = queryNotes(whereClause, null);
+        try {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                notes.add(cursor.getNote());
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+        return notes;
+    }
+
+    /**
+     * Takes a place as a parameter and returns List of all its Notes
+     */
+    public List<Note> getNotesForPlace(Place place){
+        List<Note> notes = new ArrayList<>();
+        String whereClause = NoteTable.Cols.PLACE_ID + " = " + place.getDbId();
         NoteCursorWrapper cursor = queryNotes(whereClause, null);
         try {
             cursor.moveToFirst();
