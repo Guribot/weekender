@@ -50,4 +50,17 @@ public class DbSchema {
                 "FOREIGN KEY (" + Cols.TRIP_ID + ") REFERENCES " + TripTable.NAME + "(_id) )";
 
     }
+
+    public static final class NoteTable {
+        public static final String NAME = "notes";
+
+        public static final class Cols {
+            public static final String UUID = "uuid";
+            public static final String TITLE = "title";
+            public static final String CONTENT = "content";
+            public static final String TRIP_ID = "trip_id";
+            public static final String PLACE_ID = "place_id";
+            public static final String CREATED_DATE = "created_date";
+        }
+    }
 }
