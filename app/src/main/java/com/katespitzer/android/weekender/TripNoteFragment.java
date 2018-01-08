@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class TripNoteFragment extends Fragment {
     private Trip mTrip;
 
     private static final String ARG_TRIP_ID = "trip-id";
+    private static final String TAG = "TripNoteFragment";
 
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -62,20 +64,14 @@ public class TripNoteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
 
         final Context context = view.getContext();
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new NoteRecyclerViewAdapter(mNotes, mListener));
-        }
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trip_note_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(new NoteRecyclerViewAdapter(mNotes, mListener));
 
         FloatingActionButton addButton = view.findViewById(R.id.trip_note_add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
