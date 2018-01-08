@@ -18,6 +18,9 @@
     <string name="place_address_label">Address</string>
     <string name="place_address_hint">123 Street Rd, City, ST</string>
 
+    <string name="note_title_hint">Title</string>
+    <string name="note_content_hint">Your note here</string>
+
     <string name="trip_tab_route">Route</string>
     <string name="trip_tab_places">Places</string>
     <string name="trip_tab_notes">Notes</string>
