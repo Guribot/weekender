@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Note> mNotes;
+    private List<Note> mNotes;
     private final OnListFragmentInteractionListener mListener;
 
     public NoteRecyclerViewAdapter(List<Note> notes, OnListFragmentInteractionListener listener) {
@@ -81,5 +81,9 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         public String toString() {
             return super.toString() + " '" + mContentView.getText() + "'";
         }
+    }
+
+    public void setNotes(List<Note> notes) {
+        mNotes = notes;
     }
 }

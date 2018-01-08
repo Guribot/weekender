@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +25,7 @@ public class TripNoteFragment extends Fragment {
 
     private List<Note> mNotes;
     private Trip mTrip;
+    private NoteRecyclerViewAdapter mAdapter;
 
     private static final String ARG_TRIP_ID = "trip-id";
     private static final String TAG = "TripNoteFragment";
@@ -71,7 +71,8 @@ public class TripNoteFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trip_note_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new NoteRecyclerViewAdapter(mNotes, mListener));
+        mAdapter = new NoteRecyclerViewAdapter(mNotes, mListener);
+        recyclerView.setAdapter(mAdapter);
 
         FloatingActionButton addButton = view.findViewById(R.id.trip_note_add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +86,15 @@ public class TripNoteFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        Log.i(TAG, "onResume()");
+        super.onResume();
+
+        mNotes = NoteList.get(getActivity()).getNotesForTrip(mTrip);
+        mAdapter.setNotes(mNotes);
+        mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onAttach(Context context) {
