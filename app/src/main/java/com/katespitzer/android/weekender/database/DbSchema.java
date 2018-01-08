@@ -62,5 +62,16 @@ public class DbSchema {
             public static final String PLACE_ID = "place_id";
             public static final String CREATED_DATE = "created_date";
         }
+
+        public static final String CREATE = "create table " + NoteTable.NAME + "(" +
+                "_id integer primary key autoincrement, " +
+                Cols.UUID + ", " +
+                Cols.TITLE + ", " +
+                Cols.CONTENT + ", " +
+                Cols.CREATED_DATE + ", " +
+                Cols.TRIP_ID + ", " +
+                Cols.PLACE_ID + ", " +
+                "FOREIGN KEY (" + Cols.TRIP_ID + ") REFERENCES " + TripTable.NAME + "(_id), " +
+                "FOREIGN KEY (" + Cols.PLACE_ID + ") REFERENCES " + PlaceTable.NAME + "(_id) )";
     }
 }

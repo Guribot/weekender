@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.katespitzer.android.weekender.database.DbSchema.NoteTable;
 import com.katespitzer.android.weekender.database.DbSchema.PlaceTable;
 import com.katespitzer.android.weekender.database.DbSchema.TripTable;
 
@@ -23,6 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TripTable.CREATE);
         db.execSQL(PlaceTable.CREATE);
+        db.execSQL(NoteTable.CREATE);
     }
 
     @Override
