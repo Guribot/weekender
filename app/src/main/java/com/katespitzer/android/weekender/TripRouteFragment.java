@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 
 import com.katespitzer.android.weekender.dummy.DummyContent;
 
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 
@@ -121,7 +123,7 @@ public class TripRouteFragment extends Fragment {
         void onListFragmentInteraction(DummyContent.DummyItem item);
     }
 
-    private class FetchRouteTask extends AsyncTask<Void, Void, String> {
+    private class FetchRouteTask extends AsyncTask<Void, Void, JSONObject> {
         Route mRoute;
 
         public FetchRouteTask(Route route) {
@@ -129,21 +131,32 @@ public class TripRouteFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(Void... voids) {
+        protected JSONObject doInBackground(Void... voids) {
             if (mRoute == null) {
                 Log.e(TAG, "doInBackground: No Route set");
                 return null;
             } else {
+                JSONObject jsonObject = new JSONObject();
                 String results = new DirectionsFetcher().getDirections(mRoute);
                 Log.i(TAG, "doInBackground: results returned: " + results);
-                return results;
+
+                try {
+                    jsonObject = new JSONObject(results);
+                    jsonObject = jsonObject.getJSONArray("routes")
+                            .getJSONObject(0);
+                } catch (Exception e) {
+                    Log.d(TAG, "doInBackground: exception: " + e.toString());
+                }
+
+                Log.i(TAG, "doInBackground: result is: " + results);
+                return jsonObject;
             }
         }
 
         @Override
-        protected void onPostExecute(String string) {
-            Log.i(TAG, "onPostExecute: " + string);
-            super.onPostExecute(string);
+        protected void onPostExecute(JSONObject jsonObject) {
+            Log.i(TAG, "onPostExecute: " + jsonObject);
+            super.onPostExecute(jsonObject);
         }
     }
 }

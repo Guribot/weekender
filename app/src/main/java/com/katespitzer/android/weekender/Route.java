@@ -13,7 +13,7 @@ public class Route {
     private UUID mId;
     private ArrayList<Destination> mDestinations;
     private int mTripId;
-    private String mPolyline;
+    private String mOverviewPolyline;
 
     public UUID getId() {
         return mId;
@@ -39,12 +39,12 @@ public class Route {
         mTripId = tripId;
     }
 
-    public String getPolyline() {
-        return mPolyline;
+    public String getOverviewPolyline() {
+        return mOverviewPolyline;
     }
 
-    public void setPolyline(String polyline) {
-        mPolyline = polyline;
+    public void setOverviewPolyline(String overviewPolyline) {
+        mOverviewPolyline = overviewPolyline;
     }
 
     public void addTestData(){
