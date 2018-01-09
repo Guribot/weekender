@@ -2,11 +2,13 @@ package com.katespitzer.android.weekender;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +33,13 @@ public class TripRouteFragment extends Fragment {
     private DestinationRecyclerViewAdapter mAdapter;
     private OnListFragmentInteractionListener mDestinationListener;
 
+    private static final String TAG = "TripRouteFragment";
+
     public TripRouteFragment() {
         // Required empty public constructor
     }
 
 
-    // TODO: Rename and change types and number of parameters
     public static TripRouteFragment newInstance(UUID tripId) {
         TripRouteFragment fragment = new TripRouteFragment();
         Bundle args = new Bundle();
@@ -50,6 +53,10 @@ public class TripRouteFragment extends Fragment {
         if (getArguments() != null) {
             //
         }
+
+        Route route = new Route();
+        route.addTestData();
+        new FetchRouteTask(route).execute();
     }
 
     @Override
@@ -65,7 +72,7 @@ public class TripRouteFragment extends Fragment {
         mAdapter = new DestinationRecyclerViewAdapter(DummyContent.ITEMS, mDestinationListener);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mAdapter);
-        
+
         return view;
     }
 
@@ -112,5 +119,31 @@ public class TripRouteFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyContent.DummyItem item);
+    }
+
+    private class FetchRouteTask extends AsyncTask<Void, Void, String> {
+        Route mRoute;
+
+        public FetchRouteTask(Route route) {
+            mRoute = route;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            if (mRoute == null) {
+                Log.e(TAG, "doInBackground: No Route set");
+                return null;
+            } else {
+                String results = new DirectionsFetcher().getDirections(mRoute);
+                Log.i(TAG, "doInBackground: results returned: " + results);
+                return results;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String string) {
+            Log.i(TAG, "onPostExecute: " + string);
+            super.onPostExecute(string);
+        }
     }
 }
