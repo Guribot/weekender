@@ -15,6 +15,15 @@ public class Route {
     private String mOverviewPolyline;
     private int mDbId;
 
+    public Route() {
+        this(UUID.randomUUID());
+    }
+
+    public Route(UUID uuid) {
+        mId = uuid;
+        mDestinations = new ArrayList<>();
+    }
+
     public UUID getId() {
         return mId;
     }

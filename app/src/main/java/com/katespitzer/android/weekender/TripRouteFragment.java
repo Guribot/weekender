@@ -1,17 +1,21 @@
 package com.katespitzer.android.weekender;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import org.json.JSONObject;
 
@@ -65,9 +69,8 @@ public class TripRouteFragment extends Fragment {
         if (getArguments() != null) {
             UUID tripId = (UUID) getArguments().getSerializable(TRIP_ID);
             mTrip = mTripManager.getTrip(tripId);
-            mRoute = mTripManager.getRouteFor(mTrip);
+            mRoute = mTrip.getRoute();
             mDestinations = mRoute.getDestinations();
-            Log.i(TAG, "onCreate: trip found: " + mTrip);
         }
     }
 
@@ -84,6 +87,40 @@ public class TripRouteFragment extends Fragment {
         mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mAdapter);
+
+        mAddDestinationButton = view.findViewById(R.id.trip_add_destination_button);
+        mAddDestinationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Title");
+
+                final EditText input = new EditText(getActivity());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG, "onClick: input: " + input.getText());
+                        Destination destination = new Destination();
+                        destination.setName(input.getText().toString());
+                        DestinationManager.get(getActivity()).addDestinationToRoute(destination, mRoute);
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
+            }
+        });
 
         return view;
     }

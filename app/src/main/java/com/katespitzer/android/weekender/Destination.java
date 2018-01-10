@@ -14,6 +14,11 @@ public class Destination {
     private int mRouteId;
 
     public Destination() {
+        this(UUID.randomUUID());
+    }
+
+    public Destination(UUID uuid) {
+        mId = uuid;
     }
 
     public UUID getId() {

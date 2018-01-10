@@ -170,7 +170,7 @@ public class TripActivity
 
             switch (position) {
                 case 0:
-                    fragment = TripRouteFragment.newInstance(UUID.randomUUID());
+                    fragment = TripRouteFragment.newInstance(mTrip.getId());
                     break;
                 case 1:
                     fragment = TripPlaceFragment.newInstance(mTrip.getId());
