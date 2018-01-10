@@ -167,6 +167,10 @@ public class TripManager {
         return trips;
     }
 
+    public Route getRouteFor(Trip trip) {
+        return RouteManager.get(mContext).getRoute(trip.getRouteId());
+    }
+
     /**
      * Returns the size of the database
      * does this work?

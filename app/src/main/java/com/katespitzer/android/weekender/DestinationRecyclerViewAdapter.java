@@ -7,22 +7,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.TripRouteFragment.OnListFragmentInteractionListener;
-import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link Destination} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<DestinationRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Destination> mDestinations;
     private final OnListFragmentInteractionListener mListener;
 
-    public DestinationRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public DestinationRecyclerViewAdapter(List<Destination> destinations, OnListFragmentInteractionListener listener) {
+        mDestinations = destinations;
         mListener = listener;
     }
 
@@ -35,8 +34,8 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mNameView.setText(mValues.get(position).id);
+        holder.mDestination = mDestinations.get(position);
+        holder.mNameView.setText(mDestinations.get(position).getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,7 +43,7 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mDestination);
                 }
             }
         });
@@ -52,13 +51,13 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mDestinations.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mNameView;
-        public DummyItem mItem;
+        public Destination mDestination;
 
         public ViewHolder(View view) {
             super(view);

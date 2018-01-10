@@ -193,7 +193,7 @@ public class DestinationManager {
 
         return values;
     }
-    
+
     /**
      * Takes in query parameters and returns a
      * cursor wrapped in a DestinationCursorWrapper

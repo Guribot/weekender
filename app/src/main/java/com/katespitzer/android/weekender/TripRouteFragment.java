@@ -13,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.katespitzer.android.weekender.dummy.DummyContent;
-
 import org.json.JSONObject;
 
 import java.util.List;
@@ -35,6 +33,7 @@ public class TripRouteFragment extends Fragment {
     private Trip mTrip;
     private Route mRoute;
     private List<Destination> mDestinations;
+    private TripManager mTripManager;
 
     private OnFragmentInteractionListener mListener;
     private DestinationRecyclerViewAdapter mAdapter;
@@ -61,12 +60,14 @@ public class TripRouteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTripManager = TripManager.get(getActivity());
+
         if (getArguments() != null) {
             UUID tripId = (UUID) getArguments().getSerializable(TRIP_ID);
-            mTrip = TripManager.get(getActivity()).getTrip(tripId);
+            mTrip = mTripManager.getTrip(tripId);
+            mRoute = mTripManager.getRouteFor(mTrip);
+            mDestinations = mRoute.getDestinations();
             Log.i(TAG, "onCreate: trip found: " + mTrip);
-//            mRoute = mTrip.getRoute();
-//            mDestinations = mRoute.getDestinations();
         }
     }
 
@@ -80,7 +81,7 @@ public class TripRouteFragment extends Fragment {
         final Context context = view.getContext();
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trip_route_recycler_view);
-        mAdapter = new DestinationRecyclerViewAdapter(DummyContent.ITEMS, mDestinationListener);
+        mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mAdapter);
 
@@ -129,7 +130,7 @@ public class TripRouteFragment extends Fragment {
 
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyContent.DummyItem item);
+        void onListFragmentInteraction(Destination destination);
     }
 
     private class FetchRouteTask extends AsyncTask<Void, Void, JSONObject> {
