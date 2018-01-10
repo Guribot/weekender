@@ -8,11 +8,20 @@ import java.util.UUID;
 
 public class Destination {
 
+    private UUID mId;
     private String mName;
     private String mGooglePlaceId;
     private int mRouteId;
 
     public Destination() {
+    }
+
+    public UUID getId() {
+        return mId;
+    }
+
+    public void setId(UUID id) {
+        mId = id;
     }
 
     public String getGooglePlaceId() {

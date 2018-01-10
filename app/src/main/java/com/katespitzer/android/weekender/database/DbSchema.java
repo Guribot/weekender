@@ -96,6 +96,7 @@ public class DbSchema {
         public static final String NAME = "destinations";
 
         public static final class Cols {
+            public static final String UUID = "uuid";
             public static final String NAME = "name";
             public static final String GOOGLE_PLACE_ID = "google_place_id";
             public static final String ROUTE_ID = "route_id";
@@ -103,6 +104,7 @@ public class DbSchema {
 
         public static final String CREATE = "create table " + DestinationTable.NAME + "(" +
                 "_id integer primary key autoincrement, " +
+                Cols.UUID + ", " +
                 Cols.NAME + ", " +
                 Cols.GOOGLE_PLACE_ID + ", " +
                 Cols.ROUTE_ID + ", " +
