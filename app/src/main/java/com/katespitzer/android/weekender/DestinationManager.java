@@ -158,6 +158,8 @@ public class DestinationManager {
         } finally {
             cursor.close();
         }
+
+        route.setDestinations(destinations);
         return destinations;
     }
 

@@ -70,7 +70,7 @@ public class TripRouteFragment extends Fragment {
             UUID tripId = (UUID) getArguments().getSerializable(TRIP_ID);
             mTrip = mTripManager.getTrip(tripId);
             mRoute = mTrip.getRoute();
-            mDestinations = mRoute.getDestinations();
+            mDestinations = DestinationManager.get(getActivity()).getDestinationsForRoute(mRoute);
         }
     }
 

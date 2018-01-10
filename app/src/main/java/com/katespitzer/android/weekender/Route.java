@@ -11,7 +11,7 @@ import java.util.UUID;
 public class Route {
 
     private UUID mId;
-    private ArrayList<Destination> mDestinations;
+    private List<Destination> mDestinations;
     private String mOverviewPolyline;
     private int mDbId;
 
@@ -21,7 +21,6 @@ public class Route {
 
     public Route(UUID uuid) {
         mId = uuid;
-        mDestinations = new ArrayList<>();
     }
 
     public UUID getId() {
@@ -36,7 +35,7 @@ public class Route {
         return mDestinations;
     }
 
-    public void setDestinations(ArrayList<Destination> destinations) {
+    public void setDestinations(List<Destination> destinations) {
         mDestinations = destinations;
     }
 
