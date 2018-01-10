@@ -13,6 +13,7 @@ import java.util.UUID;
 public class Trip {
     private UUID mId;
     private int dbId;
+    private Route mRoute;
     private String mTitle;
     private Date mStartDate;
     private Date mEndDate;
@@ -27,6 +28,7 @@ public class Trip {
 
     public Trip(UUID id) {
         mId = id;
+        mRoute = new Route();
     }
 
     public String getTitle() {
@@ -47,6 +49,14 @@ public class Trip {
 
     public void setDbId(int dbId) {
         this.dbId = dbId;
+    }
+
+    public Route getRoute() {
+        return mRoute;
+    }
+
+    public void setRoute(Route route) {
+        mRoute = route;
     }
 
     public Date getStartDate() {

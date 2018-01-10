@@ -12,11 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.katespitzer.android.weekender.dummy.DummyContent;
 
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -31,11 +33,18 @@ import java.util.UUID;
 
 public class TripRouteFragment extends Fragment {
 
+    private Trip mTrip;
+    private Route mRoute;
+    private List<Destination> mDestinations;
+
     private OnFragmentInteractionListener mListener;
     private DestinationRecyclerViewAdapter mAdapter;
     private OnListFragmentInteractionListener mDestinationListener;
 
+    private Button mAddDestinationButton;
+
     private static final String TAG = "TripRouteFragment";
+    private static final String TRIP_ID = "trip_id";
 
     public TripRouteFragment() {
         // Required empty public constructor
@@ -45,6 +54,7 @@ public class TripRouteFragment extends Fragment {
     public static TripRouteFragment newInstance(UUID tripId) {
         TripRouteFragment fragment = new TripRouteFragment();
         Bundle args = new Bundle();
+        args.putSerializable(TRIP_ID, tripId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,7 +63,11 @@ public class TripRouteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //
+            UUID tripId = (UUID) getArguments().getSerializable(TRIP_ID);
+            mTrip = TripList.get(getActivity()).getTrip(tripId);
+            Log.i(TAG, "onCreate: trip found: " + mTrip);
+//            mRoute = mTrip.getRoute();
+//            mDestinations = mRoute.getDestinations();
         }
     }
 
