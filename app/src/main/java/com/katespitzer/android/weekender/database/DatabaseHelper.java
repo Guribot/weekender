@@ -28,10 +28,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.i(TAG, "onCreate()");
+        db.execSQL(RouteTable.CREATE);
         db.execSQL(TripTable.CREATE);
         db.execSQL(PlaceTable.CREATE);
         db.execSQL(NoteTable.CREATE);
-        db.execSQL(RouteTable.CREATE);
         db.execSQL(DestinationTable.CREATE);
     }
 

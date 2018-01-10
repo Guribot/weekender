@@ -189,6 +189,7 @@ public class TripManager {
         values.put(TripTable.Cols.TITLE, trip.getTitle());
         values.put(TripTable.Cols.START_DATE, trip.getStartDate().getTime());
         values.put(TripTable.Cols.END_DATE, trip.getEndDate().getTime());
+        values.put(TripTable.Cols.ROUTE_ID, trip.getRouteId());
 
         return values;
     }

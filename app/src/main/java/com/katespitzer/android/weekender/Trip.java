@@ -1,7 +1,5 @@
 package com.katespitzer.android.weekender;
 
-import android.util.Log;
-
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,7 +10,8 @@ import java.util.UUID;
 
 public class Trip {
     private UUID mId;
-    private int dbId;
+    private int mDbId;
+    private int mRouteId;
     private Route mRoute;
     private String mTitle;
     private Date mStartDate;
@@ -31,6 +30,14 @@ public class Trip {
         mRoute = new Route();
     }
 
+    public int getRouteId() {
+        return mRouteId;
+    }
+
+    public void setRouteId(int routeId) {
+        mRouteId = routeId;
+    }
+
     public String getTitle() {
         return mTitle;
     }
@@ -43,12 +50,16 @@ public class Trip {
         return mId;
     }
 
+    public void setId(UUID id) {
+        mId = id;
+    }
+
     public int getDbId() {
-        return dbId;
+        return mDbId;
     }
 
     public void setDbId(int dbId) {
-        this.dbId = dbId;
+        this.mDbId = dbId;
     }
 
     public Route getRoute() {

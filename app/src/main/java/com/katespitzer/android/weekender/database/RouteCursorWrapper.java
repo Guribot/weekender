@@ -33,13 +33,11 @@ public class RouteCursorWrapper extends CursorWrapper {
     public Route getRoute() {
         String uuidString = getString(getColumnIndex(RouteTable.Cols.UUID));
         String overview_polyline = getString(getColumnIndex(RouteTable.Cols.OVERVIEW_POLYLINE));
-        int tripId = getInt(getColumnIndex(RouteTable.Cols.TRIP_ID));
         int dbId = getInt(getColumnIndex("_id"));
 
         Route route = new Route();
         route.setId(UUID.fromString(uuidString));
         route.setOverviewPolyline(overview_polyline);
-        route.setTripId(tripId);
         route.setDbId(dbId);
 
         return route;

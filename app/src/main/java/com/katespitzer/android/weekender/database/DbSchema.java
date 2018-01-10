@@ -13,6 +13,7 @@ public class DbSchema {
             public static final String TITLE = "title";
             public static final String START_DATE = "start_date";
             public static final String END_DATE = "end_date";
+            public static final String ROUTE_ID = "route_id";
         }
 
         public static final String CREATE = "create table " + TripTable.NAME + "(" +
@@ -20,8 +21,9 @@ public class DbSchema {
                 Cols.UUID + ", " +
                 Cols.TITLE + ", " +
                 Cols.START_DATE + ", " +
-                Cols.END_DATE +
-                ")";
+                Cols.END_DATE + ", " +
+                Cols.ROUTE_ID + ", " +
+                "FOREIGN KEY (" + Cols.ROUTE_ID + ") REFERENCES " + RouteTable.NAME + "(_id) )";
 
     }
 
@@ -80,16 +82,14 @@ public class DbSchema {
 
         public static final class Cols {
             public static final String UUID = "uuid";
-            public static final String TRIP_ID = "trip_id";
             public static final String OVERVIEW_POLYLINE = "overview_polyline";
         }
 
         public static final String CREATE = "create table " + RouteTable.NAME + "(" +
                 "_id integer primary key autoincrement, " +
                 Cols.UUID + ", " +
-                Cols.TRIP_ID + ", " +
-                Cols.OVERVIEW_POLYLINE + ", " +
-                "FOREIGN KEY (" + Cols.TRIP_ID + ") REFERENCES " + TripTable.NAME + "(_id) )";
+                Cols.OVERVIEW_POLYLINE +
+                ")";
     }
 
     public static final class DestinationTable {

@@ -12,7 +12,6 @@ public class Route {
 
     private UUID mId;
     private ArrayList<Destination> mDestinations;
-    private int mTripId;
     private String mOverviewPolyline;
     private int mDbId;
 
@@ -30,14 +29,6 @@ public class Route {
 
     public void setDestinations(ArrayList<Destination> destinations) {
         mDestinations = destinations;
-    }
-
-    public int getTripId() {
-        return mTripId;
-    }
-
-    public void setTripId(int tripId) {
-        mTripId = tripId;
     }
 
     public String getOverviewPolyline() {
