@@ -13,6 +13,8 @@
     <string name="trip_dates_format">%1$s - %2$s</string>
     <string name="submit_button">Submit</string>
 
+    <string name="route_add_destination">Add Destination</string>
+
     <string name="place_name_label">Name</string>
     <string name="place_name_hint">New Place</string>
     <string name="place_address_label">Address</string>

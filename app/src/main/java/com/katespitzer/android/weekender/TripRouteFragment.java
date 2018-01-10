@@ -55,10 +55,6 @@ public class TripRouteFragment extends Fragment {
         if (getArguments() != null) {
             //
         }
-
-        Route route = new Route();
-        route.addTestData();
-        new FetchRouteTask(route).execute();
     }
 
     @Override
