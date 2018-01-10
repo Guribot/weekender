@@ -14,6 +14,7 @@ public class Route {
     private ArrayList<Destination> mDestinations;
     private int mTripId;
     private String mOverviewPolyline;
+    private int mDbId;
 
     public UUID getId() {
         return mId;
@@ -66,5 +67,13 @@ public class Route {
         destinations.add(cannonBeach);
 
         setDestinations(destinations);
+    }
+
+    public int getDbId() {
+        return mDbId;
+    }
+
+    public void setDbId(int dbId) {
+        mDbId = dbId;
     }
 }

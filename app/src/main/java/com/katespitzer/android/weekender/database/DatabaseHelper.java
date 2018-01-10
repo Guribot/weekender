@@ -5,8 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.katespitzer.android.weekender.database.DbSchema.DestinationTable;
 import com.katespitzer.android.weekender.database.DbSchema.NoteTable;
 import com.katespitzer.android.weekender.database.DbSchema.PlaceTable;
+import com.katespitzer.android.weekender.database.DbSchema.RouteTable;
 import com.katespitzer.android.weekender.database.DbSchema.TripTable;
 
 /**
@@ -29,6 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(TripTable.CREATE);
         db.execSQL(PlaceTable.CREATE);
         db.execSQL(NoteTable.CREATE);
+        db.execSQL(RouteTable.CREATE);
+        db.execSQL(DestinationTable.CREATE);
     }
 
     @Override
