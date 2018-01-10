@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.katespitzer.android.weekender.database.DatabaseHelper;
-import com.katespitzer.android.weekender.database.DbSchema;
 import com.katespitzer.android.weekender.database.TripCursorWrapper;
 import com.katespitzer.android.weekender.database.DbSchema.TripTable;
 
@@ -20,38 +19,38 @@ import java.util.UUID;
  * Created by kate on 1/2/18.
  */
 
-public class TripList {
-    private static TripList sTripList;
+public class TripManager {
+    private static TripManager sTripManager;
     // it may be unnecessary to declare the context, this is for potential future features
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    private static final String TAG = "TripList";
+    private static final String TAG = "TripManager";
 
     /**
      * Constructor: takes in Context and initializes database
      *
      * @param context
      */
-    private TripList(Context context) {
+    private TripManager(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new DatabaseHelper(mContext)
                 .getWritableDatabase();
     }
 
     /**
-     * returns singular TripList
+     * returns singular TripManager
      *
      * @param context
      * @return
      */
-    public static TripList get(Context context) {
+    public static TripManager get(Context context) {
         Log.i(TAG, "in get()");
 
-        if (sTripList == null) {
-            sTripList = new TripList(context);
+        if (sTripManager == null) {
+            sTripManager = new TripManager(context);
         }
-        return sTripList;
+        return sTripManager;
     }
 
 

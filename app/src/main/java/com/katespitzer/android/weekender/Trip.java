@@ -20,7 +20,7 @@ public class Trip {
 
     private static final String TAG = "Trip";
 //    private Route mRoute;
-//    private PlaceList mPlaces;
+//    private PlaceManager mPlaces;
 
     public Trip() {
         this(UUID.randomUUID());

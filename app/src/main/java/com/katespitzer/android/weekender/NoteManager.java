@@ -7,12 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.katespitzer.android.weekender.database.DatabaseHelper;
-import com.katespitzer.android.weekender.database.DbSchema;
 import com.katespitzer.android.weekender.database.NoteCursorWrapper;
 import com.katespitzer.android.weekender.database.DbSchema.NoteTable;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,38 +18,38 @@ import java.util.UUID;
  * Created by kate on 1/8/18.
  */
 
-public class NoteList {
-    private static NoteList sNoteList;
+public class NoteManager {
+    private static NoteManager sNoteManager;
     // it may be unnecessary to declare the context, this is for potential future features
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    private static final String TAG = "NoteList";
+    private static final String TAG = "NoteManager";
 
     /**
      * Constructor: takes in Context and initializes database
      *
      * @param context
      */
-    private NoteList(Context context) {
+    private NoteManager(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new DatabaseHelper(mContext)
                 .getWritableDatabase();
     }
 
     /**
-     * returns singular NoteList
+     * returns singular NoteManager
      *
      * @param context
      * @return
      */
-    public static NoteList get(Context context) {
+    public static NoteManager get(Context context) {
         Log.i(TAG, "in get()");
 
-        if (sNoteList == null) {
-            sNoteList = new NoteList(context);
+        if (sNoteManager == null) {
+            sNoteManager = new NoteManager(context);
         }
-        return sNoteList;
+        return sNoteManager;
     }
 
 

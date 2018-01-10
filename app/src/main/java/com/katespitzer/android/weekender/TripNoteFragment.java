@@ -54,11 +54,11 @@ public class TripNoteFragment extends Fragment {
 
         UUID tripId = (UUID) getArguments().getSerializable(ARG_TRIP_ID);
 
-        TripList tripList = TripList.get(getActivity());
-        NoteList noteList = NoteList.get(getActivity());
+        TripManager tripManager = TripManager.get(getActivity());
+        NoteManager noteManager = NoteManager.get(getActivity());
 
-        mTrip = tripList.getTrip(tripId);
-        mNotes = noteList.getNotesForTrip(mTrip);
+        mTrip = tripManager.getTrip(tripId);
+        mNotes = noteManager.getNotesForTrip(mTrip);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class TripNoteFragment extends Fragment {
         Log.i(TAG, "onResume()");
         super.onResume();
 
-        mNotes = NoteList.get(getActivity()).getNotesForTrip(mTrip);
+        mNotes = NoteManager.get(getActivity()).getNotesForTrip(mTrip);
         mAdapter.setNotes(mNotes);
         mAdapter.notifyDataSetChanged();
     }

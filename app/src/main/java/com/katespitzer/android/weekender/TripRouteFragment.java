@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -64,7 +63,7 @@ public class TripRouteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             UUID tripId = (UUID) getArguments().getSerializable(TRIP_ID);
-            mTrip = TripList.get(getActivity()).getTrip(tripId);
+            mTrip = TripManager.get(getActivity()).getTrip(tripId);
             Log.i(TAG, "onCreate: trip found: " + mTrip);
 //            mRoute = mTrip.getRoute();
 //            mDestinations = mRoute.getDestinations();

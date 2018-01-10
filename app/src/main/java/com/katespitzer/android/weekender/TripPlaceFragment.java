@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,9 +56,9 @@ public class TripPlaceFragment extends Fragment {
 
         if (getArguments() != null) {
             UUID tripId = (UUID) getArguments().getSerializable(ARG_TRIP_ID);
-            mTrip = TripList.get(getActivity()).getTrip(tripId);
+            mTrip = TripManager.get(getActivity()).getTrip(tripId);
             Log.i(TAG, "onCreate: Trip Found: " + mTrip);
-            mPlaces = PlaceList.get(getActivity()).getPlacesForTrip(mTrip);
+            mPlaces = PlaceManager.get(getActivity()).getPlacesForTrip(mTrip);
         }
 
     }
@@ -95,7 +94,7 @@ public class TripPlaceFragment extends Fragment {
         Log.i(TAG, "onResume()");
         super.onResume();
 
-        mPlaces = PlaceList.get(getActivity()).getPlacesForTrip(mTrip);
+        mPlaces = PlaceManager.get(getActivity()).getPlacesForTrip(mTrip);
         mAdapter.setPlaces(mPlaces);
         mAdapter.notifyDataSetChanged();
     }

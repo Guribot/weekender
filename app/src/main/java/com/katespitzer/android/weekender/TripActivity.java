@@ -3,9 +3,7 @@ package com.katespitzer.android.weekender;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -22,8 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
-
-import com.katespitzer.android.weekender.dummy.DummyContent;
 
 import java.util.UUID;
 
@@ -59,7 +55,7 @@ public class TripActivity
         setContentView(R.layout.activity_trip);
 
         UUID tripId = (UUID) getIntent().getSerializableExtra(EXTRA_TRIP_UUID);
-        mTrip = TripList.get(this).getTrip(tripId);
+        mTrip = TripManager.get(this).getTrip(tripId);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

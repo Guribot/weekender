@@ -87,7 +87,7 @@ public class TripCreateActivity extends AppCompatActivity implements DatePickerF
             @Override
             public void onClick(View v) {
                 // putting getApplicationContext() here is a guess on my part, does it work?
-                TripList.get(getApplicationContext())
+                TripManager.get(getApplicationContext())
                         .addTrip(mTrip);
                 finish();
             }

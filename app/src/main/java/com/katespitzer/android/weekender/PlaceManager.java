@@ -7,12 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.katespitzer.android.weekender.database.DatabaseHelper;
-import com.katespitzer.android.weekender.database.DbSchema;
 import com.katespitzer.android.weekender.database.PlaceCursorWrapper;
 import com.katespitzer.android.weekender.database.DbSchema.PlaceTable;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,38 +18,38 @@ import java.util.UUID;
  * Created by kate on 1/2/18.
  */
 
-public class PlaceList {
-    private static PlaceList sPlaceList;
+public class PlaceManager {
+    private static PlaceManager sPlaceManager;
     // it may be unnecessary to declare the context, this is for potential future features
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    private static final String TAG = "PlaceList";
+    private static final String TAG = "PlaceManager";
 
     /**
      * Constructor: takes in Context and initializes database
      *
      * @param context
      */
-    private PlaceList(Context context) {
+    private PlaceManager(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new DatabaseHelper(mContext)
                 .getWritableDatabase();
     }
 
     /**
-     * returns singular PlaceList
+     * returns singular PlaceManager
      *
      * @param context
      * @return
      */
-    public static PlaceList get(Context context) {
+    public static PlaceManager get(Context context) {
         Log.i(TAG, "in get()");
 
-        if (sPlaceList == null) {
-            sPlaceList = new PlaceList(context);
+        if (sPlaceManager == null) {
+            sPlaceManager = new PlaceManager(context);
         }
-        return sPlaceList;
+        return sPlaceManager;
     }
 
 
@@ -211,7 +209,7 @@ public class PlaceList {
     }
 
     public Trip getTripFor(Place place) {
-        Trip trip = TripList.get(mContext)
+        Trip trip = TripManager.get(mContext)
                 .getTrip(place.getTripId());
 
         return trip;

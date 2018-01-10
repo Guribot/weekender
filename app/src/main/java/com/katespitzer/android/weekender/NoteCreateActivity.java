@@ -17,7 +17,7 @@ public class NoteCreateActivity extends AppCompatActivity {
     private Note mNote;
     private Trip mTrip;
     private Place mPlace;
-    private NoteList mNoteList;
+    private NoteManager mNoteManager;
 
     private EditText mTitleEditText;
     private EditText mContentEditText;
@@ -37,12 +37,12 @@ public class NoteCreateActivity extends AppCompatActivity {
         UUID tripId = (UUID) getIntent().getSerializableExtra(EXTRA_TRIP_ID);
 
         if (placeId != null) {
-            mPlace = PlaceList.get(this).getPlace(placeId);
+            mPlace = PlaceManager.get(this).getPlace(placeId);
         }
 
-        mTrip = TripList.get(this).getTrip(tripId);
+        mTrip = TripManager.get(this).getTrip(tripId);
 
-        mNoteList = NoteList.get(this);
+        mNoteManager = NoteManager.get(this);
 
         mTitleEditText = findViewById(R.id.note_title_input);
         mTitleEditText.addTextChangedListener(new TextWatcher() {
@@ -85,9 +85,9 @@ public class NoteCreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mPlace != null) {
-                    mNoteList.addNoteToPlace(mNote, mPlace);
+                    mNoteManager.addNoteToPlace(mNote, mPlace);
                 } else {
-                    mNoteList.addNoteToTrip(mNote, mTrip);
+                    mNoteManager.addNoteToTrip(mNote, mTrip);
                 }
                 finish();
             }
@@ -98,7 +98,7 @@ public class NoteCreateActivity extends AppCompatActivity {
     public static Intent newIntent(Context context, Place place) {
         Intent intent = new Intent(context, NoteCreateActivity.class);
 
-        Trip trip = PlaceList.get(context).getTripFor(place);
+        Trip trip = PlaceManager.get(context).getTripFor(place);
 
         intent.putExtra(EXTRA_PLACE_ID, place.getId());
         intent.putExtra(EXTRA_TRIP_ID, trip.getId());

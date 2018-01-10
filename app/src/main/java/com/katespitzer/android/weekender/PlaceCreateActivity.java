@@ -3,8 +3,6 @@ package com.katespitzer.android.weekender;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,7 +35,7 @@ public class PlaceCreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place_form);
 
         UUID tripId = (UUID) getIntent().getSerializableExtra(EXTRA_TRIP_ID_FOR_PLACE);
-        mTrip = TripList.get(getApplicationContext()).getTrip(tripId);
+        mTrip = TripManager.get(getApplicationContext()).getTrip(tripId);
 
         mPlace = new Place();
 
@@ -84,7 +82,7 @@ public class PlaceCreateActivity extends AppCompatActivity {
                 mPlace.setLatitude(44.444);
                 mPlace.setLongitude(55.555);
                 mPlace.setImageUrl("placeholder");
-                PlaceList pl = PlaceList.get(getApplicationContext());
+                PlaceManager pl = PlaceManager.get(getApplicationContext());
                 pl.addPlaceToTrip(mPlace, mTrip);
                 finish();
             }
