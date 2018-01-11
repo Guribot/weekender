@@ -1,4 +1,4 @@
-package com.katespitzer.android.weekender;
+package com.katespitzer.android.weekender.api;
 
 import android.net.Uri;
 import android.util.Log;

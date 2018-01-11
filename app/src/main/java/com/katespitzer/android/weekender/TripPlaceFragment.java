@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.katespitzer.android.weekender.adapters.PlaceRecyclerViewAdapter;
+import com.katespitzer.android.weekender.api.PlaceFetcher;
 import com.katespitzer.android.weekender.managers.PlaceManager;
 import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Place;

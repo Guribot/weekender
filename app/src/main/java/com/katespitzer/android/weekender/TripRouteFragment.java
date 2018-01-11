@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.katespitzer.android.weekender.adapters.DestinationRecyclerViewAdapter;
+import com.katespitzer.android.weekender.api.DirectionsFetcher;
+import com.katespitzer.android.weekender.api.PlaceFetcher;
 import com.katespitzer.android.weekender.managers.DestinationManager;
 import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Destination;
