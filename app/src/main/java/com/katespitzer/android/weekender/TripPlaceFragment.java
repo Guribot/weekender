@@ -260,7 +260,7 @@ public class TripPlaceFragment extends Fragment {
 
                 builder.show();
             } else {
-                Toast.makeText(getActivity(), "No search results.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "No search results.\n (Hint: Try entering a nearby city name)", Toast.LENGTH_SHORT).show();
             }
 
             super.onPostExecute(places);
