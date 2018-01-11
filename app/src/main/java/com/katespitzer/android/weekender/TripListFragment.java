@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.katespitzer.android.weekender.managers.TripManager;
+import com.katespitzer.android.weekender.models.Trip;
+
 import java.util.List;
 
 /**

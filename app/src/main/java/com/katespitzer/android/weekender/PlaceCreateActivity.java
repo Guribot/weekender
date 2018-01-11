@@ -12,6 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.katespitzer.android.weekender.managers.PlaceManager;
+import com.katespitzer.android.weekender.managers.TripManager;
+import com.katespitzer.android.weekender.models.Place;
+import com.katespitzer.android.weekender.models.Trip;
+
 import java.util.UUID;
 
 /**

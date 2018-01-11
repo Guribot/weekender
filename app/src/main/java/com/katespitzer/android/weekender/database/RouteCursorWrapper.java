@@ -3,10 +3,9 @@ package com.katespitzer.android.weekender.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.katespitzer.android.weekender.Route;
+import com.katespitzer.android.weekender.models.Route;
 import com.katespitzer.android.weekender.database.DbSchema.RouteTable;
 
-import java.util.Date;
 import java.util.UUID;
 
 /**

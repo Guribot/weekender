@@ -1,4 +1,4 @@
-package com.katespitzer.android.weekender;
+package com.katespitzer.android.weekender.managers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.katespitzer.android.weekender.models.Route;
 import com.katespitzer.android.weekender.database.DatabaseHelper;
 import com.katespitzer.android.weekender.database.RouteCursorWrapper;
 import com.katespitzer.android.weekender.database.DbSchema.RouteTable;

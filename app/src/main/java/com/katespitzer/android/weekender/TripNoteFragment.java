@@ -12,6 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.katespitzer.android.weekender.adapters.NoteRecyclerViewAdapter;
+import com.katespitzer.android.weekender.managers.NoteManager;
+import com.katespitzer.android.weekender.managers.TripManager;
+import com.katespitzer.android.weekender.models.Note;
+import com.katespitzer.android.weekender.models.Trip;
+
 import java.util.List;
 import java.util.UUID;
 

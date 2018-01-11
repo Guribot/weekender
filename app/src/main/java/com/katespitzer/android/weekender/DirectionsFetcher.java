@@ -3,8 +3,10 @@ package com.katespitzer.android.weekender;
 import android.net.Uri;
 import android.util.Log;
 
+import com.katespitzer.android.weekender.models.Destination;
+import com.katespitzer.android.weekender.models.Route;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;

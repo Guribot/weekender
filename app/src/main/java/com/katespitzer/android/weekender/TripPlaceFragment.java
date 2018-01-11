@@ -18,6 +18,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.katespitzer.android.weekender.adapters.PlaceRecyclerViewAdapter;
+import com.katespitzer.android.weekender.managers.PlaceManager;
+import com.katespitzer.android.weekender.managers.TripManager;
+import com.katespitzer.android.weekender.models.Place;
+import com.katespitzer.android.weekender.models.Trip;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 

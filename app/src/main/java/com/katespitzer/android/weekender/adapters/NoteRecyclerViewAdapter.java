@@ -1,4 +1,4 @@
-package com.katespitzer.android.weekender;
+package com.katespitzer.android.weekender.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,8 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.katespitzer.android.weekender.R;
 import com.katespitzer.android.weekender.TripNoteFragment.OnListFragmentInteractionListener;
-import com.katespitzer.android.weekender.dummy.DummyContent;
+import com.katespitzer.android.weekender.models.Note;
 
 import java.text.DateFormat;
 import java.util.Date;

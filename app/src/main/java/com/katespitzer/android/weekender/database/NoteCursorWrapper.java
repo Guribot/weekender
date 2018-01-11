@@ -3,7 +3,7 @@ package com.katespitzer.android.weekender.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.katespitzer.android.weekender.Note;
+import com.katespitzer.android.weekender.models.Note;
 import com.katespitzer.android.weekender.database.DbSchema.NoteTable;
 
 import java.util.Date;

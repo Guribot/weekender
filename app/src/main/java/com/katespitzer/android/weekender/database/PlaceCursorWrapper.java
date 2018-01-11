@@ -3,10 +3,9 @@ package com.katespitzer.android.weekender.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.katespitzer.android.weekender.Place;
+import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.database.DbSchema.PlaceTable;
 
-import java.util.Date;
 import java.util.UUID;
 
 /**

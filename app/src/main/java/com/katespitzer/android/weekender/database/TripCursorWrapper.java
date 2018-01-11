@@ -3,7 +3,7 @@ package com.katespitzer.android.weekender.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.katespitzer.android.weekender.Trip;
+import com.katespitzer.android.weekender.models.Trip;
 import com.katespitzer.android.weekender.database.DbSchema.TripTable;
 
 import java.util.Date;

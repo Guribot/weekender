@@ -3,11 +3,8 @@ package com.katespitzer.android.weekender.database;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.katespitzer.android.weekender.Destination;
+import com.katespitzer.android.weekender.models.Destination;
 import com.katespitzer.android.weekender.database.DbSchema.DestinationTable;
-
-import java.util.Date;
-import java.util.UUID;
 
 /**
  * Created by kate on 1/10/18.

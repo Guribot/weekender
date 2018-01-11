@@ -1,4 +1,4 @@
-package com.katespitzer.android.weekender;
+package com.katespitzer.android.weekender.models;
 
 import java.util.Date;
 import java.util.UUID;
