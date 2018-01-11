@@ -94,7 +94,7 @@ public class TripRouteFragment extends Fragment {
             public void onClick(View v) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Title");
+                builder.setTitle("Enter Destination Name");
 
                 final EditText input = new EditText(getActivity());
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -206,7 +206,7 @@ public class TripRouteFragment extends Fragment {
         protected void onPostExecute(JSONObject jsonObject) {
             Log.i(TAG, "onPostExecute: " + jsonObject);
             try {
-                mDestination.setName(jsonObject.getString("formatted_address"));
+                mDestination.setName(jsonObject.getString("name"));
                 mDestination.setGooglePlaceId(jsonObject.getString("place_id"));
 
                 DestinationManager.get(getActivity()).addDestinationToRoute(mDestination, mRoute);

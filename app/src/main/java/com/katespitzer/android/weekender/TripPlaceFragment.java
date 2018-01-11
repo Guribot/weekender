@@ -1,17 +1,26 @@
 package com.katespitzer.android.weekender;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +35,7 @@ public class TripPlaceFragment extends Fragment {
     private static final String TAG = "TripPlaceFragment";
 //    private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String ARG_TRIP_ID = "trip-id";
+    private static final int MAX_SEARCH_RESULTS = 5;
 
     private int mColumnCount = 2;
     private OnListFragmentInteractionListener mListener;
@@ -81,8 +91,33 @@ public class TripPlaceFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = PlaceCreateActivity.newIntent(context, mTrip.getId());
-                startActivity(intent);
+//                Intent intent = PlaceCreateActivity.newIntent(context, mTrip.getId());
+//                startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Place Search");
+
+                final EditText input = new EditText(getActivity());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG, "onClick: input: " + input.getText());
+                        String query = input.getText().toString();
+
+                        new FetchPlacesTask(query).execute();
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         });
 
@@ -129,7 +164,57 @@ public class TripPlaceFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(Place place);
+    }
+
+    private class FetchPlacesTask extends AsyncTask<Void, Void, List<Place>> {
+        String mQuery;
+        List<Place> mPlaces;
+
+        public FetchPlacesTask(String query) {
+            mQuery = query;
+            mPlaces = new ArrayList<>();
+        }
+
+        @Override
+        protected List<Place> doInBackground(Void... voids) {
+            if (mQuery == null) {
+                Log.e(TAG, "doInBackground: No Query set");
+                return null;
+            } else {
+                JSONObject jsonObject = new JSONObject();
+                JSONArray jsonArray = new JSONArray();
+                String results = new PlaceFetcher().getPlaceData(mQuery);
+                Log.i(TAG, "doInBackground: results returned: " + results);
+
+                try {
+                    jsonObject = new JSONObject(results);
+                    jsonArray = jsonObject.getJSONArray("results");
+
+                    int max = (jsonArray.length() > MAX_SEARCH_RESULTS ? MAX_SEARCH_RESULTS : jsonArray.length());
+
+                    for (int i = 0; i < max; i++) {
+                        JSONObject result = jsonArray.getJSONObject(i);
+
+                        Place place = new Place();
+                        place.setName(result.getString("name"));
+                        place.setAddress(result.getString("formatted_address"));
+
+                        mPlaces.add(place);
+                    }
+
+                    return mPlaces;
+                } catch (Exception e) {
+                    Log.d(TAG, "doInBackground: exception: " + e.toString());
+                    return null;
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Place> places) {
+            Log.i(TAG, "onPostExecute: " + places);
+            super.onPostExecute(places);
+        }
     }
 }
