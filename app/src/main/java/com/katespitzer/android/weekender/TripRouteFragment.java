@@ -106,7 +106,7 @@ public class TripRouteFragment extends Fragment {
                         Log.i(TAG, "onClick: input: " + input.getText());
                         Destination destination = new Destination();
                         destination.setName(input.getText().toString());
-                        DestinationManager.get(getActivity()).addDestinationToRoute(destination, mRoute);
+                        new FetchPlaceTask(destination, mRoute).execute();
                     }
                 });
 
@@ -168,6 +168,53 @@ public class TripRouteFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Destination destination);
+    }
+
+    private class FetchPlaceTask extends AsyncTask<Void, Void, JSONObject> {
+        Destination mDestination;
+        Route mRoute;
+
+        public FetchPlaceTask(Destination destination, Route route) {
+            mDestination = destination;
+            mRoute = route;
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... voids) {
+            if (mRoute == null) {
+                Log.e(TAG, "doInBackground: No Destination set");
+                return null;
+            } else {
+                JSONObject jsonObject = new JSONObject();
+                String results = new PlaceFetcher().getPlaceData(mDestination.getName());
+                Log.i(TAG, "doInBackground: results returned: " + results);
+
+                try {
+                    jsonObject = new JSONObject(results);
+                    jsonObject = jsonObject.getJSONArray("results")
+                            .getJSONObject(0);
+                } catch (Exception e) {
+                    Log.d(TAG, "doInBackground: exception: " + e.toString());
+                }
+
+                Log.i(TAG, "doInBackground: result is: " + results);
+                return jsonObject;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            Log.i(TAG, "onPostExecute: " + jsonObject);
+            try {
+                mDestination.setName(jsonObject.getString("formatted_address"));
+                mDestination.setGooglePlaceId(jsonObject.getString("place_id"));
+
+                DestinationManager.get(getActivity()).addDestinationToRoute(mDestination, mRoute);
+            } catch (Exception e) {
+                Log.e(TAG, "onPostExecute: Exception: ", e);
+            }
+            super.onPostExecute(jsonObject);
+        }
     }
 
     private class FetchRouteTask extends AsyncTask<Void, Void, JSONObject> {
