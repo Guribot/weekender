@@ -243,9 +243,11 @@ public class TripPlaceFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.i(TAG, "onClick: input: " + mSelection);
-                        PlaceManager.get(getActivity()).addPlaceToTrip(mSelection, mTrip);
-                        Toast.makeText(getActivity(), "Place Added", Toast.LENGTH_SHORT).show();
-                        updateUI();
+                        PlaceManager.get(getActivity()).addPlace(mSelection);
+//                        PlaceManager.get(getActivity()).addPlaceToTrip(mSelection, mTrip);
+//                        Toast.makeText(getActivity(), "Place Added", Toast.LENGTH_SHORT).show();
+                        Intent intent = PlaceCreateActivity.newIntent(getActivity(), mTrip.getId(), mSelection.getId());
+                        startActivity(intent);
                     }
                 });
 
