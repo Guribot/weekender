@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -170,11 +171,13 @@ public class TripPlaceFragment extends Fragment {
     private class FetchPlacesTask extends AsyncTask<Void, Void, List<Place>> {
         String mQuery;
         List<Place> mPlaces;
+        List<CharSequence> mPlaceNames;
         Place mSelection;
 
         public FetchPlacesTask(String query) {
             mQuery = query;
             mPlaces = new ArrayList<>();
+            mPlaceNames = new ArrayList<>();
         }
 
         @Override
@@ -202,6 +205,7 @@ public class TripPlaceFragment extends Fragment {
                         place.setAddress(result.getString("formatted_address"));
 
                         mPlaces.add(place);
+                        mPlaceNames.add(place.getName());
                     }
 
                     return mPlaces;
@@ -219,7 +223,7 @@ public class TripPlaceFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Search Results");
 
-            CharSequence[] placeNames = new CharSequence[]{"one", "two", "three"};
+            CharSequence[] placeNames = mPlaceNames.toArray(new CharSequence[mPlaces.size()]);
 
             builder.setSingleChoiceItems(placeNames, -1, new DialogInterface.OnClickListener() {
                 @Override
@@ -234,6 +238,8 @@ public class TripPlaceFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Log.i(TAG, "onClick: input: " + mSelection);
+                    PlaceManager.get(getActivity()).addPlaceToTrip(mSelection, mTrip);
+                    Toast.makeText(getActivity(), "Place Added", Toast.LENGTH_SHORT).show();
                 }
             });
 
