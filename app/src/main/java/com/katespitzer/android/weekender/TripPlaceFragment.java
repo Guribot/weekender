@@ -3,10 +3,13 @@ package com.katespitzer.android.weekender;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +21,17 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.PlaceDetectionClient;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
+import com.google.android.gms.location.places.PlacePhotoResponse;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.katespitzer.android.weekender.adapters.PlaceRecyclerViewAdapter;
+import com.katespitzer.android.weekender.api.PhotoFetcher;
 import com.katespitzer.android.weekender.api.PlaceFetcher;
 import com.katespitzer.android.weekender.managers.PlaceManager;
 import com.katespitzer.android.weekender.managers.TripManager;
@@ -179,47 +192,52 @@ public class TripPlaceFragment extends Fragment {
         void onListFragmentInteraction(Place place);
     }
 
-    private class FetchPlacesTask extends AsyncTask<Void, Void, List<Place>> {
+    private class FetchPlacesTask extends AsyncTask<Void, Void, String> {
         String mQuery;
         List<Place> mPlaces;
         List<CharSequence> mPlaceNames;
         Place mSelection;
 
+        GeoDataClient mGeoDataClient;
+
         public FetchPlacesTask(String query) {
             mQuery = query;
             mPlaces = new ArrayList<>();
             mPlaceNames = new ArrayList<>();
+            mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
         }
 
         @Override
-        protected List<Place> doInBackground(Void... voids) {
+        protected String doInBackground(Void... voids) {
             if (mQuery == null) {
                 Log.e(TAG, "doInBackground: No Query set");
                 return null;
             } else {
                 JSONObject jsonObject = new JSONObject();
-                JSONArray jsonArray = new JSONArray();
+//                JSONArray jsonArray = new JSONArray();
                 String results = new PlaceFetcher().getPlaceData(mQuery);
                 Log.i(TAG, "doInBackground: results returned: " + results);
-
+//
                 try {
                     jsonObject = new JSONObject(results);
-                    jsonArray = jsonObject.getJSONArray("results");
-
-                    int max = (jsonArray.length() > MAX_SEARCH_RESULTS ? MAX_SEARCH_RESULTS : jsonArray.length());
-
-                    for (int i = 0; i < max; i++) {
-                        JSONObject result = jsonArray.getJSONObject(i);
-
-                        Place place = new Place();
-                        place.setName(result.getString("name"));
-                        place.setAddress(result.getString("formatted_address"));
-
-                        mPlaces.add(place);
-                        mPlaceNames.add(place.getName());
-                    }
-
-                    return mPlaces;
+                    String status = jsonObject.getString("status");
+                    return status;
+//                    jsonArray = jsonObject.getJSONArray("results");
+//
+//                    int max = (jsonArray.length() > MAX_SEARCH_RESULTS ? MAX_SEARCH_RESULTS : jsonArray.length());
+//
+//                    for (int i = 0; i < max; i++) {
+//                        JSONObject result = jsonArray.getJSONObject(i);
+//
+//                        Place place = new Place();
+//                        place.setName(result.getString("name"));
+//                        place.setAddress(result.getString("formatted_address"));
+//
+//                        mPlaces.add(place);
+//                        mPlaceNames.add(place.getName());
+//                    }
+//
+//                    return mPlaces;
                 } catch (Exception e) {
                     Log.d(TAG, "doInBackground: exception: " + e.toString());
                     return null;
@@ -228,49 +246,93 @@ public class TripPlaceFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<Place> places) {
-            Log.i(TAG, "onPostExecute: " + places);
+        protected void onPostExecute(String status) {
+            Log.i(TAG, "onPostExecute: " + status);
 
-            if (mPlaces.size() > 0) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Search Results");
+            if (status.equals("OK")) {
+                Log.i(TAG, "onPostExecute: status ok");
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                Fragment fragment = SearchResultFragment.newInstance(mQuery, mTrip.getId());
 
-                CharSequence[] placeNames = mPlaceNames.toArray(new CharSequence[mPlaces.size()]);
+                fm.beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .addToBackStack(null)
+                        .commit();
 
-                builder.setSingleChoiceItems(placeNames, -1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, "onClick: dialog is " + dialog);
-                        Log.i(TAG, "onClick: which is " + which);
-                        mSelection = mPlaces.get(which);
-                    }
-                });
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, "onClick: input: " + mSelection);
-                        PlaceManager.get(getActivity()).addPlace(mSelection);
-//                        PlaceManager.get(getActivity()).addPlaceToTrip(mSelection, mTrip);
-//                        Toast.makeText(getActivity(), "Place Added", Toast.LENGTH_SHORT).show();
-                        Intent intent = PlaceCreateActivity.newIntent(getActivity(), mTrip.getId(), mSelection.getId());
-                        startActivity(intent);
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+            } else if (status.equals("ZERO_RESULTS")) {
+                Log.i(TAG, "onPostExecute: no results");
+                Toast.makeText(getActivity(), "No results found", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getActivity(), "No search results.\n (Hint: Try entering a nearby city name)", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onPostExecute: unexpected status: " + status);
             }
+//            if (mPlaces.size() > 0) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                builder.setTitle("Search Results");
+//
+//                CharSequence[] placeNames = mPlaceNames.toArray(new CharSequence[mPlaces.size()]);
+//
+//                builder.setSingleChoiceItems(placeNames, -1, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Log.i(TAG, "onClick: dialog is " + dialog);
+//                        Log.i(TAG, "onClick: which is " + which);
+//                        mSelection = mPlaces.get(which);
+//                    }
+//                });
+//
+//                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Log.i(TAG, "onClick: input: " + mSelection);
+//                        PlaceManager.get(getActivity()).addPlace(mSelection);
+//                        Fragment fragment = SearchResultFragment.newInstance();
+////                        PlaceManager.get(getActivity()).addPlaceToTrip(mSelection, mTrip);
+////                        Toast.makeText(getActivity(), "Place Added", Toast.LENGTH_SHORT).show();
+////                        Intent intent = PlaceCreateActivity.newIntent(getActivity(), mTrip.getId(), mSelection.getId());
+////                        startActivity(intent);
+//                    }
+//                });
+//
+//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//                builder.show();
+//            } else {
+//
+//            }
 
-            super.onPostExecute(places);
+            super.onPostExecute(status);
+        }
+
+        private void getPhotos(String placeId) {
+            final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+                @Override
+                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                    // Get the list of photos.
+                    PlacePhotoMetadataResponse photos = task.getResult();
+                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                    // Get the first photo in the list.
+                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                    // Get the attribution text.
+                    CharSequence attribution = photoMetadata.getAttributions();
+                    // Get a full-size bitmap for the photo.
+                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                            PlacePhotoResponse photo = task.getResult();
+                            Bitmap bitmap = photo.getBitmap();
+                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
+                        }
+                    });
+                }
+            });
         }
     }
 }
