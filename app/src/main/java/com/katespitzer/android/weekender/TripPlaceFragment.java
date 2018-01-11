@@ -170,6 +170,7 @@ public class TripPlaceFragment extends Fragment {
     private class FetchPlacesTask extends AsyncTask<Void, Void, List<Place>> {
         String mQuery;
         List<Place> mPlaces;
+        Place mSelection;
 
         public FetchPlacesTask(String query) {
             mQuery = query;
@@ -214,6 +215,36 @@ public class TripPlaceFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Place> places) {
             Log.i(TAG, "onPostExecute: " + places);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Search Results");
+
+            CharSequence[] placeNames = new CharSequence[]{"one", "two", "three"};
+
+            builder.setSingleChoiceItems(placeNames, -1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i(TAG, "onClick: dialog is " + dialog);
+                    Log.i(TAG, "onClick: which is " + which);
+                    mSelection = mPlaces.get(which);
+                }
+            });
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i(TAG, "onClick: input: " + mSelection);
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
 
             super.onPostExecute(places);
         }
