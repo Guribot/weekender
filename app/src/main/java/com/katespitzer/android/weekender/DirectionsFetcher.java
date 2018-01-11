@@ -29,43 +29,6 @@ public class DirectionsFetcher {
 
     public String getDirections(Route route) {
         Log.i(TAG, "getDirections()");
-//        URL url = buildURL(route.getDestinations());
-//        HttpURLConnection connection = null;
-//        InputStream in;
-//        String data = new String();
-//
-//        try {
-//            connection = (HttpURLConnection) url.openConnection();
-//            in = connection.getInputStream();
-//
-//            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-//                throw new IOException(connection.getResponseMessage() +
-//                ": with " +
-//                url.toString());
-//            }
-//
-//            // what is happening here??
-//            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-//            StringBuffer sb = new StringBuffer();
-//
-//            String line = "";
-//            while ((line = br.readLine()) != null) {
-//                sb.append(line);
-//            }
-//
-//            data = sb.toString();
-//
-//            br.close();
-//
-//            in.close();
-//
-//        } catch (Exception e) {
-//            Log.e(TAG, "getDirections: Exception occurred: ", e);
-//        } finally {
-//            connection.disconnect();
-//        }
-//
-//        return data;
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
