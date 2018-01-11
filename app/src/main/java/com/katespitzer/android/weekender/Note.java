@@ -25,6 +25,11 @@ public class Note {
         mCreatedDate = new Date();
     }
 
+    @Override
+    public String toString() {
+        return mTitle + " " + mId;
+    }
+
     public UUID getId() {
         return mId;
     }

@@ -30,6 +30,11 @@ public class Trip {
         mRoute = new Route();
     }
 
+    @Override
+    public String toString() {
+        return mTitle + " " + mId;
+    }
+
     public int getRouteId() {
         return mRouteId;
     }

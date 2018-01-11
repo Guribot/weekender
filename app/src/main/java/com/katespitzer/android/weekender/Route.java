@@ -23,6 +23,11 @@ public class Route {
         mId = uuid;
     }
 
+    @Override
+    public String toString() {
+        return "Route " + mId.toString();
+    }
+
     public UUID getId() {
         return mId;
     }

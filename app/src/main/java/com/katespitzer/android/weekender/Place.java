@@ -30,6 +30,11 @@ public class Place {
         mId = id;
     }
 
+    @Override
+    public String toString() {
+        return mName + " " + mId;
+    }
+
     public UUID getId() {
         return mId;
     }

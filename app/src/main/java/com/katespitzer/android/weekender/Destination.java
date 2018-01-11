@@ -21,6 +21,11 @@ public class Destination {
         mId = uuid;
     }
 
+    @Override
+    public String toString() {
+        return mName + " " + mId;
+    }
+
     public UUID getId() {
         return mId;
     }

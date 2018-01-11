@@ -214,6 +214,7 @@ public class TripPlaceFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Place> places) {
             Log.i(TAG, "onPostExecute: " + places);
+
             super.onPostExecute(places);
         }
     }
