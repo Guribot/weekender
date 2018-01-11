@@ -251,13 +251,15 @@ public class TripPlaceFragment extends Fragment {
 
             if (status.equals("OK")) {
                 Log.i(TAG, "onPostExecute: status ok");
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                Fragment fragment = SearchResultFragment.newInstance(mQuery, mTrip.getId());
-
-                fm.beginTransaction()
-                        .replace(R.id.container, fragment)
-                        .addToBackStack(null)
-                        .commit();
+                Intent intent = PlaceSearchActivity.newIntent(getActivity(), mQuery, mTrip.getId());
+                startActivity(intent);
+//                FragmentManager fm = getActivity().getSupportFragmentManager();
+//                Fragment fragment = SearchResultFragment.newInstance(mQuery, mTrip.getId());
+//
+//                fm.beginTransaction()
+//                        .replace(R.id.container, fragment)
+//                        .addToBackStack(null)
+//                        .commit();
 
             } else if (status.equals("ZERO_RESULTS")) {
                 Log.i(TAG, "onPostExecute: no results");
@@ -265,46 +267,6 @@ public class TripPlaceFragment extends Fragment {
             } else {
                 Log.d(TAG, "onPostExecute: unexpected status: " + status);
             }
-//            if (mPlaces.size() > 0) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                builder.setTitle("Search Results");
-//
-//                CharSequence[] placeNames = mPlaceNames.toArray(new CharSequence[mPlaces.size()]);
-//
-//                builder.setSingleChoiceItems(placeNames, -1, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Log.i(TAG, "onClick: dialog is " + dialog);
-//                        Log.i(TAG, "onClick: which is " + which);
-//                        mSelection = mPlaces.get(which);
-//                    }
-//                });
-//
-//                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Log.i(TAG, "onClick: input: " + mSelection);
-//                        PlaceManager.get(getActivity()).addPlace(mSelection);
-//                        Fragment fragment = SearchResultFragment.newInstance();
-////                        PlaceManager.get(getActivity()).addPlaceToTrip(mSelection, mTrip);
-////                        Toast.makeText(getActivity(), "Place Added", Toast.LENGTH_SHORT).show();
-////                        Intent intent = PlaceCreateActivity.newIntent(getActivity(), mTrip.getId(), mSelection.getId());
-////                        startActivity(intent);
-//                    }
-//                });
-//
-//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//
-//                builder.show();
-//            } else {
-//
-//            }
-
             super.onPostExecute(status);
         }
 

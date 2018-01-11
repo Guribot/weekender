@@ -32,7 +32,8 @@ public class TripActivity
         extends AppCompatActivity 
         implements TripPlaceFragment.OnListFragmentInteractionListener,
         TripRouteFragment.OnFragmentInteractionListener, 
-        TripNoteFragment.OnListFragmentInteractionListener {
+        TripNoteFragment.OnListFragmentInteractionListener,
+        SearchResultFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "TripActivity";
     private static final String EXTRA_TRIP_UUID = "com.katespitzer.android.weekender.trip_uuid";

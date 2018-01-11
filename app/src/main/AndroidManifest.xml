@@ -37,7 +37,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDuZyVgRjLmr8phtuJZvNXCfaZjpE_k0jo" />
 
-        <activity android:name=".NoteCreateActivity"></activity>
+        <activity android:name=".NoteCreateActivity" />
+        <activity android:name=".PlaceSearchActivity"></activity>
     </application>
 
 </manifest>

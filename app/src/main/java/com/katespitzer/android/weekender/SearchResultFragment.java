@@ -1,15 +1,9 @@
 package com.katespitzer.android.weekender;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,18 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
-import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.katespitzer.android.weekender.adapters.SearchResultRecyclerViewAdapter;
 import com.katespitzer.android.weekender.api.PlaceFetcher;
-import com.katespitzer.android.weekender.dummy.DummyContent;
-import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
-import com.katespitzer.android.weekender.managers.PlaceManager;
+import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.models.Trip;
 
@@ -57,8 +43,9 @@ public class SearchResultFragment extends Fragment {
     private List<Place> mResults;
     private OnListFragmentInteractionListener mListener;
     private SearchResultRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
 
-    private static final int MAX_SEARCH_RESULTS = 5;
+    private static final int MAX_SEARCH_RESULTS = 20;
     private static final String TAG = "SearchResultFragment";
 
     /**
@@ -86,7 +73,12 @@ public class SearchResultFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
+            Log.i(TAG, "onCreate: has arguments");
             mQuery = getArguments().getString(ARG_QUERY);
+            UUID tripId = (UUID) getArguments().getSerializable(ARG_TRIP_ID);
+            mTrip = TripManager.get(getActivity()).getTrip(tripId);
+
+            new FetchPlacesTask(mQuery, mTrip).execute();
         }
     }
 
@@ -98,20 +90,35 @@ public class SearchResultFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
+            Log.i(TAG, "onCreateView: be here please");
+
+//            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trip_route_recycler_view);
+//            mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
+//            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+//            recyclerView.setAdapter(mAdapter);
+
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mAdapter = new SearchResultRecyclerViewAdapter(mResults, mListener);
-            recyclerView.setAdapter(mAdapter);
+            mRecyclerView = (RecyclerView) view;
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+            updateUI();
         }
         return view;
     }
 
     // TODO: make this work
     private void updateUI() {
-        Log.i(TAG, "updateUI: ");
-        mAdapter.setValues(mResults);
-        mAdapter.notifyDataSetChanged();
+        Log.i(TAG, "updateUI(), mResults is currently " + mResults);
+        if (mAdapter == null) {
+            Log.i(TAG, "updateUI: setting new adapter");
+            mAdapter = new SearchResultRecyclerViewAdapter(mResults, mListener);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            Log.i(TAG, "updateUI: updating adapter");
+            // breakpoint
+            mAdapter.setValues(mResults);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -119,12 +126,12 @@ public class SearchResultFragment extends Fragment {
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach: ");
         super.onAttach(context);
-//        if (context instanceof OnListFragmentInteractionListener) {
-//            mListener = (OnListFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
+        if (context instanceof OnListFragmentInteractionListener) {
+            mListener = (OnListFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -200,7 +207,7 @@ public class SearchResultFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Place> places) {
-            Log.i(TAG, "onPostExecute()");
+            Log.i(TAG, "onPostExecute() " + places);
             mResults = mPlaces;
             updateUI();
             super.onPostExecute(places);
