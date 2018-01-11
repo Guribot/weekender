@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
@@ -87,6 +86,7 @@ public class SearchResultFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
+        mResults = new ArrayList<>();
 
         // Set the adapter
         if (view instanceof RecyclerView) {

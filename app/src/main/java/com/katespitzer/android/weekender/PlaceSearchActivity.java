@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.katespitzer.android.weekender.models.Place;
 
@@ -54,7 +55,8 @@ public class PlaceSearchActivity extends AppCompatActivity implements SearchResu
 
     @Override
     public void onListFragmentInteraction(Place result) {
-
+        Log.i(TAG, "onListFragmentInteraction: " + result);
+        Toast.makeText(this, "Clicked on result: "+ result.getName(), Toast.LENGTH_SHORT).show();
     }
 
     public static Intent newIntent(Context context, String query, UUID tripId) {
