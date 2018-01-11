@@ -130,9 +130,7 @@ public class TripPlaceFragment extends Fragment {
         Log.i(TAG, "onResume()");
         super.onResume();
 
-        mPlaces = PlaceManager.get(getActivity()).getPlacesForTrip(mTrip);
-        mAdapter.setPlaces(mPlaces);
-        mAdapter.notifyDataSetChanged();
+        updateUI();
     }
 
     @Override
@@ -152,6 +150,12 @@ public class TripPlaceFragment extends Fragment {
         Log.i(TAG, "onDetach()");
         super.onDetach();
         mListener = null;
+    }
+
+    private void updateUI() {
+        mPlaces = PlaceManager.get(getActivity()).getPlacesForTrip(mTrip);
+        mAdapter.setPlaces(mPlaces);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -220,37 +224,42 @@ public class TripPlaceFragment extends Fragment {
         protected void onPostExecute(List<Place> places) {
             Log.i(TAG, "onPostExecute: " + places);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Search Results");
+            if (mPlaces.size() > 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Search Results");
 
-            CharSequence[] placeNames = mPlaceNames.toArray(new CharSequence[mPlaces.size()]);
+                CharSequence[] placeNames = mPlaceNames.toArray(new CharSequence[mPlaces.size()]);
 
-            builder.setSingleChoiceItems(placeNames, -1, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.i(TAG, "onClick: dialog is " + dialog);
-                    Log.i(TAG, "onClick: which is " + which);
-                    mSelection = mPlaces.get(which);
-                }
-            });
+                builder.setSingleChoiceItems(placeNames, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG, "onClick: dialog is " + dialog);
+                        Log.i(TAG, "onClick: which is " + which);
+                        mSelection = mPlaces.get(which);
+                    }
+                });
 
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.i(TAG, "onClick: input: " + mSelection);
-                    PlaceManager.get(getActivity()).addPlaceToTrip(mSelection, mTrip);
-                    Toast.makeText(getActivity(), "Place Added", Toast.LENGTH_SHORT).show();
-                }
-            });
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG, "onClick: input: " + mSelection);
+                        PlaceManager.get(getActivity()).addPlaceToTrip(mSelection, mTrip);
+                        Toast.makeText(getActivity(), "Place Added", Toast.LENGTH_SHORT).show();
+                        updateUI();
+                    }
+                });
 
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
 
-            builder.show();
+                builder.show();
+            } else {
+                Toast.makeText(getActivity(), "No search results.", Toast.LENGTH_SHORT).show();
+            }
 
             super.onPostExecute(places);
         }
