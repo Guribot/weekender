@@ -8,22 +8,24 @@ import android.widget.TextView;
 
 import com.katespitzer.android.weekender.PlaceNoteFragment.OnListFragmentInteractionListener;
 import com.katespitzer.android.weekender.R;
-import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
+import com.katespitzer.android.weekender.models.Note;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link Note} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class PlaceNoteRecyclerViewAdapter extends RecyclerView.Adapter<PlaceNoteRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Note> mNotes;
     private final OnListFragmentInteractionListener mListener;
 
-    public PlaceNoteRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public PlaceNoteRecyclerViewAdapter(List<Note> notes, OnListFragmentInteractionListener listener) {
+        mNotes = notes;
         mListener = listener;
     }
 
@@ -36,9 +38,12 @@ public class PlaceNoteRecyclerViewAdapter extends RecyclerView.Adapter<PlaceNote
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mNote = mNotes.get(position);
+        holder.mNoteTitle.setText(mNotes.get(position).getTitle());
+        holder.mNoteContent.setText(mNotes.get(position).getContent());
+        Date noteDate = mNotes.get(position).getCreatedDate();
+        String stringDate = DateFormat.getDateInstance(DateFormat.SHORT).format(noteDate);
+        holder.mNoteDate.setText(stringDate);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +51,7 @@ public class PlaceNoteRecyclerViewAdapter extends RecyclerView.Adapter<PlaceNote
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onNoteClicked(holder.mItem);
+                    mListener.onNoteClicked(holder.mNote);
                 }
             }
         });
@@ -54,25 +59,27 @@ public class PlaceNoteRecyclerViewAdapter extends RecyclerView.Adapter<PlaceNote
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mNotes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mNoteTitle;
+        public final TextView mNoteContent;
+        public final TextView mNoteDate;
+        public Note mNote;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mNoteTitle = (TextView) view.findViewById(R.id.note_title);
+            mNoteContent = (TextView) view.findViewById(R.id.note_content_summary);
+            mNoteDate = (TextView) view.findViewById(R.id.note_date);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mNoteTitle.getText() + "'";
         }
     }
 }

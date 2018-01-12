@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.dummy.DummyContent;
+import com.katespitzer.android.weekender.managers.PlaceManager;
+import com.katespitzer.android.weekender.models.Note;
+import com.katespitzer.android.weekender.models.Place;
+import com.katespitzer.android.weekender.models.Trip;
 
 import java.util.UUID;
 
@@ -43,6 +48,8 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
      */
     private ViewPager mViewPager;
     private UUID mPlaceId;
+    private Place mPlace;
+    private Trip mTrip;
 
     private static final String TAG = "PlaceTabbedActivity";
     private static final String EXTRA_PLACE_ID = "com.katespitzer.android.weekender.place_id";
@@ -53,6 +60,7 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
         setContentView(R.layout.activity_place_tabbed);
 
         mPlaceId = (UUID) getIntent().getSerializableExtra(EXTRA_PLACE_ID);
+        mPlace = PlaceManager.get(this).getPlace(mPlaceId);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,7 +87,7 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
     }
 
     @Override
-    public void onNoteClicked(DummyContent.DummyItem item) {
+    public void onNoteClicked(Note note) {
         //
     }
 
@@ -103,7 +111,13 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.place_menu_add_note) {
+            Log.i(TAG, "onOptionsItemSelected: Write note");
+
+            Intent intent = NoteCreateActivity.newIntent(this, mPlace);
+
+            startActivity(intent);
+
             return true;
         }
 

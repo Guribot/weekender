@@ -52,11 +52,21 @@ public class HomeActivity extends AppCompatActivity {
         hideActionBar();
     }
 
+    /**
+     * Hides action bar and status bar
+     */
     private void hideActionBar() {
+        //get and hide action bar
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.hide();
         }
+
+        // get and hide status bar
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
     }
 
     private void startTripList() {

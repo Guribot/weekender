@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ public class NoteCreateActivity extends AppCompatActivity {
     private EditText mContentEditText;
     private Button mSubmitButton;
 
+    private static final String TAG = "NoteCreateActivity";
     private static final String EXTRA_PLACE_ID = "com.katespitzer.android.weekender.place_db_id";
     private static final String EXTRA_TRIP_ID = "com.katespitzer.android.weekender.trip_db_id";
 
@@ -103,9 +105,10 @@ public class NoteCreateActivity extends AppCompatActivity {
     }
 
     public static Intent newIntent(Context context, Place place) {
+        Log.i(TAG, "newIntent: ");
         Intent intent = new Intent(context, NoteCreateActivity.class);
 
-        Trip trip = PlaceManager.get(context).getTripFor(place);
+        Trip trip = TripManager.get(context).getTrip(place.getTripId());
 
         intent.putExtra(EXTRA_PLACE_ID, place.getId());
         intent.putExtra(EXTRA_TRIP_ID, trip.getId());

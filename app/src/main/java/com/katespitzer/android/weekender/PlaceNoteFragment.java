@@ -6,13 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.katespitzer.android.weekender.adapters.PlaceNoteRecyclerViewAdapter;
-import com.katespitzer.android.weekender.dummy.DummyContent;
-import com.katespitzer.android.weekender.dummy.DummyContent.DummyItem;
 import com.katespitzer.android.weekender.managers.NoteManager;
 import com.katespitzer.android.weekender.managers.PlaceManager;
 import com.katespitzer.android.weekender.models.Note;
@@ -32,6 +31,7 @@ public class PlaceNoteFragment extends Fragment {
     private Place mPlace;
     private List<Note> mNotes;
 
+    private static final String TAG = "PlaceNoteFragment";
     private static final String ARG_PLACE_ID = "place_id";
     private OnListFragmentInteractionListener mListener;
 
@@ -59,6 +59,7 @@ public class PlaceNoteFragment extends Fragment {
             UUID placeId = (UUID) getArguments().getSerializable(ARG_PLACE_ID);
             mPlace = PlaceManager.get(getActivity()).getPlace(placeId);
             mNotes = NoteManager.get(getActivity()).getNotesForPlace(mPlace);
+            Log.i(TAG, "onCreate: notes are " + mNotes);
         }
     }
 
@@ -72,7 +73,7 @@ public class PlaceNoteFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new PlaceNoteRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new PlaceNoteRecyclerViewAdapter(mNotes, mListener));
         }
         return view;
     }
@@ -106,6 +107,6 @@ public class PlaceNoteFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onNoteClicked(DummyItem item);
+        void onNoteClicked(Note note);
     }
 }

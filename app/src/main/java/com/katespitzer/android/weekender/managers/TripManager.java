@@ -95,7 +95,7 @@ public class TripManager {
     public Trip getTrip(int id) {
         Log.i(TAG, "in getTrip()");
         TripCursorWrapper cursor = queryTrips(
-                TripTable.Cols.UUID + " = ?",
+                "_id = ?",
                 new String[] { "" + id }
         );
 
