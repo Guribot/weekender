@@ -43,7 +43,6 @@ import java.util.UUID;
 public class PlaceFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    private OnListFragmentInteractionListener mListListener;
     private GeoDataClient mGeoDataClient;
     private Place mPlace;
 
@@ -106,16 +105,6 @@ public class PlaceFragment extends Fragment {
         mPlaceAddress = view.findViewById(R.id.place_address);
         mPlaceAddress.setText(mPlace.getAddress());
 
-        // set notes recycler view
-        mRecyclerView = view.findViewById(R.id.place_notes_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        mRecyclerView.setAdapter(new PlaceNoteRecyclerViewAdapter(DummyContent.ITEMS, mListListener));
-
-
-        // on click: add note form to add note to place
-        // TODO: implement
-        mAddNoteButton = view.findViewById(R.id.place_add_note_button);
-
         return view;
     }
 
@@ -153,12 +142,6 @@ public class PlaceFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyContent.DummyItem item);
-    }
-
     /**
      * Takes in the target imageView and the google place ID,
      * finds first image and sets it to the image view
@@ -176,9 +159,9 @@ public class PlaceFragment extends Fragment {
                 // Get the list of photos.
                 PlacePhotoMetadataResponse photos = task.getResult();
                 // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                final PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
                 // Get the first photo in the list.
-                PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                final PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
                 // Get the attribution text.
                 CharSequence attribution = photoMetadata.getAttributions();
                 // Get a full-size bitmap for the photo.
@@ -192,6 +175,8 @@ public class PlaceFragment extends Fragment {
                         Bitmap bitmap = photo.getBitmap();
 
                         imageView.setImageBitmap(bitmap);
+
+                        photoMetadataBuffer.release();
 
                         Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
                     }

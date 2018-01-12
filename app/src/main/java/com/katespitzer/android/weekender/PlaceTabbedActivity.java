@@ -26,7 +26,7 @@ import com.katespitzer.android.weekender.dummy.DummyContent;
 
 import java.util.UUID;
 
-public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragment.OnListFragmentInteractionListener, PlaceFragment.OnFragmentInteractionListener {
+public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragment.OnFragmentInteractionListener, PlaceNoteFragment.OnListFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -69,15 +69,6 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
     }
 
     public static Intent newIntent(Context context, UUID placeId) {
@@ -88,12 +79,12 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-        
+    public void onNoteClicked(DummyContent.DummyItem item) {
+        //
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onFragmentInteraction(Uri uri) {
 
     }
 
@@ -174,7 +165,7 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
                 case 0:
                     return PlaceFragment.newInstance(mPlaceId);
                 case 1:
-                    return PlaceholderFragment.newInstance(position);
+                    return PlaceNoteFragment.newInstance(mPlaceId);
                 default:
                     return PlaceFragment.newInstance(mPlaceId);
             }

@@ -250,7 +250,7 @@ public class TripPlaceFragment extends Fragment {
                     // Get the list of photos.
                     PlacePhotoMetadataResponse photos = task.getResult();
                     // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                    final PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
                     // Get the first photo in the list.
                     PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
                     // Get the attribution text.
@@ -262,9 +262,11 @@ public class TripPlaceFragment extends Fragment {
                         public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
                             PlacePhotoResponse photo = task.getResult();
                             Bitmap bitmap = photo.getBitmap();
+                            photoMetadataBuffer.release();
                             Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
                         }
                     });
+
                 }
             });
         }

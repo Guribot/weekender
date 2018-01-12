@@ -39,7 +39,6 @@
 
         <activity android:name=".NoteCreateActivity" />
         <activity android:name=".PlaceSearchActivity" />
-        <activity android:name=".PlaceActivity" />
         <activity
             android:name=".PlaceTabbedActivity"
             android:label="@string/title_activity_place_tabbed"
