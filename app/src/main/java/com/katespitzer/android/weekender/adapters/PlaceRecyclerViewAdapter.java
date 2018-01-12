@@ -41,7 +41,7 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.i(TAG, "onCreateViewHolder: ");
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_place, parent, false);
+                .inflate(R.layout.fragment_place_listitem, parent, false);
 
         mGeoDataClient = Places.getGeoDataClient(parent.getContext(), null);
 

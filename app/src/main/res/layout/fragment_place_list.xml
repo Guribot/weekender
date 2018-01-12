@@ -23,6 +23,6 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.katespitzer.android.weekender.TripPlaceFragment"
-        tools:listitem="@layout/fragment_place" />
+        tools:listitem="@layout/fragment_place_listitem" />
 
 </android.support.design.widget.CoordinatorLayout>

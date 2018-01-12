@@ -33,4 +33,7 @@
 
     <string name="place_add_button">Add Place</string>
     <string name="place_image_desc">Photo of location</string>
+
+    <string name="place_notes_title">Notes</string>
+    <string name="place_notes_add_note_button">New Note</string>
 </resources>

@@ -21,7 +21,7 @@ import java.util.UUID;
  */
 
 public class PlaceSearchActivity extends AppCompatActivity implements SearchResultFragment.OnListFragmentInteractionListener,
-PlaceDetailFragment.OnFragmentInteractionListener {
+SearchResultDetailFragment.OnFragmentInteractionListener {
 
     private Trip mTrip;
 
@@ -57,7 +57,7 @@ PlaceDetailFragment.OnFragmentInteractionListener {
     @Override
     public void onListFragmentInteraction(Place result) {
         Log.i(TAG, "onListFragmentInteraction: " + result);
-        Fragment fragment = PlaceDetailFragment.newInstance(result.getGooglePlaceId(), mTrip.getId());
+        Fragment fragment = SearchResultDetailFragment.newInstance(result.getGooglePlaceId(), mTrip.getId());
         FragmentManager fm = getSupportFragmentManager();
 
         fm.beginTransaction()

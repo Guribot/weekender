@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceBufferResponse;
 import com.google.android.gms.location.places.PlacePhotoMetadata;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
@@ -24,10 +24,10 @@ import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.katespitzer.android.weekender.adapters.PlaceNoteRecyclerViewAdapter;
+import com.katespitzer.android.weekender.dummy.DummyContent;
 import com.katespitzer.android.weekender.managers.PlaceManager;
-import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Place;
-import com.katespitzer.android.weekender.models.Trip;
 
 import java.util.UUID;
 
@@ -35,31 +35,29 @@ import java.util.UUID;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PlaceDetailFragment.OnFragmentInteractionListener} interface
+ * {@link PlaceFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PlaceDetailFragment#newInstance} factory method to
+ * Use the {@link PlaceFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PlaceDetailFragment extends Fragment {
-    private static final String ARG_PLACE_ID = "google_place_id";
-    private static final String ARG_TRIP_ID = "trip_id";
+public class PlaceFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-
-    private Place mPlace;
-    private Trip mTrip;
-    private String mGooglePlaceId;
-
+    private OnListFragmentInteractionListener mListListener;
     private GeoDataClient mGeoDataClient;
+    private Place mPlace;
 
     private TextView mPlaceName;
-    private ImageView mPlacePhoto;
+    private ImageView mPlaceImage;
     private TextView mPlaceAddress;
-    private Button mAddButton;
+    private Button mAddNoteButton;
+    private RecyclerView mRecyclerView;
 
-    private static final String TAG = "PlaceDetailFragment";
 
-    public PlaceDetailFragment() {
+    private static final String TAG = "PlaceFragment";
+    private static final String ARG_PLACE_ID = "place_id";
+
+    public PlaceFragment() {
         // Required empty public constructor
     }
 
@@ -67,13 +65,13 @@ public class PlaceDetailFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment PlaceDetailFragment.
+     * @param placeId
+     * @return A new instance of fragment PlaceFragment.
      */
-    public static PlaceDetailFragment newInstance(String googlePlaceId, UUID tripId) {
-        PlaceDetailFragment fragment = new PlaceDetailFragment();
+    public static PlaceFragment newInstance(UUID placeId) {
+        PlaceFragment fragment = new PlaceFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PLACE_ID, googlePlaceId);
-        args.putSerializable(ARG_TRIP_ID, tripId);
+        args.putSerializable(ARG_PLACE_ID, placeId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,9 +80,9 @@ public class PlaceDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mGooglePlaceId = getArguments().getString(ARG_PLACE_ID);
-            UUID tripId = (UUID) getArguments().getSerializable(ARG_TRIP_ID);
-            mTrip = TripManager.get(getActivity()).getTrip(tripId);
+            // set mPlace
+            UUID placeId = (UUID) getArguments().getSerializable(ARG_PLACE_ID);
+            mPlace = PlaceManager.get(getActivity()).getPlace(placeId);
         }
 
         mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
@@ -94,50 +92,29 @@ public class PlaceDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_place, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_place_detail, container, false);
-
+        // display place name
         mPlaceName = view.findViewById(R.id.place_name);
+        mPlaceName.setText(mPlace.getName());
 
-        mPlacePhoto = view.findViewById(R.id.place_image);
+        // call setImageView
+        mPlaceImage = view.findViewById(R.id.place_image);
+        setImageView(mPlaceImage, mPlace.getGooglePlaceId());
 
+        // display place address
         mPlaceAddress = view.findViewById(R.id.place_address);
+        mPlaceAddress.setText(mPlace.getAddress());
 
-        mAddButton = view.findViewById(R.id.place_add_button);
+        // set notes recycler view
+        mRecyclerView = view.findViewById(R.id.place_notes_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        mRecyclerView.setAdapter(new PlaceNoteRecyclerViewAdapter(DummyContent.ITEMS, mListListener));
 
-        mGeoDataClient.getPlaceById(mGooglePlaceId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-                if (task.isSuccessful()) {
-                    PlaceBufferResponse places = task.getResult();
-                    com.google.android.gms.location.places.Place result = places.get(0);
-                    Log.i(TAG, "Place found: " + result.getName());
 
-                    mPlace = new Place();
-                    mPlace.setName(result.getName().toString());
-                    mPlace.setGooglePlaceId(mGooglePlaceId);
-                    mPlace.setAddress(result.getAddress().toString());
-
-                    places.release();
-
-                    mPlaceName.setText(mPlace.getName());
-                    mPlaceAddress.setText(mPlace.getAddress());
-
-                    setImageView(mPlacePhoto, mPlace.getGooglePlaceId());
-
-                    mAddButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            PlaceManager.get(getActivity()).addPlaceToTrip(mPlace, mTrip);
-                            Toast.makeText(getActivity(), mPlace.getName() + " added to trip!", Toast.LENGTH_SHORT).show();
-                            getActivity().onBackPressed();
-                        }
-                    });
-                } else {
-                    Log.e(TAG, "Place not found.");
-                }
-            }
-        });
+        // on click: add note form to add note to place
+        // TODO: implement
+        mAddNoteButton = view.findViewById(R.id.place_add_note_button);
 
         return view;
     }
@@ -170,13 +147,23 @@ public class PlaceDetailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+
+        // use this for adding note?
         void onFragmentInteraction(Uri uri);
     }
 
 
+    public interface OnListFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onListFragmentInteraction(DummyContent.DummyItem item);
+    }
+
     /**
-     * From Google
+     * Takes in the target imageView and the google place ID,
+     * finds first image and sets it to the image view
      *
+     * @param imageView
      * @param placeId
      */
 
@@ -205,7 +192,6 @@ public class PlaceDetailFragment extends Fragment {
                         Bitmap bitmap = photo.getBitmap();
 
                         imageView.setImageBitmap(bitmap);
-                        mPlace.setBitmap(bitmap);
 
                         Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
                     }
