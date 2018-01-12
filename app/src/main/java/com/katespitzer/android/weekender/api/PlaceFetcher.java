@@ -29,7 +29,7 @@ public class PlaceFetcher {
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
         try {
-            URL url = buildURL(query);
+            URL url = buildTextSearchURL(query);
             Log.i(TAG, "getPlaceData: URL BUILT: " + url);
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -60,7 +60,7 @@ public class PlaceFetcher {
         return data;
     }
 
-    public URL buildURL(String query) {
+    public URL buildTextSearchURL(String query) {
         String newURL = ENDPOINT.buildUpon()
                 .appendQueryParameter(KEY, PLACES_API_KEY)
                 .appendQueryParameter(QUERY, query)
@@ -69,7 +69,7 @@ public class PlaceFetcher {
         try {
             return new URL(newURL);
         } catch (Exception e) {
-            Log.e(TAG, "buildURL: Exception Occurred: ", e);
+            Log.e(TAG, "buildTextSearchURL: Exception Occurred: ", e);
             return null;
         }
     }

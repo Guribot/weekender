@@ -2,11 +2,32 @@ package com.katespitzer.android.weekender;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.PlaceBufferResponse;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.katespitzer.android.weekender.api.PlaceFetcher;
+import com.katespitzer.android.weekender.models.Place;
+import com.katespitzer.android.weekender.models.Trip;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -18,16 +39,21 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class PlaceDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_PLACE_ID = "google_place_id";
 
     private OnFragmentInteractionListener mListener;
+
+    private Place mPlace;
+    private String mGooglePlaceId;
+
+    private GeoDataClient mGeoDataClient;
+
+    private TextView mPlaceName;
+    private ImageView mPlacePhoto;
+    private TextView mPlaceAddress;
+    private Button mAddButton;
+
+    private static final String TAG = "PlaceDetailFragment";
 
     public PlaceDetailFragment() {
         // Required empty public constructor
@@ -37,16 +63,14 @@ public class PlaceDetailFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param place
      * @return A new instance of fragment PlaceDetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PlaceDetailFragment newInstance(String param1, String param2) {
+    public static PlaceDetailFragment newInstance(Place place) {
         PlaceDetailFragment fragment = new PlaceDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PLACE_ID, place.getGooglePlaceId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,23 +79,42 @@ public class PlaceDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mGooglePlaceId = getArguments().getString(ARG_PLACE_ID);
         }
+
+        mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_place_detail, container, false);
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        mGeoDataClient.getPlaceById(mGooglePlaceId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                if (task.isSuccessful()) {
+                    PlaceBufferResponse places = task.getResult();
+                    com.google.android.gms.location.places.Place myPlace = places.get(0);
+                    Log.i(TAG, "Place found: " + myPlace.getName());
+                    places.release();
+                } else {
+                    Log.e(TAG, "Place not found.");
+                }
+            }
+        });
+
+        View view = inflater.inflate(R.layout.fragment_place_detail, container, false);
+
+        mPlaceName = view.findViewById(R.id.place_name);
+
+        mPlacePhoto = view.findViewById(R.id.place_image);
+
+        mPlaceAddress = view.findViewById(R.id.place_address);
+
+        mAddButton = view.findViewById(R.id.place_add_button);
+
+        return view;
     }
 
     @Override
@@ -102,7 +145,92 @@ public class PlaceDetailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+    private class FetchPlaceTask extends AsyncTask<Void, Void, Place> {
+        String mGooglePlaceId;
+        Place mResult;
+
+        GeoDataClient mGeoDataClient;
+
+        public FetchPlaceTask(String googlePlaceId) {
+            mGooglePlaceId = googlePlaceId;
+            mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
+        }
+
+        @Override
+        protected Place doInBackground(Void... voids) {
+//            mGeoDataClient.getPlaceById(mGooglePlaceId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+//                @Override
+//                public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+//                    if (task.isSuccessful()) {
+//                        PlaceBufferResponse places = task.getResult();
+//                        com.google.android.gms.location.Place myPlace = places.get(0);
+//                        Log.i(TAG, "Place found: " + myPlace.getName());
+//                        places.release();
+//                    } else {
+//                        Log.e(TAG, "Place not found.");
+//                    }
+//                }
+//            });
+
+//            if (mGooglePlaceId == null) {
+//                Log.e(TAG, "doInBackground: No Google Place ID set");
+//                return null;
+//            } else {
+//                JSONObject jsonObject = new JSONObject();
+//                JSONArray jsonArray = new JSONArray();
+////                String result = new PlaceFetcher().getPlaceDetails(mGooglePlaceId);
+//
+////                Log.i(TAG, "doInBackground: results returned: " + result);
+//
+//                try {
+////                    jsonObject = new JSONObject(result);
+//
+//                    return mResult;
+//                } catch (Exception e) {
+//                    Log.d(TAG, "doInBackground: exception: " + e.toString());
+//                    return null;
+//                }
+//            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Place result) {
+            Log.i(TAG, "onPostExecute: " + result);
+            super.onPostExecute(result);
+        }
+
+//        private void getPhotos(String placeId) {
+//            final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+//            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+//                @Override
+//                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+//                    // Get the list of photos.
+//                    PlacePhotoMetadataResponse photos = task.getResult();
+//                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+//                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+//                    // Get the first photo in the list.
+//                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+//                    // Get the attribution text.
+//                    CharSequence attribution = photoMetadata.getAttributions();
+//                    // Get a full-size bitmap for the photo.
+//                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+//                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+//                            PlacePhotoResponse photo = task.getResult();
+//                            Bitmap bitmap = photo.getBitmap();
+//                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
+//                        }
+//                    });
+//                }
+//            });
+//        }
+    }
+
+
 }

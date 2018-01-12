@@ -192,6 +192,7 @@ public class SearchResultFragment extends Fragment {
 
                         Place place = new Place();
                         place.setName(result.getString("name"));
+                        place.setGooglePlaceId(result.getString("place_id"));
                         place.setAddress(result.getString("formatted_address"));
 
                         mPlaces.add(place);

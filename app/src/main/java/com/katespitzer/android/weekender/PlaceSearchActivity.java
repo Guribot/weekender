@@ -2,6 +2,7 @@ package com.katespitzer.android.weekender;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -16,13 +17,12 @@ import com.katespitzer.android.weekender.models.Place;
 import java.util.UUID;
 
 /**
- * Created by kate on 1/2/18.
- *
- * Below layout based on that of Big Nerd Ranch's Android Programming book
+ * Created by kate on 1/10/18.
  *
  */
 
-public class PlaceSearchActivity extends AppCompatActivity implements SearchResultFragment.OnListFragmentInteractionListener {
+public class PlaceSearchActivity extends AppCompatActivity implements SearchResultFragment.OnListFragmentInteractionListener,
+PlaceDetailFragment.OnFragmentInteractionListener {
     private static final String TAG = "PlaceSearchActivity";
 
     private static final String EXTRA_TRIP_ID = "com.katespitzer.android.weekender.trip_id";
@@ -33,8 +33,6 @@ public class PlaceSearchActivity extends AppCompatActivity implements SearchResu
         Log.i(TAG, "in onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
-
-        // TODO: wrap head around what's happening below (better understand FragmentManager)
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
@@ -56,7 +54,18 @@ public class PlaceSearchActivity extends AppCompatActivity implements SearchResu
     @Override
     public void onListFragmentInteraction(Place result) {
         Log.i(TAG, "onListFragmentInteraction: " + result);
-        Toast.makeText(this, "Clicked on result: "+ result.getName(), Toast.LENGTH_SHORT).show();
+        Fragment fragment = PlaceDetailFragment.newInstance(result);
+        FragmentManager fm = getSupportFragmentManager();
+
+        fm.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //
     }
 
     public static Intent newIntent(Context context, String query, UUID tripId) {
