@@ -6,6 +6,7 @@
     <string name="find_trips">Find Trip</string>
     <string name="van_content_desc">Camper Van (art by Freepik)</string>
 
+    <string name="trip_menu_add_place">Add Place</string>
     <string name="trip_title_label">Trip Name</string>
     <string name="trip_title_hint">My Trip</string>
     <string name="trip_start_label">Start Date</string>

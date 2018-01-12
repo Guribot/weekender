@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.katespitzer.android.weekender.TripActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/trip_menu_add_place"
         android:icon="@drawable/ic_add"
         android:orderInCategory="100"
-        android:title="@string/place_menu_add_note"
+        android:title="@string/trip_menu_add_place"
         app:showAsAction="ifRoom" />
 </menu>
