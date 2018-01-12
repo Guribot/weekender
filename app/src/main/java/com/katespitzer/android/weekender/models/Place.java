@@ -1,5 +1,6 @@
 package com.katespitzer.android.weekender.models;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.util.UUID;
@@ -14,10 +15,9 @@ public class Place {
     private String mName;
     private String mAddress;
     private String mGooglePlaceId;
-    private double mLatitude;
-    private double mLongitude;
     private int mTripId;
-    private String mImageUrl;
+
+    private Bitmap mBitmap;
 
     private static final String TAG = "Place.java";
 
@@ -76,22 +76,6 @@ public class Place {
         mGooglePlaceId = googlePlaceId;
     }
 
-    public double getLatitude() {
-        return mLatitude;
-    }
-
-    public void setLatitude(double latitude) {
-        mLatitude = latitude;
-    }
-
-    public double getLongitude() {
-        return mLongitude;
-    }
-
-    public void setLongitude(double longitude) {
-        mLongitude = longitude;
-    }
-
     public int getTripId() {
         return mTripId;
     }
@@ -100,11 +84,11 @@ public class Place {
         mTripId = tripId;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
+    public Bitmap getBitmap() {
+        return mBitmap;
     }
 
-    public void setImageUrl(String imageUrl) {
-        mImageUrl = imageUrl;
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
     }
 }

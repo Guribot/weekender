@@ -4,8 +4,19 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.ImageView;
 
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
+import com.google.android.gms.location.places.PlacePhotoResponse;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.models.Trip;
 import com.katespitzer.android.weekender.database.DatabaseHelper;
@@ -23,6 +34,7 @@ import java.util.UUID;
 public class PlaceManager {
     private static PlaceManager sPlaceManager;
     // it may be unnecessary to declare the context, this is for potential future features
+    private static GeoDataClient sGeoDataClient;
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
@@ -51,6 +63,11 @@ public class PlaceManager {
         if (sPlaceManager == null) {
             sPlaceManager = new PlaceManager(context);
         }
+
+        if (sGeoDataClient == null) {
+            sGeoDataClient = Places.getGeoDataClient(context, null);
+        }
+
         return sPlaceManager;
     }
 
@@ -76,7 +93,12 @@ public class PlaceManager {
             // if there are results, return the first one
             // (since search param is UUID, There Can Only Be One
             cursor.moveToFirst();
-            return cursor.getPlace();
+            Place place = cursor.getPlace();
+
+            // make API call to retrieve place bitmap
+            setImage(place);
+
+            return place;
         } finally {
             // close cursor!
             cursor.close();
@@ -106,7 +128,12 @@ public class PlaceManager {
             // if there are results, return the first one
             // (since search param is UUID, There Can Only Be One
             cursor.moveToFirst();
-            return cursor.getPlace();
+            Place place = cursor.getPlace();
+
+            // make API call to retrieve place bitmap
+            setImage(place);
+
+            return place;
         } finally {
             // close cursor!
             cursor.close();
@@ -229,9 +256,6 @@ public class PlaceManager {
         values.put(PlaceTable.Cols.NAME, place.getName());
         values.put(PlaceTable.Cols.ADDRESS, place.getAddress());
         values.put(PlaceTable.Cols.GOOGLE_PLACE_ID, place.getGooglePlaceId());
-        values.put(PlaceTable.Cols.LAT, place.getLatitude());
-        values.put(PlaceTable.Cols.LONG, place.getLongitude());
-        values.put(PlaceTable.Cols.IMG, place.getImageUrl());
         values.put(PlaceTable.Cols.TRIP_ID, place.getTripId());
 
         return values;
@@ -258,5 +282,44 @@ public class PlaceManager {
         );
 
         return new PlaceCursorWrapper(cursor);
+    }
+
+    /**
+     * From Google
+     *
+     * @param place
+     */
+
+    private void setImage(final Place place) {
+        Log.i(TAG, "setImageView: ");
+        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = sGeoDataClient.getPlacePhotos(place.getGooglePlaceId());
+        photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                // Get the list of photos.
+                PlacePhotoMetadataResponse photos = task.getResult();
+                // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                // Get the first photo in the list.
+                PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                // Get the attribution text.
+                CharSequence attribution = photoMetadata.getAttributions();
+                // Get a full-size bitmap for the photo.
+                Task<PlacePhotoResponse> photoResponse = sGeoDataClient.getPhoto(photoMetadata);
+                photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                    @Override
+                    public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                        Log.i(TAG, "onComplete: ");
+
+                        PlacePhotoResponse photo = task.getResult();
+                        Bitmap bitmap = photo.getBitmap();
+
+                        place.setBitmap(bitmap);
+
+                        Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
+                    }
+                });
+            }
+        });
     }
 }

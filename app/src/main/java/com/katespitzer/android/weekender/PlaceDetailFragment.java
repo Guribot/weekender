@@ -200,9 +200,13 @@ public class PlaceDetailFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
                         Log.i(TAG, "onComplete: ");
+
                         PlacePhotoResponse photo = task.getResult();
                         Bitmap bitmap = photo.getBitmap();
+
                         imageView.setImageBitmap(bitmap);
+                        mPlace.setBitmap(bitmap);
+
                         Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
                     }
                 });
