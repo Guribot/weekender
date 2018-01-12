@@ -36,4 +36,8 @@
 
     <string name="place_notes_title">Notes</string>
     <string name="place_notes_add_note_button">New Note</string>
+
+    <string name="title_activity_place_tabbed">Place Overview</string>
+    <string name="place_tab_info">Info</string>
+    <string name="place_tab_notes">Notes</string>
 </resources>

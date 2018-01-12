@@ -185,7 +185,7 @@ public class TripPlaceFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Place place);
+        void onPlaceClicked(Place place);
     }
 
     private class FetchPlacesTask extends AsyncTask<Void, Void, String> {

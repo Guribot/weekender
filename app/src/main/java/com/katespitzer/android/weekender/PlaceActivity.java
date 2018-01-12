@@ -36,7 +36,7 @@ public class PlaceActivity extends AppCompatActivity
                 .commit();
     }
 
-    public Intent newIntent(Context context, UUID placeId) {
+    public static Intent newIntent(Context context, UUID placeId) {
         Log.i(TAG, "newIntent: ");
         Intent intent = new Intent(context, PlaceActivity.class);
         intent.putExtra(EXTRA_PLACE_ID, placeId);

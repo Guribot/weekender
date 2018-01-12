@@ -56,7 +56,7 @@ SearchResultDetailFragment.OnFragmentInteractionListener {
 
     @Override
     public void onListFragmentInteraction(Place result) {
-        Log.i(TAG, "onListFragmentInteraction: " + result);
+        Log.i(TAG, "onPlaceClicked: " + result);
         Fragment fragment = SearchResultDetailFragment.newInstance(result.getGooglePlaceId(), mTrip.getId());
         FragmentManager fm = getSupportFragmentManager();
 
