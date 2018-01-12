@@ -34,6 +34,7 @@ public class PlaceCursorWrapper extends CursorWrapper {
         String uuidString = getString(getColumnIndex(PlaceTable.Cols.UUID));
         String name = getString(getColumnIndex(PlaceTable.Cols.NAME));
         String address = getString(getColumnIndex(PlaceTable.Cols.ADDRESS));
+        String googlePlaceId = getString(getColumnIndex(PlaceTable.Cols.GOOGLE_PLACE_ID));
         int tripId = getInt(getColumnIndex(PlaceTable.Cols.TRIP_ID));
         int dbId = getInt(getColumnIndex("_id"));
 
@@ -41,6 +42,7 @@ public class PlaceCursorWrapper extends CursorWrapper {
         place.setId(UUID.fromString(uuidString));
         place.setName(name);
         place.setAddress(address);
+        place.setGooglePlaceId(googlePlaceId);
         place.setTripId(tripId);
         place.setDbId(dbId);
 

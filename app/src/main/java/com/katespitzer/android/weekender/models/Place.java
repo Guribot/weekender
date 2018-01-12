@@ -13,6 +13,7 @@ public class Place {
     private int dbId;
     private String mName;
     private String mAddress;
+    private String mGooglePlaceId;
     private double mLatitude;
     private double mLongitude;
     private int mTripId;
@@ -65,6 +66,14 @@ public class Place {
 
     public void setAddress(String address) {
         mAddress = address;
+    }
+
+    public String getGooglePlaceId() {
+        return mGooglePlaceId;
+    }
+
+    public void setGooglePlaceId(String googlePlaceId) {
+        mGooglePlaceId = googlePlaceId;
     }
 
     public double getLatitude() {

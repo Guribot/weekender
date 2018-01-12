@@ -35,6 +35,7 @@ public class DbSchema {
             public static final String TRIP_ID = "trip_id";
             public static final String NAME = "name";
             public static final String ADDRESS = "address";
+            public static final String GOOGLE_PLACE_ID = "google_place_id";
             public static final String LONG = "longitude";
             public static final String LAT = "latitude";
             public static final String IMG = "imgUrl";
@@ -46,6 +47,7 @@ public class DbSchema {
                 Cols.TRIP_ID + " integer, " +
                 Cols.NAME + ", " +
                 Cols.ADDRESS + ", " +
+                Cols.GOOGLE_PLACE_ID + ", " +
                 Cols.LONG + ", " +
                 Cols.LAT + ", " +
                 Cols.IMG + ", " +

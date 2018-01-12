@@ -228,6 +228,7 @@ public class PlaceManager {
         values.put(PlaceTable.Cols.UUID, place.getId().toString());
         values.put(PlaceTable.Cols.NAME, place.getName());
         values.put(PlaceTable.Cols.ADDRESS, place.getAddress());
+        values.put(PlaceTable.Cols.GOOGLE_PLACE_ID, place.getGooglePlaceId());
         values.put(PlaceTable.Cols.LAT, place.getLatitude());
         values.put(PlaceTable.Cols.LONG, place.getLongitude());
         values.put(PlaceTable.Cols.IMG, place.getImageUrl());
