@@ -218,22 +218,6 @@ public class TripPlaceFragment extends Fragment {
                     jsonObject = new JSONObject(results);
                     String status = jsonObject.getString("status");
                     return status;
-//                    jsonArray = jsonObject.getJSONArray("results");
-//
-//                    int max = (jsonArray.length() > MAX_SEARCH_RESULTS ? MAX_SEARCH_RESULTS : jsonArray.length());
-//
-//                    for (int i = 0; i < max; i++) {
-//                        JSONObject result = jsonArray.getJSONObject(i);
-//
-//                        Place place = new Place();
-//                        place.setName(result.getString("name"));
-//                        place.setAddress(result.getString("formatted_address"));
-//
-//                        mPlaces.add(place);
-//                        mPlaceNames.add(place.getName());
-//                    }
-//
-//                    return mPlaces;
                 } catch (Exception e) {
                     Log.d(TAG, "doInBackground: exception: " + e.toString());
                     return null;
@@ -249,14 +233,6 @@ public class TripPlaceFragment extends Fragment {
                 Log.i(TAG, "onPostExecute: status ok");
                 Intent intent = PlaceSearchActivity.newIntent(getActivity(), mQuery, mTrip.getId());
                 startActivity(intent);
-//                FragmentManager fm = getActivity().getSupportFragmentManager();
-//                Fragment fragment = SearchResultFragment.newInstance(mQuery, mTrip.getId());
-//
-//                fm.beginTransaction()
-//                        .replace(R.id.container, fragment)
-//                        .addToBackStack(null)
-//                        .commit();
-
             } else if (status.equals("ZERO_RESULTS")) {
                 Log.i(TAG, "onPostExecute: no results");
                 Toast.makeText(getActivity(), "No results found", Toast.LENGTH_SHORT).show();
