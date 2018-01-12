@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlaceBufferResponse;
@@ -20,6 +21,8 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.katespitzer.android.weekender.api.PlaceFetcher;
+import com.katespitzer.android.weekender.managers.PlaceManager;
+import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.models.Trip;
 
@@ -28,6 +31,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -40,10 +44,12 @@ import java.util.List;
  */
 public class PlaceDetailFragment extends Fragment {
     private static final String ARG_PLACE_ID = "google_place_id";
+    private static final String ARG_TRIP_ID = "trip_id";
 
     private OnFragmentInteractionListener mListener;
 
     private Place mPlace;
+    private Trip mTrip;
     private String mGooglePlaceId;
 
     private GeoDataClient mGeoDataClient;
@@ -63,14 +69,13 @@ public class PlaceDetailFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param place
      * @return A new instance of fragment PlaceDetailFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static PlaceDetailFragment newInstance(Place place) {
+    public static PlaceDetailFragment newInstance(String googlePlaceId, UUID tripId) {
         PlaceDetailFragment fragment = new PlaceDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PLACE_ID, place.getGooglePlaceId());
+        args.putString(ARG_PLACE_ID, googlePlaceId);
+        args.putSerializable(ARG_TRIP_ID, tripId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,6 +85,8 @@ public class PlaceDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mGooglePlaceId = getArguments().getString(ARG_PLACE_ID);
+            UUID tripId = (UUID) getArguments().getSerializable(ARG_TRIP_ID);
+            mTrip = TripManager.get(getActivity()).getTrip(tripId);
         }
 
         mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
@@ -90,20 +97,6 @@ public class PlaceDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        mGeoDataClient.getPlaceById(mGooglePlaceId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-                if (task.isSuccessful()) {
-                    PlaceBufferResponse places = task.getResult();
-                    com.google.android.gms.location.places.Place myPlace = places.get(0);
-                    Log.i(TAG, "Place found: " + myPlace.getName());
-                    places.release();
-                } else {
-                    Log.e(TAG, "Place not found.");
-                }
-            }
-        });
-
         View view = inflater.inflate(R.layout.fragment_place_detail, container, false);
 
         mPlaceName = view.findViewById(R.id.place_name);
@@ -113,6 +106,38 @@ public class PlaceDetailFragment extends Fragment {
         mPlaceAddress = view.findViewById(R.id.place_address);
 
         mAddButton = view.findViewById(R.id.place_add_button);
+
+        mGeoDataClient.getPlaceById(mGooglePlaceId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                if (task.isSuccessful()) {
+                    PlaceBufferResponse places = task.getResult();
+                    com.google.android.gms.location.places.Place result = places.get(0);
+                    Log.i(TAG, "Place found: " + result.getName());
+
+                    mPlace = new Place();
+                    mPlace.setName(result.getName().toString());
+                    mPlace.setGooglePlaceId(mGooglePlaceId);
+                    mPlace.setAddress(result.getAddress().toString());
+
+                    places.release();
+
+                    mPlaceName.setText(mPlace.getName());
+                    mPlaceAddress.setText(mPlace.getAddress());
+
+                    mAddButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PlaceManager.get(getActivity()).addPlaceToTrip(mPlace, mTrip);
+                            Toast.makeText(getActivity(), mPlace.getName() + " added to trip!", Toast.LENGTH_SHORT).show();
+                            getActivity().onBackPressed();
+                        }
+                    });
+                } else {
+                    Log.e(TAG, "Place not found.");
+                }
+            }
+        });
 
         return view;
     }

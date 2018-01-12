@@ -12,7 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Place;
+import com.katespitzer.android.weekender.models.Trip;
 
 import java.util.UUID;
 
@@ -23,6 +25,9 @@ import java.util.UUID;
 
 public class PlaceSearchActivity extends AppCompatActivity implements SearchResultFragment.OnListFragmentInteractionListener,
 PlaceDetailFragment.OnFragmentInteractionListener {
+
+    private Trip mTrip;
+
     private static final String TAG = "PlaceSearchActivity";
 
     private static final String EXTRA_TRIP_ID = "com.katespitzer.android.weekender.trip_id";
@@ -39,6 +44,7 @@ PlaceDetailFragment.OnFragmentInteractionListener {
 
         Intent intent = getIntent();
         UUID tripId = (UUID) intent.getSerializableExtra(EXTRA_TRIP_ID);
+        mTrip = TripManager.get(this).getTrip(tripId);
         String query = intent.getStringExtra(EXTRA_QUERY);
 
         if (fragment == null) {
@@ -54,12 +60,11 @@ PlaceDetailFragment.OnFragmentInteractionListener {
     @Override
     public void onListFragmentInteraction(Place result) {
         Log.i(TAG, "onListFragmentInteraction: " + result);
-        Fragment fragment = PlaceDetailFragment.newInstance(result);
+        Fragment fragment = PlaceDetailFragment.newInstance(result.getGooglePlaceId(), mTrip.getId());
         FragmentManager fm = getSupportFragmentManager();
 
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
                 .commit();
     }
 
