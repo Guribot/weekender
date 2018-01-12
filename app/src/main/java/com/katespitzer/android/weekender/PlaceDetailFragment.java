@@ -1,8 +1,8 @@
 package com.katespitzer.android.weekender;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,6 +17,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlaceBufferResponse;
+import com.google.android.gms.location.places.PlacePhotoMetadata;
+import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
+import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
+import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -119,6 +123,8 @@ public class PlaceDetailFragment extends Fragment {
                     mPlaceName.setText(mPlace.getName());
                     mPlaceAddress.setText(mPlace.getAddress());
 
+                    setImageView(mPlacePhoto, mPlace.getGooglePlaceId());
+
                     mAddButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -168,88 +174,39 @@ public class PlaceDetailFragment extends Fragment {
     }
 
 
-    private class FetchPlaceTask extends AsyncTask<Void, Void, Place> {
-        String mGooglePlaceId;
-        Place mResult;
+    /**
+     * From Google
+     *
+     * @param placeId
+     */
 
-        GeoDataClient mGeoDataClient;
-
-        public FetchPlaceTask(String googlePlaceId) {
-            mGooglePlaceId = googlePlaceId;
-            mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
-        }
-
-        @Override
-        protected Place doInBackground(Void... voids) {
-//            mGeoDataClient.getPlaceById(mGooglePlaceId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
-//                @Override
-//                public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-//                    if (task.isSuccessful()) {
-//                        PlaceBufferResponse places = task.getResult();
-//                        com.google.android.gms.location.Place myPlace = places.get(0);
-//                        Log.i(TAG, "Place found: " + myPlace.getName());
-//                        places.release();
-//                    } else {
-//                        Log.e(TAG, "Place not found.");
-//                    }
-//                }
-//            });
-
-//            if (mGooglePlaceId == null) {
-//                Log.e(TAG, "doInBackground: No Google Place ID set");
-//                return null;
-//            } else {
-//                JSONObject jsonObject = new JSONObject();
-//                JSONArray jsonArray = new JSONArray();
-////                String result = new PlaceFetcher().getPlaceDetails(mGooglePlaceId);
-//
-////                Log.i(TAG, "doInBackground: results returned: " + result);
-//
-//                try {
-////                    jsonObject = new JSONObject(result);
-//
-//                    return mResult;
-//                } catch (Exception e) {
-//                    Log.d(TAG, "doInBackground: exception: " + e.toString());
-//                    return null;
-//                }
-//            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Place result) {
-            Log.i(TAG, "onPostExecute: " + result);
-            super.onPostExecute(result);
-        }
-
-//        private void getPhotos(String placeId) {
-//            final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
-//            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
-//                @Override
-//                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
-//                    // Get the list of photos.
-//                    PlacePhotoMetadataResponse photos = task.getResult();
-//                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-//                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-//                    // Get the first photo in the list.
-//                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-//                    // Get the attribution text.
-//                    CharSequence attribution = photoMetadata.getAttributions();
-//                    // Get a full-size bitmap for the photo.
-//                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
-//                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-//                            PlacePhotoResponse photo = task.getResult();
-//                            Bitmap bitmap = photo.getBitmap();
-//                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
-//                        }
-//                    });
-//                }
-//            });
-//        }
+    private void setImageView(final ImageView imageView, String placeId) {
+        Log.i(TAG, "setImageView: ");
+        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+        photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                // Get the list of photos.
+                PlacePhotoMetadataResponse photos = task.getResult();
+                // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                // Get the first photo in the list.
+                PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                // Get the attribution text.
+                CharSequence attribution = photoMetadata.getAttributions();
+                // Get a full-size bitmap for the photo.
+                Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                    @Override
+                    public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                        Log.i(TAG, "onComplete: ");
+                        PlacePhotoResponse photo = task.getResult();
+                        Bitmap bitmap = photo.getBitmap();
+                        imageView.setImageBitmap(bitmap);
+                        Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
+                    }
+                });
+            }
+        });
     }
-
-
 }

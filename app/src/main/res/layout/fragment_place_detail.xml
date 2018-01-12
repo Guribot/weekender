@@ -25,9 +25,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/blueprint"
         android:contentDescription="@string/place_image_desc"
+        android:scaleType="centerCrop"
+        android:src="@drawable/blueprint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/place_name" />
