@@ -95,9 +95,6 @@ public class PlaceManager {
             cursor.moveToFirst();
             Place place = cursor.getPlace();
 
-            // make API call to retrieve place bitmap
-            setImage(place);
-
             return place;
         } finally {
             // close cursor!
@@ -129,9 +126,6 @@ public class PlaceManager {
             // (since search param is UUID, There Can Only Be One
             cursor.moveToFirst();
             Place place = cursor.getPlace();
-
-            // make API call to retrieve place bitmap
-            setImage(place);
 
             return place;
         } finally {
@@ -211,7 +205,9 @@ public class PlaceManager {
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                places.add(cursor.getPlace());
+                Place place = cursor.getPlace();
+
+                places.add(place);
                 cursor.moveToNext();
             }
         } finally {
@@ -284,42 +280,5 @@ public class PlaceManager {
         return new PlaceCursorWrapper(cursor);
     }
 
-    /**
-     * From Google
-     *
-     * @param place
-     */
 
-    private void setImage(final Place place) {
-        Log.i(TAG, "setImageView: ");
-        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = sGeoDataClient.getPlacePhotos(place.getGooglePlaceId());
-        photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
-                // Get the list of photos.
-                PlacePhotoMetadataResponse photos = task.getResult();
-                // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                // Get the first photo in the list.
-                PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-                // Get the attribution text.
-                CharSequence attribution = photoMetadata.getAttributions();
-                // Get a full-size bitmap for the photo.
-                Task<PlacePhotoResponse> photoResponse = sGeoDataClient.getPhoto(photoMetadata);
-                photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-                    @Override
-                    public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                        Log.i(TAG, "onComplete: ");
-
-                        PlacePhotoResponse photo = task.getResult();
-                        Bitmap bitmap = photo.getBitmap();
-
-                        place.setBitmap(bitmap);
-
-                        Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
-                    }
-                });
-            }
-        });
-    }
 }

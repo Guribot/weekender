@@ -93,9 +93,6 @@ public class PlaceCreateActivity extends AppCompatActivity {
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPlace.setLatitude(44.444);
-                mPlace.setLongitude(55.555);
-                mPlace.setImageUrl("placeholder");
                 PlaceManager pl = PlaceManager.get(getApplicationContext());
                 pl.addPlaceToTrip(mPlace, mTrip);
                 finish();
