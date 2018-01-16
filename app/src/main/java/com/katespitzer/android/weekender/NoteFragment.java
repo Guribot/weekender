@@ -7,6 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.katespitzer.android.weekender.managers.NoteManager;
+import com.katespitzer.android.weekender.models.Note;
+
+import java.util.UUID;
 
 
 /**
@@ -18,14 +24,14 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class NoteFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private Note mNote;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextView mTitleView;
+    private TextView mSourceView;
+    private TextView mContentView;
+
+    private static final String TAG = "NoteFragment";
+    private static final String ARG_NOTE_ID = "note_id";
 
     private OnFragmentInteractionListener mListener;
 
@@ -37,16 +43,14 @@ public class NoteFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param noteId
      * @return A new instance of fragment NoteFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NoteFragment newInstance(String param1, String param2) {
+    public static NoteFragment newInstance(UUID noteId) {
         NoteFragment fragment = new NoteFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_NOTE_ID, noteId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,8 +59,9 @@ public class NoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            UUID noteId = (UUID) getArguments().getSerializable(ARG_NOTE_ID);
+
+            mNote = NoteManager.get(getActivity()).getNote(noteId);
         }
     }
 
@@ -64,7 +69,13 @@ public class NoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_note, container, false);
+        View view = inflater.inflate(R.layout.fragment_note, container, false);
+
+        mTitleView = view.findViewById(R.id.note_title);
+        mSourceView = view.findViewById(R.id.note_source);
+        mContentView = view.findViewById(R.id.note_content);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

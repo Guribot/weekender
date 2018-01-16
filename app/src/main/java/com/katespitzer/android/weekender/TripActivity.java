@@ -128,8 +128,9 @@ public class TripActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Note note) {
-        Log.i(TAG, "onPlaceClicked: dummy");
+    public void onNoteClicked(Note note) {
+        Log.i(TAG, "onPlaceClicked: ");
+        
     }
 
     /**
