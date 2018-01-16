@@ -129,8 +129,11 @@ public class TripActivity
 
     @Override
     public void onNoteClicked(Note note) {
-        Log.i(TAG, "onPlaceClicked: ");
-        
+        Log.i(TAG, "onNoteClicked: " + note);
+
+        Intent intent = NoteActivity.newIntent(this, note.getId());
+
+        startActivity(intent);
     }
 
     /**

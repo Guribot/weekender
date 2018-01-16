@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.managers.NoteManager;
+import com.katespitzer.android.weekender.managers.PlaceManager;
 import com.katespitzer.android.weekender.models.Note;
+import com.katespitzer.android.weekender.models.Place;
 
 import java.util.UUID;
 
@@ -72,8 +74,18 @@ public class NoteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_note, container, false);
 
         mTitleView = view.findViewById(R.id.note_title);
+        mTitleView.setText(mNote.getTitle());
+
         mSourceView = view.findViewById(R.id.note_source);
+        if (mNote.getPlaceId() > 0) {
+            Place place = PlaceManager.get(getActivity()).getPlace(mNote.getPlaceId());
+            mSourceView.setText(place.getName());
+        } else {
+            mSourceView.setVisibility(View.GONE);
+        }
+
         mContentView = view.findViewById(R.id.note_content);
+        mContentView.setText(mNote.getContent());
 
         return view;
     }

@@ -14,7 +14,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textAlignment="textEnd"
-        android:textAppearance="@style/TextAppearance.Compat.Notification.Info.Media"
+        android:textAppearance="@style/TextAppearance.Compat.Notification.Info"
+        android:textColor="@color/colorAccent"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,12 +39,10 @@
         android:id="@+id/note_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:textAlignment="textEnd"
         app:layout_constraintBaseline_toBaselineOf="@id/note_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="07/14/2017" />
 
