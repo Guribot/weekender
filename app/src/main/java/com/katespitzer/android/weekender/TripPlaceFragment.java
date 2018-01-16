@@ -15,6 +15,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -88,6 +91,52 @@ public class TripPlaceFragment extends Fragment {
             mPlaces = PlaceManager.get(getActivity()).getPlacesForTrip(mTrip);
         }
 
+        setHasOptionsMenu(true);
+
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_trip_places, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.trip_menu_add_place) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Place Search");
+
+            final EditText input = new EditText(getActivity());
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i(TAG, "onClick: input: " + input.getText());
+                    String query = input.getText().toString();
+
+                    new FetchPlacesTask(getActivity(), query).execute();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -154,4 +203,91 @@ public class TripPlaceFragment extends Fragment {
         void onPlaceClicked(Place place);
     }
 
+
+    private class FetchPlacesTask extends AsyncTask<Void, Void, String> {
+        String mQuery;
+        List<Place> mPlaces;
+        List<CharSequence> mPlaceNames;
+        Place mSelection;
+        Context mContext;
+
+        GeoDataClient mGeoDataClient;
+
+        public FetchPlacesTask(Context context, String query) {
+            mContext = context;
+            mQuery = query;
+            mPlaces = new ArrayList<>();
+            mPlaceNames = new ArrayList<>();
+            mGeoDataClient = Places.getGeoDataClient(mContext, null);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            if (mQuery == null) {
+                Log.e(TAG, "doInBackground: No Query set");
+                return null;
+            } else {
+                JSONObject jsonObject = new JSONObject();
+//                JSONArray jsonArray = new JSONArray();
+                String results = new PlaceFetcher().getPlaceData(mQuery);
+                Log.i(TAG, "doInBackground: results returned: " + results);
+//
+                try {
+                    jsonObject = new JSONObject(results);
+                    String status = jsonObject.getString("status");
+                    return status;
+                } catch (Exception e) {
+                    Log.d(TAG, "doInBackground: exception: " + e.toString());
+                    return null;
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String status) {
+            Log.i(TAG, "onPostExecute: " + status);
+
+            if (status.equals("OK")) {
+                Log.i(TAG, "onPostExecute: status ok");
+                Intent intent = PlaceSearchActivity.newIntent(mContext, mQuery, mTrip.getId());
+                startActivity(intent);
+            } else if (status.equals("ZERO_RESULTS")) {
+                Log.i(TAG, "onPostExecute: no results");
+                Toast.makeText(mContext, "No results found", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d(TAG, "onPostExecute: unexpected status: " + status);
+            }
+            super.onPostExecute(status);
+        }
+
+        private void getPhotos(String placeId) {
+            final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+                @Override
+                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+                    // Get the list of photos.
+                    PlacePhotoMetadataResponse photos = task.getResult();
+                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+                    final PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+                    // Get the first photo in the list.
+                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                    // Get the attribution text.
+                    CharSequence attribution = photoMetadata.getAttributions();
+                    // Get a full-size bitmap for the photo.
+                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                            PlacePhotoResponse photo = task.getResult();
+                            Bitmap bitmap = photo.getBitmap();
+                            photoMetadataBuffer.release();
+                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
+                        }
+                    });
+
+                }
+            });
+        }
     }
+
+}

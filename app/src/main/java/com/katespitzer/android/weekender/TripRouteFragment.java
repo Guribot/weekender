@@ -2,6 +2,7 @@ package com.katespitzer.android.weekender;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -81,6 +85,8 @@ public class TripRouteFragment extends Fragment {
             mRoute = mTrip.getRoute();
             mDestinations = DestinationManager.get(getActivity()).getDestinationsForRoute(mRoute);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -133,6 +139,28 @@ public class TripRouteFragment extends Fragment {
 
         return view;
     }
+
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_trip_route, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+//        if (id == R.id.trip_menu_add_note) {
+//
+//            return true;
+//        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
