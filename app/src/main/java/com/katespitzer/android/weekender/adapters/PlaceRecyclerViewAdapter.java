@@ -54,7 +54,15 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
         holder.mPlace = mPlaces.get(position);
         holder.mPlaceNameView.setText(mPlaces.get(position).getName());
         holder.mPlaceAddressView.setText(mPlaces.get(position).getAddress());
-        setImageView(holder.mPlacePhotoView, mPlaces.get(position).getGooglePlaceId());
+        
+        // download Bitmap if it does not exist, display existing bitmap if it does
+        if (mPlaces.get(position).getBitmap() == null) {
+            Log.i(TAG, "onBindViewHolder: bitmap does not exist; obtaining bitmap");
+            setImageView(holder.mPlacePhotoView, mPlaces.get(position));
+        } else {
+            Log.i(TAG, "onBindViewHolder: bitmap exists");
+            holder.mPlacePhotoView.setImageBitmap(mPlaces.get(position).getBitmap());
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,9 +111,9 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
      * From Google
      *
      */
-    private void setImageView(final ImageView imageView, String placeId) {
+    private void setImageView(final ImageView imageView, final Place place) {
         Log.i(TAG, "setImageView: ");
-        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(place.getGooglePlaceId());
         photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
             @Override
             public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
@@ -128,6 +136,8 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
                         Bitmap bitmap = photo.getBitmap();
 
                         imageView.setImageBitmap(bitmap);
+                        
+                        place.setBitmap(bitmap);
 
                         Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
                     }
