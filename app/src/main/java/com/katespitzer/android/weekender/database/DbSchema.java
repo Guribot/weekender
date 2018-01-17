@@ -35,6 +35,7 @@ public class DbSchema {
             public static final String TRIP_ID = "trip_id";
             public static final String NAME = "name";
             public static final String ADDRESS = "address";
+            public static final String IMAGE = "image";
             public static final String GOOGLE_PLACE_ID = "google_place_id";
         }
 
@@ -78,6 +79,7 @@ public class DbSchema {
 
         public static final class Cols {
             public static final String UUID = "uuid";
+            public static final String MAPIMG = "map_image";
             public static final String OVERVIEW_POLYLINE = "overview_polyline";
         }
 
