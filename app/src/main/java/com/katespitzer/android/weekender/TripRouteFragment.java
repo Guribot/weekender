@@ -196,10 +196,11 @@ public class TripRouteFragment extends Fragment {
     }
 
     private void renderRoute() {
-        new FetchRouteTask(mTrip.getRoute())
-                .execute();
-
-
+        if (mRoute.getDestinations().size() > 0) {
+            Log.i(TAG, "renderRoute: destinations found, rendering route");
+            new FetchRouteTask(mTrip.getRoute())
+                    .execute();
+        }
     }
 
     /**
