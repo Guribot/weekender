@@ -195,8 +195,14 @@ public class TripRouteFragment extends Fragment {
         mListener = null;
     }
 
+    /**
+     * If the Route already has a mapImage saved, it will display it.
+     * If not, if the route has at least 1 destination, it will find the route, save the image, and display it.
+     */
     private void renderRoute() {
-        if (mRoute.getDestinations().size() > 0) {
+        if (mRoute.getMapImage() != null) {
+            mRouteImageView.setImageBitmap(mRoute.getMapImage());
+        } else if (mRoute.getDestinations().size() > 0) {
             Log.i(TAG, "renderRoute: destinations found, rendering route");
             new FetchRouteTask(mTrip.getRoute())
                     .execute();
@@ -317,6 +323,7 @@ public class TripRouteFragment extends Fragment {
         protected void onPostExecute(JSONObject jsonObject) {
             Log.i(TAG, "onPostExecute: " + jsonObject);
 
+            mRoute.setMapImage(mRouteBitmap);
             mRouteImageView.setImageBitmap(mRouteBitmap);
 
             super.onPostExecute(jsonObject);
