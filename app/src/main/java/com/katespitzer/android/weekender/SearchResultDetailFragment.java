@@ -123,7 +123,7 @@ public class SearchResultDetailFragment extends Fragment {
                     mPlaceName.setText(mPlace.getName());
                     mPlaceAddress.setText(mPlace.getAddress());
 
-                    setImageView(mPlacePhoto, mPlace.getGooglePlaceId());
+                    setImageView(mPlacePhoto, mPlace);
 
                     mAddButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -179,12 +179,12 @@ public class SearchResultDetailFragment extends Fragment {
      * finds first image and sets it to the image view
      *
      * @param imageView
-     * @param placeId
+     * @param place
      */
 
-    private void setImageView(final ImageView imageView, String placeId) {
+    private void setImageView(final ImageView imageView, final Place place) {
         Log.i(TAG, "setImageView: ");
-        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(place.getGooglePlaceId());
         photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
             @Override
             public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
@@ -207,6 +207,8 @@ public class SearchResultDetailFragment extends Fragment {
                         Bitmap bitmap = photo.getBitmap();
 
                         imageView.setImageBitmap(bitmap);
+
+                        place.setBitmap(bitmap);
 
                         photoMetadataBuffer.release();
 
