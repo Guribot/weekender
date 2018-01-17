@@ -3,6 +3,7 @@ package com.katespitzer.android.weekender;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 
 import com.katespitzer.android.weekender.adapters.DestinationRecyclerViewAdapter;
 import com.katespitzer.android.weekender.api.DirectionsFetcher;
+import com.katespitzer.android.weekender.api.MapFetcher;
 import com.katespitzer.android.weekender.api.PlaceFetcher;
 import com.katespitzer.android.weekender.managers.DestinationManager;
 import com.katespitzer.android.weekender.managers.TripManager;
@@ -52,13 +54,14 @@ public class TripRouteFragment extends Fragment {
     private Route mRoute;
     private List<Destination> mDestinations;
     private TripManager mTripManager;
+    private Bitmap mRouteBitmap;
 
     private OnFragmentInteractionListener mListener;
     private DestinationRecyclerViewAdapter mAdapter;
     private OnListFragmentInteractionListener mDestinationListener;
 
     private Button mAddDestinationButton;
-    private ImageView mRouteImage;
+    private ImageView mRouteImageView;
 
     private static final String TAG = "TripRouteFragment";
     private static final String TRIP_ID = "trip_id";
@@ -104,6 +107,8 @@ public class TripRouteFragment extends Fragment {
         mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mAdapter);
+
+        mRouteImageView = view.findViewById(R.id.trip_route_map_holder);
 
         mAddDestinationButton = view.findViewById(R.id.trip_add_destination_button);
         mAddDestinationButton.setOnClickListener(new View.OnClickListener() {
@@ -266,6 +271,7 @@ public class TripRouteFragment extends Fragment {
 
     private class FetchRouteTask extends AsyncTask<Void, Void, JSONObject> {
         Route mRoute;
+        String mPolyline;
 
         public FetchRouteTask(Route route) {
             mRoute = route;
@@ -290,6 +296,18 @@ public class TripRouteFragment extends Fragment {
                 }
 
                 Log.i(TAG, "doInBackground: result is: " + results);
+
+                try {
+                    mPolyline = jsonObject.getJSONObject("overview_polyline").getString("points");
+                    Log.i(TAG, "onPostExecute: Polyline Found: " + mPolyline);
+                    mRoute.setOverviewPolyline(mPolyline);
+                } catch (Exception e) {
+                    Log.e(TAG, "onPostExecute: exception", e);
+                }
+
+                mRouteBitmap = MapFetcher.getMapImage(mPolyline);
+                Log.i(TAG, "doInBackground: " + mRouteBitmap);
+
                 return jsonObject;
             }
         }
@@ -297,13 +315,9 @@ public class TripRouteFragment extends Fragment {
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
             Log.i(TAG, "onPostExecute: " + jsonObject);
-            try {
-                String polyline = jsonObject.getJSONObject("overview_polyline").getString("points");
-                Log.i(TAG, "onPostExecute: Polyline Found: " + polyline);
-                mRoute.setOverviewPolyline(polyline);
-            } catch (Exception e) {
-                Log.e(TAG, "onPostExecute: exception", e);
-            }
+
+            mRouteImageView.setImageBitmap(mRouteBitmap);
+
             super.onPostExecute(jsonObject);
         }
     }
