@@ -182,6 +182,7 @@ public class RouteManager {
     private static ContentValues getContentValues(Route route) {
         ContentValues values = new ContentValues();
         values.put(RouteTable.Cols.UUID, route.getId().toString());
+        values.put(RouteTable.Cols.MAP_IMG, route.getMapImageByteArray());
         values.put(RouteTable.Cols.OVERVIEW_POLYLINE, route.getOverviewPolyline());
 
         return values;

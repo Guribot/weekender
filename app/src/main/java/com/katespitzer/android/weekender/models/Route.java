@@ -1,5 +1,9 @@
 package com.katespitzer.android.weekender.models;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +17,7 @@ public class Route {
     private UUID mId;
     private List<Destination> mDestinations;
     private String mOverviewPolyline;
+    private Bitmap mMapImage;
     private int mDbId;
 
     public Route() {
@@ -71,6 +76,26 @@ public class Route {
         destinations.add(cannonBeach);
 
         setDestinations(destinations);
+    }
+
+    public Bitmap getMapImage() {
+        return mMapImage;
+    }
+
+    public byte[] getMapImageByteArray() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        mMapImage.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bytes = baos.toByteArray();
+        return bytes;
+    }
+
+    public void setMapImage(Bitmap mapImage) {
+        mMapImage = mapImage;
+    }
+
+    public void setMapImage(byte[] bytes) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        mMapImage = bitmap;
     }
 
     public int getDbId() {

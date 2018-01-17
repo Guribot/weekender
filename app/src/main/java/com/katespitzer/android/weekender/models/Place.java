@@ -1,8 +1,10 @@
 package com.katespitzer.android.weekender.models;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
 /**
@@ -88,7 +90,19 @@ public class Place {
         return mBitmap;
     }
 
+    public byte[] getBitmapByteArray() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        mBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bytes = baos.toByteArray();
+        return bytes;
+    }
+
     public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
+    }
+
+    public void setBitmap(byte[] bytes) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         mBitmap = bitmap;
     }
 }

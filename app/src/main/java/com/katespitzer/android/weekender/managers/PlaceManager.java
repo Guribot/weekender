@@ -250,6 +250,7 @@ public class PlaceManager {
         ContentValues values = new ContentValues();
         values.put(PlaceTable.Cols.UUID, place.getId().toString());
         values.put(PlaceTable.Cols.NAME, place.getName());
+        values.put(PlaceTable.Cols.IMAGE, place.getBitmapByteArray());
         values.put(PlaceTable.Cols.ADDRESS, place.getAddress());
         values.put(PlaceTable.Cols.GOOGLE_PLACE_ID, place.getGooglePlaceId());
         values.put(PlaceTable.Cols.TRIP_ID, place.getTripId());

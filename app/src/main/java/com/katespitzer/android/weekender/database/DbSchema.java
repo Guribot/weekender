@@ -44,6 +44,7 @@ public class DbSchema {
                 Cols.UUID + ", " +
                 Cols.TRIP_ID + " integer, " +
                 Cols.NAME + ", " +
+                Cols.IMAGE + ", " +
                 Cols.ADDRESS + ", " +
                 Cols.GOOGLE_PLACE_ID + ", " +
                 "FOREIGN KEY (" + Cols.TRIP_ID + ") REFERENCES " + TripTable.NAME + "(_id) )";
@@ -79,13 +80,14 @@ public class DbSchema {
 
         public static final class Cols {
             public static final String UUID = "uuid";
-            public static final String MAPIMG = "map_image";
+            public static final String MAP_IMG = "map_image";
             public static final String OVERVIEW_POLYLINE = "overview_polyline";
         }
 
         public static final String CREATE = "create table " + RouteTable.NAME + "(" +
                 "_id integer primary key autoincrement, " +
                 Cols.UUID + ", " +
+                Cols.MAP_IMG + ", " +
                 Cols.OVERVIEW_POLYLINE +
                 ")";
     }
