@@ -27,6 +27,8 @@ public class TripManager {
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
+    private RouteManager mRouteManager;
+
     private static final String TAG = "TripManager";
 
     /**
@@ -38,6 +40,8 @@ public class TripManager {
         mContext = context.getApplicationContext();
         mDatabase = new DatabaseHelper(mContext)
                 .getWritableDatabase();
+
+        mRouteManager = RouteManager.get(context);
     }
 
     /**
@@ -77,7 +81,11 @@ public class TripManager {
             // if there are results, return the first one
             // (since search param is UUID, There Can Only Be One
             cursor.moveToFirst();
-            return cursor.getTrip();
+
+            Trip trip = cursor.getTrip();
+            trip.setRoute(mRouteManager.getRoute(trip.getRouteId()));
+
+            return trip;
         } finally {
             // close cursor!
             cursor.close();
@@ -107,7 +115,11 @@ public class TripManager {
             // if there are results, return the first one
             // (since search param is UUID, There Can Only Be One
             cursor.moveToFirst();
-            return cursor.getTrip();
+
+            Trip trip = cursor.getTrip();
+            trip.setRoute(mRouteManager.getRoute(trip.getRouteId()));
+
+            return trip;
         } finally {
             // close cursor!
             cursor.close();
@@ -123,6 +135,12 @@ public class TripManager {
      */
     public void addTrip(Trip trip) {
         Log.i(TAG, "in addTrip()");
+
+        Route route = new Route();
+        mRouteManager.addRoute(route);
+        trip.setRoute(route);
+        trip.setRouteId(route.getId());
+
         ContentValues values = getContentValues(trip);
 
         mDatabase.insert(TripTable.NAME, null, values);
@@ -195,7 +213,7 @@ public class TripManager {
         values.put(TripTable.Cols.TITLE, trip.getTitle());
         values.put(TripTable.Cols.START_DATE, trip.getStartDate().getTime());
         values.put(TripTable.Cols.END_DATE, trip.getEndDate().getTime());
-        values.put(TripTable.Cols.ROUTE_ID, trip.getRouteId());
+        values.put(TripTable.Cols.ROUTE_ID, trip.getRouteId().toString());
 
         return values;
     }

@@ -11,15 +11,13 @@ import java.util.UUID;
 public class Trip {
     private UUID mId;
     private int mDbId;
-    private int mRouteId;
+    private UUID mRouteId;
     private Route mRoute;
     private String mTitle;
     private Date mStartDate;
     private Date mEndDate;
 
     private static final String TAG = "Trip";
-//    private Route mRoute;
-//    private PlaceManager mPlaces;
 
     public Trip() {
         this(UUID.randomUUID());
@@ -27,7 +25,6 @@ public class Trip {
 
     public Trip(UUID id) {
         mId = id;
-        mRoute = new Route();
     }
 
     @Override
@@ -35,11 +32,11 @@ public class Trip {
         return mTitle + " " + mId;
     }
 
-    public int getRouteId() {
+    public UUID getRouteId() {
         return mRouteId;
     }
 
-    public void setRouteId(int routeId) {
+    public void setRouteId(UUID routeId) {
         mRouteId = routeId;
     }
 

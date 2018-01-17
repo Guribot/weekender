@@ -37,7 +37,9 @@ public class RouteCursorWrapper extends CursorWrapper {
 
         Route route = new Route();
         route.setId(UUID.fromString(uuidString));
-        route.setMapImage(mapImage);
+        if (mapImage != null) {
+            route.setMapImage(mapImage);
+        }
         route.setOverviewPolyline(overviewPolyline);
         route.setDbId(dbId);
 
