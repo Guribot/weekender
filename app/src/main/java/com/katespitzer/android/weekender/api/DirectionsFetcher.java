@@ -1,5 +1,6 @@
 package com.katespitzer.android.weekender.api;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
@@ -75,19 +76,19 @@ public class DirectionsFetcher {
 
         Uri builtURL = ENDPOINT.buildUpon()
                 .appendQueryParameter(KEY, DIRECTIONS_API_KEY)
-                .appendQueryParameter(ORIGIN, origin.getGooglePlaceId())
-                .appendQueryParameter(ENDDEST, endDest.getGooglePlaceId())
+                .appendQueryParameter(ORIGIN, "place_id:" + origin.getGooglePlaceId())
+                .appendQueryParameter(ENDDEST, "place_id:" + endDest.getGooglePlaceId())
                 .build();
 
         if (waypoints.size() > 0) {
             for (int i = 0; i < waypoints.size(); i ++) {
-                waypointVals = waypointVals.concat(waypoints.get(i).getGooglePlaceId());
+                waypointVals = waypointVals.concat("place_id:" + waypoints.get(i).getGooglePlaceId());
                 if ( (i + 1) != waypoints.size() ) {
                     waypointVals = waypointVals.concat("|");
                 }
             }
 
-            builtURL.buildUpon()
+            builtURL = builtURL.buildUpon()
                     .appendQueryParameter(WAYPOINTS, waypointVals)
                     .build();
         }

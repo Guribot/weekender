@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.katespitzer.android.weekender.adapters.DestinationRecyclerViewAdapter;
 import com.katespitzer.android.weekender.api.DirectionsFetcher;
@@ -57,6 +58,7 @@ public class TripRouteFragment extends Fragment {
     private OnListFragmentInteractionListener mDestinationListener;
 
     private Button mAddDestinationButton;
+    private ImageView mRouteImage;
 
     private static final String TAG = "TripRouteFragment";
     private static final String TRIP_ID = "trip_id";
@@ -137,6 +139,8 @@ public class TripRouteFragment extends Fragment {
             }
         });
 
+        renderRoute();
+
         return view;
     }
 
@@ -186,6 +190,13 @@ public class TripRouteFragment extends Fragment {
         mListener = null;
     }
 
+    private void renderRoute() {
+        new FetchRouteTask(mTrip.getRoute())
+                .execute();
+
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -200,7 +211,6 @@ public class TripRouteFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
 
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
@@ -287,6 +297,13 @@ public class TripRouteFragment extends Fragment {
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
             Log.i(TAG, "onPostExecute: " + jsonObject);
+            try {
+                String polyline = jsonObject.getJSONObject("overview_polyline").getString("points");
+                Log.i(TAG, "onPostExecute: Polyline Found: " + polyline);
+                mRoute.setOverviewPolyline(polyline);
+            } catch (Exception e) {
+                Log.e(TAG, "onPostExecute: exception", e);
+            }
             super.onPostExecute(jsonObject);
         }
     }
