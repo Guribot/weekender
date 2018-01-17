@@ -4,13 +4,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.katespitzer.android.weekender.adapters.DestinationRecyclerViewAdapter;
 import com.katespitzer.android.weekender.api.DirectionsFetcher;
@@ -48,7 +54,7 @@ import java.util.UUID;
  * create an instance of this fragment.
  */
 
-public class TripRouteFragment extends Fragment {
+public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private Trip mTrip;
     private Route mRoute;
@@ -62,6 +68,7 @@ public class TripRouteFragment extends Fragment {
 
     private Button mAddDestinationButton;
     private ImageView mRouteImageView;
+    private ConstraintLayout mConstraintLayout;
 
     private static final String TAG = "TripRouteFragment";
     private static final String TRIP_ID = "trip_id";
@@ -107,6 +114,12 @@ public class TripRouteFragment extends Fragment {
         mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mAdapter);
+
+        // setting swipe callback for destination list
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
+        mConstraintLayout = view.findViewById(R.id.constraint_layout);
 
         mRouteImageView = view.findViewById(R.id.trip_route_map_holder);
 
@@ -204,8 +217,48 @@ public class TripRouteFragment extends Fragment {
             mRouteImageView.setImageBitmap(mRoute.getMapImage());
         } else if (mRoute.getDestinations().size() > 1) {
             Log.i(TAG, "renderRoute: destinations found, rendering route");
-            new FetchRouteTask(mTrip.getRoute())
-                    .execute();
+            getRoute();
+        }
+    }
+
+    private void getRoute() {
+        new FetchRouteTask(mTrip.getRoute())
+                .execute();
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof DestinationRecyclerViewAdapter.ViewHolder) {
+            // get the swiped item name for Snack bar
+            String name = mDestinations.get(viewHolder.getAdapterPosition()).getName();
+
+            // backup item for Undo
+            final Destination deletedDestination = mDestinations.get(viewHolder.getAdapterPosition());
+            final int deletedIndex = viewHolder.getAdapterPosition();
+
+            // remove the item from the recycler view
+            mAdapter.removeDestination(viewHolder.getAdapterPosition());
+
+            // display a Snack bar with Undo option
+            Snackbar snackbar = Snackbar.make(mConstraintLayout, name + " removed!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // undo the removal (restore item)
+                    mAdapter.restoreDestination(deletedDestination, deletedIndex);
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    getRoute();
+                    mRoute.setDestinations(mDestinations);
+                    mAdapter.notifyDataSetChanged();
+                    super.onDismissed(transientBottomBar, event);
+                }
+            });
+            snackbar.show();
         }
     }
 
@@ -250,8 +303,6 @@ public class TripRouteFragment extends Fragment {
 
                 try {
                     jsonObject = new JSONObject(results);
-                    jsonObject = jsonObject.getJSONArray("results")
-                            .getJSONObject(0);
                 } catch (Exception e) {
                     Log.d(TAG, "doInBackground: exception: " + e.toString());
                 }
@@ -265,14 +316,36 @@ public class TripRouteFragment extends Fragment {
         protected void onPostExecute(JSONObject jsonObject) {
             Log.i(TAG, "onPostExecute: " + jsonObject);
             try {
-                mDestination.setName(jsonObject.getString("name"));
-                mDestination.setGooglePlaceId(jsonObject.getString("place_id"));
+                switch (jsonObject.getString("status")) {
+                    case "OK":
+                        try {
+                            jsonObject = jsonObject.getJSONArray("results")
+                                    .getJSONObject(0);
 
-                DestinationManager.get(getActivity()).addDestinationToRoute(mDestination, mRoute);
+                            mDestination.setName(jsonObject.getString("name"));
+                            mDestination.setGooglePlaceId(jsonObject.getString("place_id"));
+
+                            DestinationManager.get(getActivity()).addDestinationToRoute(mDestination, mRoute);
+
+                            mDestinations = mRoute.getDestinations();
+                            mAdapter.notifyDataSetChanged();
+
+                            getRoute();
+                        } catch (Exception e) {
+                            Log.e(TAG, "onPostExecute: Exception: ", e);
+                        }
+                        super.onPostExecute(jsonObject);
+                        break;
+                    case "ZERO_RESULTS":
+                        Toast.makeText(getActivity(), "No results found.", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Log.d(TAG, "onPostExecute: something weird happened: " + jsonObject.getString("status"));
+                }
             } catch (Exception e) {
-                Log.e(TAG, "onPostExecute: Exception: ", e);
+                Log.e(TAG, "onPostExecute: unexpected JSON response: ", e);
             }
-            super.onPostExecute(jsonObject);
+
         }
     }
 

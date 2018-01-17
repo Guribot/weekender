@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Weekender</string>
 
+    <string name="delete">Delete</string>
+
     <string name="my_trips">My Trips</string>
     <string name="new_trip">New Trip</string>
     <string name="find_trips">Find Trip</string>

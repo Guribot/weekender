@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.R;
@@ -15,7 +16,6 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Destination} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<DestinationRecyclerViewAdapter.ViewHolder> {
 
@@ -30,7 +30,7 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_destination, parent, false);
+                .inflate(R.layout.fragment_destination2, parent, false);
         return new ViewHolder(view);
     }
 
@@ -61,15 +61,30 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         public final TextView mNameView;
         public Destination mDestination;
 
+        public RelativeLayout mViewForeground;
+        public RelativeLayout mViewBackground;
+
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mNameView = (TextView) view.findViewById(R.id.trip_destination_name);
+            mViewForeground = view.findViewById(R.id.view_foreground);
+            mViewBackground = view.findViewById(R.id.view_background);
         }
 
         @Override
         public String toString() {
             return super.toString() + " '" + mNameView.getText() + "'";
         }
+    }
+
+    public void removeDestination(int position) {
+        mDestinations.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreDestination(Destination destination, int position) {
+        mDestinations.add(position, destination);
+        notifyItemInserted(position);
     }
 }
