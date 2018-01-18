@@ -1,16 +1,19 @@
 package com.katespitzer.android.weekender.models;
 
+import android.support.annotation.NonNull;
+
 import java.util.UUID;
 
 /**
  * Created by kate on 1/9/18.
  */
 
-public class Destination {
+public class Destination implements Comparable {
 
     private UUID mId;
     private String mName;
     private String mGooglePlaceId;
+    private int mPosition;
     private int mRouteId;
 
     public Destination() {
@@ -50,11 +53,28 @@ public class Destination {
         mName = name;
     }
 
+    public int getPosition() {
+        return mPosition;
+    }
+
+    public void setPosition(int position) {
+        mPosition = position;
+    }
+
     public int getRouteId() {
         return mRouteId;
     }
 
     public void setRouteId(int routeId) {
         mRouteId = routeId;
+    }
+
+    @Override
+    public int compareTo(@NonNull Object other) throws ClassCastException {
+        if (other instanceof Destination) {
+            return this.getPosition() - ((Destination) other).getPosition();
+        } else {
+            throw new ClassCastException("Destination expected");
+        }
     }
 }

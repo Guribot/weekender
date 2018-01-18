@@ -11,6 +11,7 @@ import com.katespitzer.android.weekender.R;
 import com.katespitzer.android.weekender.TripRouteFragment.OnListFragmentInteractionListener;
 import com.katespitzer.android.weekender.models.Destination;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
 
     public DestinationRecyclerViewAdapter(List<Destination> destinations, OnListFragmentInteractionListener listener) {
         mDestinations = destinations;
+        Collections.sort(mDestinations);
         mListener = listener;
     }
 

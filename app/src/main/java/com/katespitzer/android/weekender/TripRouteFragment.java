@@ -2,14 +2,12 @@ package com.katespitzer.android.weekender;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -159,7 +157,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
             }
         });
 
-        renderRoute();
+        launchRoute();
 
         return view;
     }
@@ -228,18 +226,19 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
      * If the Route already has a mapImage saved, it will display it.
      * If not, if the route has at least 2 destinations, it will find the route, save the image, and display it.
      */
-    private void renderRoute() {
+    private void launchRoute() {
         if (mRoute.getMapImage() != null) {
             mRouteImageView.setImageBitmap(mRoute.getMapImage());
-        } else if (mRoute.getDestinations().size() > 1) {
-            Log.i(TAG, "renderRoute: destinations found, rendering route");
+        } else {
             getRoute();
         }
     }
 
     private void getRoute() {
-        new FetchRouteTask(mTrip.getRoute())
-                .execute();
+        if (mDestinations.size() > 1) {
+            new FetchRouteTask(mTrip.getRoute())
+                    .execute();
+        }
     }
 
     @Override
@@ -360,6 +359,10 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                             // build Destination around result data
                             mDestination.setName(jsonObject.getString("name"));
                             mDestination.setGooglePlaceId(jsonObject.getString("place_id"));
+
+                            // set position; defaults to last
+                            int position = mDestinations.size();
+                            mDestination.setPosition(position);
 
                             // add Destination to database, set Route ID
                             DestinationManager.get(getActivity()).addDestinationToRoute(mDestination, mRoute);
