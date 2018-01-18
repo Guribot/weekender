@@ -13,6 +13,7 @@ import com.katespitzer.android.weekender.database.DestinationCursorWrapper;
 import com.katespitzer.android.weekender.database.DbSchema.DestinationTable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -199,6 +200,113 @@ public class DestinationManager {
     }
 
     /**
+     * deletes the given destination from the database,
+     * retrieves/sorts the list of all other destinations from the same route,
+     * and iterates through all destinations that were after the deleted destination,
+     * setting an incrementing position
+     * (in practice, this probably decrements them all by one)
+     *
+     * @param destination - destination to be deleted
+     */
+    public void deleteDestinationFromRoute(Destination destination) {
+        // get Route that Destination belongs to
+        Route route = RouteManager.get(mContext)
+                .getRoute(destination.getRouteId());
+
+        // position to delete and begin from
+        int pos = destination.getPosition();
+
+        // delete destination
+        deleteDestination(destination);
+
+        // get and sort list of remaining Destinations from route
+        List<Destination> destinations = getDestinationsForRoute(route);
+        Collections.sort(destinations);
+
+        // position of last element
+        int max = destinations.size() - 1;
+
+        // iterate through remaining destinations
+        for (int i = pos; i <= max; i++) {
+            // get destination at index i
+            Destination currentDest = destinations.get(i);
+
+            // set destination's position to i
+            currentDest.setPosition(i);
+        }
+
+    }
+
+    /**
+     * takes a destination, and switches its position with the destination previous to it in the list
+     * @param destination
+     */
+    public void moveDestinationUp(Destination destination) {
+        // stop if Destination is already first
+        if (destination.getPosition() == 0) {
+            return;
+        }
+
+        // get Route that Destination belongs to
+        Route route = RouteManager.get(mContext)
+                .getRoute(destination.getRouteId());
+
+        // get positions destination is moving to and from
+        int fromPos = destination.getPosition();
+        int toPos = fromPos - 1;
+
+        // get and sort list of Destinations from route
+        List<Destination> destinations = getDestinationsForRoute(route);
+        Collections.sort(destinations);
+
+        // find destination that selected destination will be switching spots with
+        Destination prevDest = destinations.get(toPos);
+
+        // switch the positions
+        destination.setPosition(toPos);
+        prevDest.setPosition(fromPos);
+
+        // updates database
+        sDestinationManager.updateDestination(destination);
+        sDestinationManager.updateDestination(prevDest);
+    }
+
+    /**
+     * takes a destination, and switches its position with the destination after it in the list
+     * @param destination
+     */
+    public void moveDestinationDown(Destination destination) {
+        // get Route that Destination belongs to
+        Route route = RouteManager.get(mContext)
+                .getRoute(destination.getRouteId());
+
+        // get positions destination is moving to and from
+        int fromPos = destination.getPosition();
+        int toPos = fromPos + 1;
+
+        // get and sort list of Destinations from route
+        List<Destination> destinations = getDestinationsForRoute(route);
+        Collections.sort(destinations);
+
+        // stop if Destination is already last
+        if (fromPos + 1 == destinations.size()) {
+            return;
+        }
+
+        // find destination that selected destination will be switching spots with
+        Destination nextDest = destinations.get(toPos);
+
+        // switch the positions
+        destination.setPosition(toPos);
+        nextDest.setPosition(fromPos);
+
+        // updates database
+        sDestinationManager.updateDestination(destination);
+        sDestinationManager.updateDestination(nextDest);
+    }
+
+
+    /**
      * Converts provided Destination into equivalent ContentValues (for use in SQLite operations)
      *
      * @param destination
@@ -208,6 +316,7 @@ public class DestinationManager {
         ContentValues values = new ContentValues();
         values.put(DestinationTable.Cols.UUID, destination.getId().toString());
         values.put(DestinationTable.Cols.NAME, destination.getName());
+        values.put(DestinationTable.Cols.POSITION, destination.getPosition());
         values.put(DestinationTable.Cols.GOOGLE_PLACE_ID, destination.getGooglePlaceId());
         values.put(DestinationTable.Cols.ROUTE_ID, destination.getRouteId());
 

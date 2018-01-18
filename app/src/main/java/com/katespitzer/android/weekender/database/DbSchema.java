@@ -98,6 +98,7 @@ public class DbSchema {
         public static final class Cols {
             public static final String UUID = "uuid";
             public static final String NAME = "name";
+            public static final String POSITION = "position";
             public static final String GOOGLE_PLACE_ID = "google_place_id";
             public static final String ROUTE_ID = "route_id";
         }
@@ -106,6 +107,7 @@ public class DbSchema {
                 "_id integer primary key autoincrement, " +
                 Cols.UUID + ", " +
                 Cols.NAME + ", " +
+                Cols.POSITION + ", " +
                 Cols.GOOGLE_PLACE_ID + ", " +
                 Cols.ROUTE_ID + ", " +
                 "FOREIGN KEY (" + Cols.ROUTE_ID + ") REFERENCES " + RouteTable.NAME + "(_id) )";

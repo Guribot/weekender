@@ -1,14 +1,16 @@
 package com.katespitzer.android.weekender.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.R;
-import com.katespitzer.android.weekender.TripRouteFragment.OnListFragmentInteractionListener;
+import com.katespitzer.android.weekender.TripRouteFragment.OnDestinationListItemInteractionListener;
 import com.katespitzer.android.weekender.models.Destination;
 
 import java.util.Collections;
@@ -16,14 +18,16 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Destination} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link OnDestinationListItemInteractionListener}.
  */
 public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<DestinationRecyclerViewAdapter.ViewHolder> {
 
     private List<Destination> mDestinations;
-    private final OnListFragmentInteractionListener mListener;
+    private final OnDestinationListItemInteractionListener mListener;
 
-    public DestinationRecyclerViewAdapter(List<Destination> destinations, OnListFragmentInteractionListener listener) {
+    private static final String TAG = "DestintnRcyclrVwAdptr";
+
+    public DestinationRecyclerViewAdapter(List<Destination> destinations, OnDestinationListItemInteractionListener listener) {
         mDestinations = destinations;
         Collections.sort(mDestinations);
         mListener = listener;
@@ -41,13 +45,45 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         holder.mDestination = mDestinations.get(position);
         holder.mNameView.setText(mDestinations.get(position).getName());
 
+        if (holder.mDestination.getPosition() == 0) {
+            holder.mUpArrow.setVisibility(View.INVISIBLE);
+        } else {
+            holder.mUpArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "onClick: up arrow");
+                    if (mListener != null) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onUpArrowClicked(holder.mDestination);
+                    }
+                }
+            });
+        }
+
+        if (holder.mDestination.getPosition() == mDestinations.size() - 1) {
+            holder.mDownArrow.setVisibility(View.INVISIBLE);
+        } else {
+            holder.mDownArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i(TAG, "onClick: down arrow");
+                    if (mListener != null) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onDownArrowClicked(holder.mDestination);
+                    }
+                }
+            });
+        }
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
+                if (mListener != null) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mDestination);
+//                    mListener.onArrowClicked(holder.mDestination);
                 }
             }
         });
@@ -62,6 +98,8 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         public final View mView;
         public final TextView mNameView;
         public Destination mDestination;
+        public final ImageView mUpArrow;
+        public final ImageView mDownArrow;
 
         public RelativeLayout mViewForeground;
         public RelativeLayout mViewBackground;
@@ -72,6 +110,9 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
             mNameView = (TextView) view.findViewById(R.id.trip_destination_name);
             mViewForeground = view.findViewById(R.id.view_foreground);
             mViewBackground = view.findViewById(R.id.view_background);
+
+            mUpArrow = view.findViewById(R.id.up_icon);
+            mDownArrow = view.findViewById(R.id.down_icon);
         }
 
         @Override
@@ -91,6 +132,7 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
     }
 
     public void setDestinations(List<Destination> destinations) {
+        Collections.sort(destinations);
         mDestinations = destinations;
     }
 }

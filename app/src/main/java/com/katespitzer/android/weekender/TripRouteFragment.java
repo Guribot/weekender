@@ -58,12 +58,13 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     private Route mRoute;
     private List<Destination> mDestinations;
     private TripManager mTripManager;
+    private DestinationManager mDestinationManager;
     private Bitmap mRouteBitmap;
 
     private OnFragmentInteractionListener mListener;
     private DestinationRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private OnListFragmentInteractionListener mDestinationListener;
+    private OnDestinationListItemInteractionListener mDestinationListener;
 
     private Button mAddDestinationButton;
     private ImageView mRouteImageView;
@@ -109,6 +110,27 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 
         // Set the adapter
         final Context context = view.getContext();
+        mDestinationManager = DestinationManager.get(getActivity());
+
+        mDestinationListener = new OnDestinationListItemInteractionListener() {
+            @Override
+            public void onUpArrowClicked(Destination destination) {
+                Log.i(TAG, "onUpArrowClicked: " + destination);
+                mDestinationManager.moveDestinationUp(destination);
+
+                updateUI();
+                getRoute();
+            }
+
+            @Override
+            public void onDownArrowClicked(Destination destination) {
+                Log.i(TAG, "onDownArrowClicked: " + destination);
+                mDestinationManager.moveDestinationDown(destination);
+
+                updateUI();
+                getRoute();
+            }
+        };
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.trip_route_recycler_view);
         updateUI();
@@ -209,7 +231,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     }
 
     private void updateUI() {
-        mDestinations = DestinationManager.get(getActivity())
+        mDestinations = mDestinationManager
                 .getDestinationsForRoute(mRoute);
 
         if (mAdapter == null) {
@@ -280,7 +302,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                     // if it was deleted (and undo button was not clicked), delete from db
                     // (otherwise it will keep showing up when getDestinationsForRoute is called)
                     if (mIsDeleted) {
-                        DestinationManager.get(getActivity()).deleteDestination(deletedDestination);
+                        mDestinationManager.deleteDestinationFromRoute(deletedDestination);
                     }
 
                     // update the route's saved Destination list to match the displayed list
@@ -310,9 +332,9 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         void onFragmentInteraction(Uri uri);
     }
 
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Destination destination);
+    public interface OnDestinationListItemInteractionListener {
+        void onUpArrowClicked(Destination destination);
+        void onDownArrowClicked(Destination destination);
     }
 
     private class FetchPlaceTask extends AsyncTask<Void, Void, JSONObject> {
@@ -365,7 +387,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                             mDestination.setPosition(position);
 
                             // add Destination to database, set Route ID
-                            DestinationManager.get(getActivity()).addDestinationToRoute(mDestination, mRoute);
+                            mDestinationManager.addDestinationToRoute(mDestination, mRoute);
 
                             // update mDestinations based on DB, re-render list
                             updateUI();

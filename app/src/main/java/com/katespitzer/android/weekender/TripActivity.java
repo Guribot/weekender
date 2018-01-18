@@ -33,7 +33,9 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.katespitzer.android.weekender.api.PlaceFetcher;
+import com.katespitzer.android.weekender.managers.DestinationManager;
 import com.katespitzer.android.weekender.managers.TripManager;
+import com.katespitzer.android.weekender.models.Destination;
 import com.katespitzer.android.weekender.models.Note;
 import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.models.Trip;
@@ -47,7 +49,7 @@ import java.util.UUID;
 public class TripActivity 
         extends AppCompatActivity 
         implements TripPlaceFragment.OnListFragmentInteractionListener,
-        TripRouteFragment.OnFragmentInteractionListener, 
+        TripRouteFragment.OnFragmentInteractionListener,
         TripNoteFragment.OnListFragmentInteractionListener,
         SearchResultFragment.OnListFragmentInteractionListener {
 
