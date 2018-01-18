@@ -39,8 +39,7 @@ public class NoteCursorWrapper extends CursorWrapper {
         int placeId = getInt(getColumnIndex(NoteTable.Cols.PLACE_ID));
         int dbId = getInt(getColumnIndex("_id"));
 
-        Note note = new Note();
-        note.setId(UUID.fromString(uuidString));
+        Note note = new Note(UUID.fromString(uuidString));
         note.setTitle(name);
         note.setContent(content);
         note.setTripId(tripId);

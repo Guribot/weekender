@@ -113,7 +113,7 @@ public class RouteManager {
      * @param route
      */
     public void addRoute(Route route) {
-        Log.i(TAG, "in addRoute()");
+        Log.i(TAG, "in addRoute: " + route);
         ContentValues values = getContentValues(route);
 
         long r = mDatabase.insert(RouteTable.NAME, null, values);
@@ -125,13 +125,28 @@ public class RouteManager {
      * @param route
      */
     public void updateRoute(Route route) {
-        Log.i(TAG, "updateRoute()");
+        Log.i(TAG, "updateRoute: " + route);
         String uuidString = route.getId().toString();
         ContentValues values = getContentValues(route);
 
         mDatabase.update(RouteTable.NAME, values,
                 RouteTable.Cols.UUID + " = ?",
                 new String[]{uuidString});
+    }
+
+    /**
+     * Takes in a route and deletes it from the database (if it's present)
+     *
+     * @param route
+     */
+    public void deleteRoute(Route route) {
+        Log.i(TAG, "deleteRoute: " + route);
+        String uuidString = route.getId().toString();
+
+        mDatabase.delete(RouteTable.NAME,
+                RouteTable.Cols.UUID + " = ?",
+                new String[] {uuidString}
+                );
     }
 
     /**

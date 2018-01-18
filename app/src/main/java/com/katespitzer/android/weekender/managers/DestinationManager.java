@@ -112,6 +112,22 @@ public class DestinationManager {
                 new String[]{uuidString});
     }
 
+
+    /**
+     * Takes in a route and deletes it from the database (if it's present)
+     *
+     * @param destination
+     */
+    public void deleteDestination(Destination destination) {
+        Log.i(TAG, "deleteDestination: " + destination);
+        String uuidString = destination.getId().toString();
+
+        mDatabase.delete(DestinationTable.NAME,
+                DestinationTable.Cols.UUID + " = ?",
+                new String[] {uuidString}
+        );
+    }
+
     /**
      * Queries db with null query params (retrieving entire db)
      * iterates through db, parses row into Destination, and adds to

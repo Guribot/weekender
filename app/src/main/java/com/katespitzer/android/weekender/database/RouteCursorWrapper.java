@@ -35,8 +35,7 @@ public class RouteCursorWrapper extends CursorWrapper {
         byte[] mapImage = getBlob(getColumnIndex(RouteTable.Cols.MAP_IMG));
         int dbId = getInt(getColumnIndex("_id"));
 
-        Route route = new Route();
-        route.setId(UUID.fromString(uuidString));
+        Route route = new Route(UUID.fromString(uuidString));
         if (mapImage != null) {
             route.setMapImage(mapImage);
         }
