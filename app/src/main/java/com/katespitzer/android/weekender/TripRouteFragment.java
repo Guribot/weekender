@@ -70,6 +70,8 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     private ImageView mRouteImageView;
     private ConstraintLayout mConstraintLayout;
 
+    private boolean mIsDeleted;
+
     private static final String TAG = "TripRouteFragment";
     private static final String TRIP_ID = "trip_id";
 
@@ -229,6 +231,9 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof DestinationRecyclerViewAdapter.ViewHolder) {
+            // set isDeleted to true
+            mIsDeleted = true;
+
             // get the swiped item name for Snack bar
             String name = mDestinations.get(viewHolder.getAdapterPosition()).getName();
 
@@ -239,22 +244,37 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
             // remove the item from the recycler view
             mAdapter.removeDestination(viewHolder.getAdapterPosition());
 
+            // retrieve the updated map
+            getRoute();
+
             // display a Snack bar with Undo option
             Snackbar snackbar = Snackbar.make(mConstraintLayout, name + " removed!", Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // set isDeleted to false
+                    mIsDeleted = false;
                     // undo the removal (restore item)
                     mAdapter.restoreDestination(deletedDestination, deletedIndex);
+                    // retrieve the updated map
+                    getRoute();
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar transientBottomBar, int event) {
-                    getRoute();
+                    // if it was deleted (and undo button was not clicked), delete from db
+                    // (otherwise it will keep showing up when getDestinationsForRoute is called)
+                    if (mIsDeleted) {
+                        DestinationManager.get(getActivity()).deleteDestination(deletedDestination);
+                    }
+
+                    // update the route's saved Destination list to match the displayed list
                     mRoute.setDestinations(mDestinations);
+                    // re-render the display (??? is this necessary?)
                     mAdapter.notifyDataSetChanged();
+
                     super.onDismissed(transientBottomBar, event);
                 }
             });
