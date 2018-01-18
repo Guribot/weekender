@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<DestinationRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Destination> mDestinations;
+    private List<Destination> mDestinations;
     private final OnListFragmentInteractionListener mListener;
 
     public DestinationRecyclerViewAdapter(List<Destination> destinations, OnListFragmentInteractionListener listener) {
@@ -86,5 +86,9 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
     public void restoreDestination(Destination destination, int position) {
         mDestinations.add(position, destination);
         notifyItemInserted(position);
+    }
+
+    public void setDestinations(List<Destination> destinations) {
+        mDestinations = destinations;
     }
 }

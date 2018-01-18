@@ -64,6 +64,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 
     private OnFragmentInteractionListener mListener;
     private DestinationRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
     private OnListFragmentInteractionListener mDestinationListener;
 
     private Button mAddDestinationButton;
@@ -97,7 +98,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
             UUID tripId = (UUID) getArguments().getSerializable(TRIP_ID);
             mTrip = mTripManager.getTrip(tripId);
             mRoute = mTrip.getRoute();
-            mDestinations = DestinationManager.get(getActivity()).getDestinationsForRoute(mRoute);
         }
 
         setHasOptionsMenu(true);
@@ -112,14 +112,12 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         // Set the adapter
         final Context context = view.getContext();
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trip_route_recycler_view);
-        mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.trip_route_recycler_view);
+        updateUI();
 
         // setting swipe callback for destination list
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
         mConstraintLayout = view.findViewById(R.id.constraint_layout);
 
@@ -141,8 +139,10 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.i(TAG, "onClick: input: " + input.getText());
+                        // create Destination object based on search input
                         Destination destination = new Destination();
                         destination.setName(input.getText().toString());
+                        // begin AsyncTask to get Destination info
                         new FetchPlaceTask(destination, mRoute).execute();
                     }
                 });
@@ -210,6 +210,20 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         mListener = null;
     }
 
+    private void updateUI() {
+        mDestinations = DestinationManager.get(getActivity())
+                .getDestinationsForRoute(mRoute);
+
+        if (mAdapter == null) {
+            mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setDestinations(mDestinations);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     /**
      * If the Route already has a mapImage saved, it will display it.
      * If not, if the route has at least 2 destinations, it will find the route, save the image, and display it.
@@ -273,7 +287,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                     // update the route's saved Destination list to match the displayed list
                     mRoute.setDestinations(mDestinations);
                     // re-render the display (??? is this necessary?)
-                    mAdapter.notifyDataSetChanged();
+                    updateUI();
 
                     super.onDismissed(transientBottomBar, event);
                 }
@@ -339,27 +353,34 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                 switch (jsonObject.getString("status")) {
                     case "OK":
                         try {
+                            // retrieve result data
                             jsonObject = jsonObject.getJSONArray("results")
                                     .getJSONObject(0);
 
+                            // build Destination around result data
                             mDestination.setName(jsonObject.getString("name"));
                             mDestination.setGooglePlaceId(jsonObject.getString("place_id"));
 
+                            // add Destination to database, set Route ID
                             DestinationManager.get(getActivity()).addDestinationToRoute(mDestination, mRoute);
 
-                            mDestinations = mRoute.getDestinations();
-                            mAdapter.notifyDataSetChanged();
+                            // update mDestinations based on DB, re-render list
+                            updateUI();
 
+                            // update map
                             getRoute();
                         } catch (Exception e) {
+                            // something broke
                             Log.e(TAG, "onPostExecute: Exception: ", e);
                         }
                         super.onPostExecute(jsonObject);
                         break;
                     case "ZERO_RESULTS":
+                        // display Toast to user
                         Toast.makeText(getActivity(), "No results found.", Toast.LENGTH_SHORT).show();
                         break;
                     default:
+                        // something else broke
                         Log.d(TAG, "onPostExecute: something weird happened: " + jsonObject.getString("status"));
                 }
             } catch (Exception e) {
