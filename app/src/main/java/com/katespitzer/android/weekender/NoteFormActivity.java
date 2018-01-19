@@ -31,29 +31,42 @@ public class NoteFormActivity extends AppCompatActivity {
     private EditText mContentEditText;
     private Button mSubmitButton;
 
-    private static final String TAG = "NoteCreateActivity";
+    private boolean isEdit;
+
+    private static final String TAG = "NoteFormActivity";
     private static final String EXTRA_PLACE_ID = "com.katespitzer.android.weekender.place_db_id";
     private static final String EXTRA_TRIP_ID = "com.katespitzer.android.weekender.trip_db_id";
+    private static final String EXTRA_NOTE_ID = "com.katespitzer.android.weekender.note_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_form);
 
-        mNote = new Note();
-
-        UUID placeId = (UUID) getIntent().getSerializableExtra(EXTRA_PLACE_ID);
-        UUID tripId = (UUID) getIntent().getSerializableExtra(EXTRA_TRIP_ID);
-
-        if (placeId != null) {
-            mPlace = PlaceManager.get(this).getPlace(placeId);
-        }
-
-        mTrip = TripManager.get(this).getTrip(tripId);
-
         mNoteManager = NoteManager.get(this);
 
+        if (getIntent().getSerializableExtra(EXTRA_NOTE_ID) != null) {
+            UUID noteId = (UUID) getIntent().getSerializableExtra(EXTRA_NOTE_ID);
+            mNote = mNoteManager.getNote(noteId);
+            isEdit = true;
+        } else {
+            mNote = new Note();
+            isEdit = false;
+
+            UUID placeId = (UUID) getIntent().getSerializableExtra(EXTRA_PLACE_ID);
+            UUID tripId = (UUID) getIntent().getSerializableExtra(EXTRA_TRIP_ID);
+
+            if (placeId != null) {
+                mPlace = PlaceManager.get(this).getPlace(placeId);
+            }
+
+            mTrip = TripManager.get(this).getTrip(tripId);
+        }
+
         mTitleEditText = findViewById(R.id.note_title_input);
+        if (isEdit) {
+            mTitleEditText.setText(mNote.getTitle());
+        }
         mTitleEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -72,6 +85,9 @@ public class NoteFormActivity extends AppCompatActivity {
         });
 
         mContentEditText = findViewById(R.id.note_content_input);
+        if (isEdit) {
+            mContentEditText.setText(mNote.getContent());
+        }
         mContentEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -93,10 +109,14 @@ public class NoteFormActivity extends AppCompatActivity {
         mSubmitButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if (mPlace != null) {
-                    mNoteManager.addNoteToPlace(mNote, mPlace);
+                if (isEdit) {
+                    mNoteManager.updateNote(mNote);
                 } else {
-                    mNoteManager.addNoteToTrip(mNote, mTrip);
+                    if (mPlace != null) {
+                        mNoteManager.addNoteToPlace(mNote, mPlace);
+                    } else {
+                        mNoteManager.addNoteToTrip(mNote, mTrip);
+                    }
                 }
                 finish();
             }
@@ -104,9 +124,16 @@ public class NoteFormActivity extends AppCompatActivity {
 
     }
 
+    public static Intent newIntent(Context context, Note note) {
+        Intent intent = new Intent(context, NoteFormActivity.class);
+
+        intent.putExtra(EXTRA_NOTE_ID, note.getId());
+
+        return intent;
+    }
+
     public static Intent newIntent(Context context, Place place) {
-        Log.i(TAG, "newIntent: ");
-        Intent intent = new Intent(context, NoteCreateActivity.class);
+        Intent intent = new Intent(context, NoteFormActivity.class);
 
         Trip trip = TripManager.get(context).getTrip(place.getTripId());
 

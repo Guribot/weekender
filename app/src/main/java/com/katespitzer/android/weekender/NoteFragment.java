@@ -1,10 +1,15 @@
 package com.katespitzer.android.weekender;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -31,6 +36,7 @@ public class NoteFragment extends Fragment {
     private TextView mTitleView;
     private TextView mSourceView;
     private TextView mContentView;
+    private UUID mNoteId;
 
     private static final String TAG = "NoteFragment";
     private static final String ARG_NOTE_ID = "note_id";
@@ -61,20 +67,21 @@ public class NoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            UUID noteId = (UUID) getArguments().getSerializable(ARG_NOTE_ID);
-
-            mNote = NoteManager.get(getActivity()).getNote(noteId);
+            mNoteId = (UUID) getArguments().getSerializable(ARG_NOTE_ID);
+            mNote = NoteManager.get(getActivity()).getNote(mNoteId);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView: ");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_note, container, false);
 
         mTitleView = view.findViewById(R.id.note_title);
-        mTitleView.setText(mNote.getTitle());
 
         mSourceView = view.findViewById(R.id.note_source);
         if (mNote.getPlaceId() > 0) {
@@ -85,10 +92,41 @@ public class NoteFragment extends Fragment {
         }
 
         mContentView = view.findViewById(R.id.note_content);
-        mContentView.setText(mNote.getContent());
+
+        displayNote();
 
         return view;
     }
+
+    private void displayNote() {
+        mNote = NoteManager.get(getActivity()).getNote(mNoteId);
+
+        mTitleView.setText(mNote.getTitle());
+        mContentView.setText(mNote.getContent());
+    }
+
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_note, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.note_menu_edit_note) {
+            Intent intent = NoteFormActivity.newIntent(getActivity(), mNote);
+
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -99,6 +137,7 @@ public class NoteFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
+        Log.i(TAG, "onAttach: ");
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -112,6 +151,13 @@ public class NoteFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        Log.i(TAG, "onResume: ");
+        displayNote();
+        super.onResume();
     }
 
     /**

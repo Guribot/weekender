@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -23,7 +21,6 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import com.katespitzer.android.weekender.dummy.DummyContent;
 import com.katespitzer.android.weekender.managers.PlaceManager;
 import com.katespitzer.android.weekender.models.Note;
 import com.katespitzer.android.weekender.models.Place;
