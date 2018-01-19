@@ -1,10 +1,13 @@
 package com.katespitzer.android.weekender;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.katespitzer.android.weekender.managers.NoteManager;
 import com.katespitzer.android.weekender.managers.PlaceManager;
@@ -118,10 +122,15 @@ public class NoteFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.note_menu_edit_note) {
-            Intent intent = NoteFormActivity.newIntent(getActivity(), mNote);
+        switch (id) {
+            case R.id.note_menu_edit_note:
+                Intent intent = NoteFormActivity.newIntent(getActivity(), mNote);
 
-            startActivity(intent);
+                startActivity(intent);
+                break;
+            case R.id.note_menu_delete_note:
+                deleteNoteWithConfirm();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -158,6 +167,27 @@ public class NoteFragment extends Fragment {
         Log.i(TAG, "onResume: ");
         displayNote();
         super.onResume();
+    }
+
+    private void deleteNoteWithConfirm() {
+        Log.i(TAG, "deleteNoteWithConfirm: ");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Permanently delete this note?");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                NoteManager.get(getActivity()).deleteNote(mNote);
+                Toast.makeText(getActivity(), "Note deleted", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
     /**

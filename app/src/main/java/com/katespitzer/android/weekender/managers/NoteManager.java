@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.katespitzer.android.weekender.database.DbSchema;
 import com.katespitzer.android.weekender.models.Note;
 import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.models.Trip;
@@ -205,6 +206,16 @@ public class NoteManager {
         note.setTripId(place.getTripId());
         note.setPlaceId(place.getDbId());
         addNote(note);
+    }
+
+    public void deleteNote(Note note) {
+        Log.i(TAG, "deleteNote: " + note);
+        String uuidString = note.getId().toString();
+
+        mDatabase.delete(DbSchema.NoteTable.NAME,
+                DbSchema.NoteTable.Cols.UUID + " = ?",
+                new String[] {uuidString}
+        );
     }
 
     /**
