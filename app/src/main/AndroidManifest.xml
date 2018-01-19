@@ -2,7 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.katespitzer.android.weekender">
 
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality. 
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -43,7 +55,10 @@
             android:name=".PlaceTabbedActivity"
             android:label="@string/title_activity_place_tabbed"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".NoteActivity"></activity>
+        <activity android:name=".NoteActivity" />
+        <activity
+            android:name=".TripMapActivity"
+            android:label="@string/title_activity_trip_map"></activity>
     </application>
 
 </manifest>

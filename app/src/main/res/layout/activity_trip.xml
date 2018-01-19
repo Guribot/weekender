@@ -33,6 +33,12 @@
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TabItem
+                android:id="@+id/trip_tab_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trip_tab_map" />
+
+            <android.support.design.widget.TabItem
                 android:id="@+id/trip_tab_route"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

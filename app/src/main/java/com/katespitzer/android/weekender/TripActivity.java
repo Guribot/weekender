@@ -156,12 +156,15 @@ public class TripActivity
 
             switch (position) {
                 case 0:
-                    fragment = TripRouteFragment.newInstance(mTrip.getId());
+                    fragment = new TripMapFragment();
                     break;
                 case 1:
-                    fragment = TripPlaceFragment.newInstance(mTrip.getId());
+                    fragment = TripRouteFragment.newInstance(mTrip.getId());
                     break;
                 case 2:
+                    fragment = TripPlaceFragment.newInstance(mTrip.getId());
+                    break;
+                case 3:
                     fragment = TripNoteFragment.newInstance(mTrip.getId());
                     break;
                 default:
@@ -175,8 +178,8 @@ public class TripActivity
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show 4 total pages.
+            return 4;
         }
     }
 
