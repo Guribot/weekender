@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.katespitzer.android.weekender.TripRouteFragment"
-    tools:listitem="@layout/fragment_destination" />
+    tools:listitem="@layout/fragment_destination2" />

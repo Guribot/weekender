@@ -13,6 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:background="@drawable/topo_texture"
         android:orientation="vertical">
 
         <TextView
@@ -23,7 +25,7 @@
             android:gravity="center"
             android:keepScreenOn="true"
             android:text="@string/app_name"
-            android:textColor="#ffffff"
+            android:textColor="@color/colorWhite"
             android:textSize="72sp" />
 
         <ImageView
@@ -35,6 +37,7 @@
             android:paddingStart="48dp"
             android:contentDescription="@string/van_content_desc"
             android:scaleType="fitCenter"
+            android:tint="@color/colorWhite"
             android:src="@drawable/ic_005_surf_van" />
 
         <!-- This FrameLayout insets its children based on system windows using
@@ -57,7 +60,7 @@
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/my_trips"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
@@ -70,7 +73,7 @@
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/new_trip"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
@@ -83,7 +86,7 @@
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:text="@string/find_trips"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
