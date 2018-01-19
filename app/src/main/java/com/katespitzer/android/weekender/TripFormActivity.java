@@ -1,5 +1,6 @@
 package com.katespitzer.android.weekender;
 
+import android.app.Activity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,12 +8,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Trip;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 public class TripFormActivity extends AppCompatActivity implements DatePickerFragment.DatePickerListener {
@@ -21,6 +24,7 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
     private EditText mStartEditText;
     private EditText mEndEditText;
     private Button mSubmitButton;
+    private Activity mActivity;
 
     private Trip mTrip;
 
@@ -44,6 +48,8 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_form);
 
+        mActivity = this;
+
         mTrip = new Trip();
 
         mTitleEditText = findViewById(R.id.new_trip_title);
@@ -63,11 +69,23 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
                 //
             }
         });
+        mTitleEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            // TODO: make this work
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Log.i(TAG, "onFocusChange: ");
+                if (!hasFocus) {
+                    Log.i(TAG, "onFocusChange2: ");
+                    hideKeyboard(v);
+                }
+            }
+        });
 
         mStartEditText = findViewById(R.id.new_trip_start);
         mStartEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 DatePickerFragment dialog = DatePickerFragment.newInstance(getString(R.string.trip_start_label), mTrip.getStartDate());
                 dialog.show(fragmentManager, DIALOG_START_DATE);
@@ -78,6 +96,7 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
         mEndEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 DatePickerFragment dialog = DatePickerFragment.newInstance(getString(R.string.trip_end_label), mTrip.getEndDate());
                 dialog.show(fragmentManager, DIALOG_END_DATE);
@@ -89,12 +108,18 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // putting getApplicationContext() here is a guess on my part, does it work?
-                TripManager.get(getApplicationContext())
+                TripManager.get(mActivity)
                         .addTrip(mTrip);
                 finish();
             }
         });
+    }
+
+    public void hideKeyboard(View view) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -103,12 +128,17 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
         switch (tag) {
             case DIALOG_START_DATE:
                 mTrip.setStartDate(date);
-                mStartEditText.setText(date.toString());
+                mStartEditText.setText(dateFormat(date));
                 break;
             case DIALOG_END_DATE:
                 mTrip.setEndDate(date);
-                mEndEditText.setText(date.toString());
+                mEndEditText.setText(dateFormat(date));
                 break;
         }
+    }
+
+    private String dateFormat(Date date) {
+        return DateFormat.getDateInstance(DateFormat.MEDIUM)
+                .format(date);
     }
 }
