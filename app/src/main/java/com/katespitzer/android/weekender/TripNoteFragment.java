@@ -104,7 +104,7 @@ public class TripNoteFragment extends Fragment {
 
         if (id == R.id.trip_menu_add_note) {
 
-            Intent intent = NoteCreateActivity.newIntent(getActivity(), mTrip);
+            Intent intent = NoteFormActivity.newIntent(getActivity(), mTrip);
             startActivity(intent);
 
             return true;

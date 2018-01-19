@@ -114,7 +114,7 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
         if (id == R.id.place_menu_add_note) {
             Log.i(TAG, "onOptionsItemSelected: Write note");
 
-            Intent intent = NoteCreateActivity.newIntent(this, mPlace);
+            Intent intent = NoteFormActivity.newIntent(this, mPlace);
 
             startActivity(intent);
 

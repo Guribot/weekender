@@ -20,7 +20,7 @@ import com.katespitzer.android.weekender.models.Trip;
 
 import java.util.UUID;
 
-public class NoteCreateActivity extends AppCompatActivity {
+public class NoteFormActivity extends AppCompatActivity {
 
     private Note mNote;
     private Trip mTrip;
@@ -117,7 +117,7 @@ public class NoteCreateActivity extends AppCompatActivity {
     }
 
     public static Intent newIntent(Context context, Trip trip) {
-        Intent intent = new Intent(context, NoteCreateActivity.class);
+        Intent intent = new Intent(context, NoteFormActivity.class);
         intent.putExtra(EXTRA_TRIP_ID, trip.getId());
 
         return intent;
