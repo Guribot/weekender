@@ -173,7 +173,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                 });
 
                 builder.show();
-
             }
         });
 
@@ -221,14 +220,17 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     }
 
     private void updateUI() {
+        // set mDestinations to the most up-to-date list of destinations for the current Route
         mDestinations = mDestinationManager
                 .getDestinationsForRoute(mRoute);
 
         if (mAdapter == null) {
+            // if the adapter hasn't been set yet, create & set it
             mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             mRecyclerView.setAdapter(mAdapter);
         } else {
+            // if it has been set, update the destinations
             mAdapter.setDestinations(mDestinations);
             mAdapter.notifyDataSetChanged();
         }
@@ -299,14 +301,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Placeholder interaction listener - consider deleting if never used
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
