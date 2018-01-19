@@ -50,23 +50,25 @@
             tools:text="Seattle, WA"/>
 
 
-        <ImageView
+        <ImageButton
             android:id="@+id/down_icon"
-            android:layout_width="@dimen/ic_delete"
-            android:layout_height="@dimen/ic_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/padd_10"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_down" />
 
 
-        <ImageView
+        <ImageButton
             android:id="@+id/up_icon"
-            android:layout_width="@dimen/ic_delete"
-            android:layout_height="@dimen/ic_delete"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/padd_10"
-            android:layout_toLeftOf="@id/down_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="9dp"
+            android:layout_toStartOf="@+id/down_icon"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_up" />
 
     </RelativeLayout>

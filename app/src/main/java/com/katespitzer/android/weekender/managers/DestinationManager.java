@@ -193,8 +193,8 @@ public class DestinationManager {
         return getDestinations().size();
     }
 
-    public void addDestinationToRoute(Destination destination, Route route) {
-        Log.i(TAG, "addDestinationToRoute()");
+    public void restoreDestinationToRoute(Destination destination, Route route) {
+        Log.i(TAG, "restoreDestinationToRoute()");
         destination.setRouteId(route.getDbId());
         addDestination(destination);
     }
@@ -233,8 +233,46 @@ public class DestinationManager {
 
             // set destination's position to i
             currentDest.setPosition(i);
+
+            // save destination with updated position in db
+            sDestinationManager.updateDestination(currentDest);
         }
 
+    }
+
+    /**
+     * adds the given destination back to its route at the provided position
+     * and updates other destinations' positions
+     *
+     * @param destination
+     * @param pos
+     */
+    public void restoreDestinationToRoute(Destination destination, int pos) {
+        // get Route that Destination belongs to
+        Route route = RouteManager.get(mContext)
+                .getRoute(destination.getRouteId());
+
+        // get and sort list of existing Destinations from route
+        List<Destination> destinations = getDestinationsForRoute(route);
+        Collections.sort(destinations);
+
+        // position of last element
+        int max = destinations.size();
+
+        // iterate through remaining destinations
+        for (int i = pos; i <= max; i++) {
+            // get destination at index i
+            Destination currentDest = destinations.get(i);
+
+            // set destination's position to i + 1
+            currentDest.setPosition(i + 1);
+
+            // save destination with updated position in db
+            sDestinationManager.updateDestination(currentDest);
+        }
+
+        // add destination to route at position
+        restoreDestinationToRoute(destination, route);
     }
 
     /**

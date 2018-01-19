@@ -1,10 +1,14 @@
 package com.katespitzer.android.weekender.adapters;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +27,13 @@ import java.util.List;
 public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<DestinationRecyclerViewAdapter.ViewHolder> {
 
     private List<Destination> mDestinations;
+    private Context mContext;
     private final OnDestinationListItemInteractionListener mListener;
+
+    private Drawable mUpOn;
+    private Drawable mUpOff;
+    private Drawable mDownOn;
+    private Drawable mDownOff;
 
     private static final String TAG = "DestintnRcyclrVwAdptr";
 
@@ -37,6 +47,15 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_destination2, parent, false);
+
+        mContext = parent.getContext();
+
+        Resources resources = mContext.getResources();
+        mUpOn = resources.getDrawable(R.drawable.ic_up);
+        mUpOff = resources.getDrawable(R.drawable.ic_up_disabled);
+        mDownOn = resources.getDrawable(R.drawable.ic_down);
+        mDownOff = resources.getDrawable(R.drawable.ic_down_disabled);
+
         return new ViewHolder(view);
     }
 
@@ -46,8 +65,11 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         holder.mNameView.setText(mDestinations.get(position).getName());
 
         if (holder.mDestination.getPosition() == 0) {
-            holder.mUpArrow.setVisibility(View.INVISIBLE);
+            holder.mUpArrow.setEnabled(false);
+            holder.mUpArrow.setImageDrawable(mUpOff);
         } else {
+            holder.mUpArrow.setEnabled(true);
+            holder.mUpArrow.setImageDrawable(mUpOn);
             holder.mUpArrow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -62,8 +84,11 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         }
 
         if (holder.mDestination.getPosition() == mDestinations.size() - 1) {
-            holder.mDownArrow.setVisibility(View.INVISIBLE);
+            holder.mDownArrow.setEnabled(false);
+            holder.mDownArrow.setImageDrawable(mDownOff);
         } else {
+            holder.mDownArrow.setEnabled(true);
+            holder.mDownArrow.setImageDrawable(mDownOn);
             holder.mDownArrow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -98,8 +123,8 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         public final View mView;
         public final TextView mNameView;
         public Destination mDestination;
-        public final ImageView mUpArrow;
-        public final ImageView mDownArrow;
+        public final ImageButton mUpArrow;
+        public final ImageButton mDownArrow;
 
         public RelativeLayout mViewForeground;
         public RelativeLayout mViewBackground;
