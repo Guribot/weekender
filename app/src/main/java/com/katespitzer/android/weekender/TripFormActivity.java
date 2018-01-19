@@ -15,7 +15,7 @@ import com.katespitzer.android.weekender.models.Trip;
 
 import java.util.Date;
 
-public class TripCreateActivity extends AppCompatActivity implements DatePickerFragment.DatePickerListener {
+public class TripFormActivity extends AppCompatActivity implements DatePickerFragment.DatePickerListener {
 
     private EditText mTitleEditText;
     private EditText mStartEditText;
@@ -24,7 +24,7 @@ public class TripCreateActivity extends AppCompatActivity implements DatePickerF
 
     private Trip mTrip;
 
-    private static final String TAG = "TripCreateActivity";
+    private static final String TAG = "TripFormActivity";
     private static final String DIALOG_START_DATE = "DialogStartDate";
     private static final String DIALOG_END_DATE = "DialogEndDate";
 

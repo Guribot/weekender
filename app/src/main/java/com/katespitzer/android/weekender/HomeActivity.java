@@ -77,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void startNewTrip() {
         Log.i(TAG, "in startNewTrip()");
-        Intent intent = new Intent(this, TripCreateActivity.class);
+        Intent intent = new Intent(this, TripFormActivity.class);
         startActivityForResult(intent, NEW_TRIP_REQUEST);
     }
 }
