@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
@@ -17,6 +19,9 @@ public class Place {
     private String mName;
     private String mAddress;
     private String mGooglePlaceId;
+    private double mLat;
+    private double mLong;
+    private LatLng mLatLng;
     private int mTripId;
 
     private Bitmap mBitmap;
@@ -84,6 +89,24 @@ public class Place {
 
     public void setTripId(int tripId) {
         mTripId = tripId;
+    }
+
+    public LatLng getLatLng() {
+        return mLatLng;
+    }
+
+    public void setLatLng(double latitude, double longitude) {
+        mLat = latitude;
+        mLong = longitude;
+        mLatLng = new LatLng(latitude, longitude);
+    }
+
+    public double getLat() {
+        return mLat;
+    }
+
+    public double getLong() {
+        return mLong;
     }
 
     public Bitmap getBitmap() {

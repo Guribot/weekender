@@ -36,6 +36,8 @@ public class DbSchema {
             public static final String NAME = "name";
             public static final String ADDRESS = "address";
             public static final String IMAGE = "image";
+            public static final String LAT = "latitude";
+            public static final String LONG = "longitude";
             public static final String GOOGLE_PLACE_ID = "google_place_id";
         }
 
@@ -46,6 +48,8 @@ public class DbSchema {
                 Cols.NAME + ", " +
                 Cols.IMAGE + ", " +
                 Cols.ADDRESS + ", " +
+                Cols.LAT + ", " +
+                Cols.LONG + ", " +
                 Cols.GOOGLE_PLACE_ID + ", " +
                 "FOREIGN KEY (" + Cols.TRIP_ID + ") REFERENCES " + TripTable.NAME + "(_id) )";
 
