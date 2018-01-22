@@ -363,6 +363,12 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                             int position = mDestinations.size();
                             mDestination.setPosition(position);
 
+                            // set lat & lng
+                            JSONObject latlong = jsonObject.getJSONObject("geometry").getJSONObject("location");
+                            double latitude = Double.parseDouble(latlong.getString("lat"));
+                            double longitude = Double.parseDouble(latlong.getString("lng"));
+                            mDestination.setLatLng(latitude, longitude);
+
                             // add Destination to database, set Route ID
                             mDestinationManager.restoreDestinationToRoute(mDestination, mRoute);
 

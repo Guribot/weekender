@@ -356,6 +356,8 @@ public class DestinationManager {
         values.put(DestinationTable.Cols.NAME, destination.getName());
         values.put(DestinationTable.Cols.POSITION, destination.getPosition());
         values.put(DestinationTable.Cols.GOOGLE_PLACE_ID, destination.getGooglePlaceId());
+        values.put(DestinationTable.Cols.LAT, destination.getLatLng().latitude);
+        values.put(DestinationTable.Cols.LONG, destination.getLatLng().longitude);
         values.put(DestinationTable.Cols.ROUTE_ID, destination.getRouteId());
 
         return values;

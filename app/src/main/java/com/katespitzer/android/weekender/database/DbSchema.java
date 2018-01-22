@@ -104,6 +104,8 @@ public class DbSchema {
             public static final String NAME = "name";
             public static final String POSITION = "position";
             public static final String GOOGLE_PLACE_ID = "google_place_id";
+            public static final String LAT = "latitude";
+            public static final String LONG = "longitude";
             public static final String ROUTE_ID = "route_id";
         }
 
@@ -113,6 +115,8 @@ public class DbSchema {
                 Cols.NAME + ", " +
                 Cols.POSITION + ", " +
                 Cols.GOOGLE_PLACE_ID + ", " +
+                Cols.LAT + ", " +
+                Cols.LONG + ", " +
                 Cols.ROUTE_ID + ", " +
                 "FOREIGN KEY (" + Cols.ROUTE_ID + ") REFERENCES " + RouteTable.NAME + "(_id) )";
     }

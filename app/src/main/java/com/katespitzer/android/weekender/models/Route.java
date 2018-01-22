@@ -155,6 +155,6 @@ public class Route {
             path.add(new LatLng(lat * 1e-5, lng * 1e-5));
         }
 
-        return new PolylineOptions().addAll(path).width(10).color(Color.BLUE);
+        return new PolylineOptions().addAll(path).width(10).color(Color.argb(200, 26, 117, 237));
     }
 }

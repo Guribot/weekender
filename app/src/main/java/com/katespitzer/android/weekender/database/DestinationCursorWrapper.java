@@ -33,6 +33,8 @@ public class DestinationCursorWrapper extends CursorWrapper {
         String uuidString = getString(getColumnIndex(DestinationTable.Cols.UUID));
         String name = getString(getColumnIndex(DestinationTable.Cols.NAME));
         String googlePlaceId = getString(getColumnIndex(DestinationTable.Cols.GOOGLE_PLACE_ID));
+        double latitude = getDouble(getColumnIndex(DestinationTable.Cols.LAT));
+        double longitude = getDouble(getColumnIndex(DestinationTable.Cols.LONG));
         int position = getInt(getColumnIndex(DestinationTable.Cols.POSITION));
         int routeId = getInt(getColumnIndex(DestinationTable.Cols.ROUTE_ID));
 
@@ -40,6 +42,7 @@ public class DestinationCursorWrapper extends CursorWrapper {
         destination.setName(name);
         destination.setGooglePlaceId(googlePlaceId);
         destination.setPosition(position);
+        destination.setLatLng(latitude, longitude);
         destination.setRouteId(routeId);
 
         return destination;

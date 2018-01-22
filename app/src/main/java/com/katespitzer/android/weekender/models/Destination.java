@@ -2,6 +2,8 @@ package com.katespitzer.android.weekender.models;
 
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.UUID;
 
 /**
@@ -13,6 +15,7 @@ public class Destination implements Comparable {
     private UUID mId;
     private String mName;
     private String mGooglePlaceId;
+    private LatLng mLatLng;
     private int mPosition;
     private int mRouteId;
 
@@ -67,6 +70,18 @@ public class Destination implements Comparable {
 
     public void setRouteId(int routeId) {
         mRouteId = routeId;
+    }
+
+    public LatLng getLatLng() {
+        return mLatLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        mLatLng = latLng;
+    }
+
+    public void setLatLng(double latitude, double longitude) {
+        mLatLng = new LatLng(latitude, longitude);
     }
 
     @Override
