@@ -35,7 +35,7 @@ public class TripMapFragment extends Fragment {
     private static final String TAG = "TripMapFragment";
     private static final String TRIP_ID = "trip_id";
 
-    public Fragment newInstance(UUID tripId) {
+    public static Fragment newInstance(UUID tripId) {
         Fragment fragment = new TripMapFragment();
         Bundle args = new Bundle();
         args.putSerializable(TRIP_ID, tripId);
