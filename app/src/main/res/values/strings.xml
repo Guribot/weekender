@@ -44,6 +44,8 @@
 
     <string name="place_notes_title">Notes</string>
     <string name="place_notes_add_note_button">New Note</string>
+    <string name="place_menu_delete_place">Delete Place</string>
+    <string name="delete_place_confirm">Permanently delete %1$s?</string>
 
     <string name="notes_menu_edit">Edit Note</string>
     <string name="notes_menu_delete">Delete Note</string>

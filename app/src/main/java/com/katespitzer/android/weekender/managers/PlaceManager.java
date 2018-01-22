@@ -4,19 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
-import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.katespitzer.android.weekender.database.DbSchema;
 import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.models.Trip;
 import com.katespitzer.android.weekender.database.DatabaseHelper;
@@ -161,6 +153,22 @@ public class PlaceManager {
         mDatabase.update(PlaceTable.NAME, values,
                 PlaceTable.Cols.UUID + " = ?",
                 new String[]{uuidString});
+    }
+
+    /**
+     * Takes in a place and deletes it from the database (if it's present)
+     *
+     * @param place
+     */
+    public void deletePlace(Place place) {
+        String uuidString = place.getId().toString();
+
+        mDatabase.delete(DbSchema.PlaceTable.NAME,
+                DbSchema.PlaceTable.Cols.UUID + " = ?",
+                new String[] {uuidString}
+        );
+
+        NoteManager.get(mContext).deleteNotesForPlace(place);
     }
 
     /**

@@ -1,6 +1,8 @@
 package com.katespitzer.android.weekender;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +12,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -51,6 +56,8 @@ public class PlaceFragment extends Fragment {
     private TextView mPlaceAddress;
     private Button mAddNoteButton;
     private RecyclerView mRecyclerView;
+    private PlaceManager mPlaceManager;
+    
 
 
     private static final String TAG = "PlaceFragment";
@@ -78,11 +85,16 @@ public class PlaceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        mPlaceManager = PlaceManager.get(getActivity());
+        
         if (getArguments() != null) {
             // set mPlace
             UUID placeId = (UUID) getArguments().getSerializable(ARG_PLACE_ID);
-            mPlace = PlaceManager.get(getActivity()).getPlace(placeId);
+            mPlace = mPlaceManager.getPlace(placeId);
         }
+
+        setHasOptionsMenu(true);
 
         mGeoDataClient = Places.getGeoDataClient(getActivity(), null);
     }
@@ -106,6 +118,39 @@ public class PlaceFragment extends Fragment {
         mPlaceAddress.setText(mPlace.getAddress());
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_place_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.place_menu_delete_place) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+            dialog.setTitle(getString(R.string.delete_place_confirm, mPlace.getName()));
+            dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mPlaceManager.deletePlace(mPlace);
+
+                    getActivity().onBackPressed();
+                }
+            });
+            dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();   
+                }
+            });
+            dialog.show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

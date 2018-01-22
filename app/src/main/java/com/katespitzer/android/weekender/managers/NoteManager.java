@@ -115,6 +115,20 @@ public class NoteManager {
     }
 
     /**
+     * Takes in a place and deletes all its notes from the database (if it's present)
+     *
+     * @param place
+     */
+    public void deleteNotesForPlace(Place place) {
+        String uuidString = place.getId().toString();
+
+        mDatabase.delete(DbSchema.NoteTable.NAME,
+                NoteTable.Cols.PLACE_ID + " = ?",
+                new String[] {uuidString}
+        );
+    }
+
+    /**
      * Queries db with null query params (retrieving entire db)
      * iterates through db, parses row into Note, and adds to
      * returned List<Note>
