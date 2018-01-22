@@ -111,18 +111,10 @@ public class TripMapFragment extends Fragment {
                                 getString(R.string.open_in_google_maps),
                         };
 
-                        dialog.setSingleChoiceItems(options, -1, new DialogInterface.OnClickListener() {
+                        dialog.setItems(options, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mSelection = which;
-                            }
-                        });
-                        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Log.i(TAG, "onClick: " + dialog + ", " + which);
-                                Log.i(TAG, "onClick: selection was " + mSelection);
-                                switch (mSelection) {
+                                switch (which) {
                                     case 0:
                                         // View place details
 
@@ -154,12 +146,6 @@ public class TripMapFragment extends Fragment {
                                         dialog.cancel();
                                         break;
                                 }
-                            }
-                        });
-                        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
                             }
                         });
                         dialog.show();
