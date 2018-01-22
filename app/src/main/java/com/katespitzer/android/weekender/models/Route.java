@@ -2,6 +2,11 @@ package com.katespitzer.android.weekender.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -18,6 +23,7 @@ public class Route {
     private List<Destination> mDestinations;
     private String mOverviewPolyline;
     private Bitmap mMapImage;
+    private Polyline mPolyline;
     private int mDbId;
 
     public Route() {
@@ -104,5 +110,51 @@ public class Route {
 
     public void setDbId(int dbId) {
         mDbId = dbId;
+    }
+
+
+    /**
+     * method to decode polylines into LatLng, enabling a string to be converted into a Polyline object
+     *
+     * adapted from
+     * https://reformatcode.com/code/android/find-the-closest-point-on-polygon-to-user-location
+     * @return
+     */
+    public PolylineOptions getPolylineOptions(){
+        if (mOverviewPolyline == null) {
+            return null;
+        }
+
+        int len = mOverviewPolyline.length();
+
+        final ArrayList<LatLng> path = new ArrayList<>();
+        int index = 0;
+        int lat = 0;
+        int lng = 0;
+
+        while (index < len) {
+            int result = 1;
+            int shift = 0;
+            int b;
+            do {
+                b = mOverviewPolyline.charAt(index++) - 63 - 1;
+                result += b << shift;
+                shift += 5;
+            } while (b >= 0x1f);
+            lat += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+
+            result = 1;
+            shift = 0;
+            do {
+                b = mOverviewPolyline.charAt(index++) - 63 - 1;
+                result += b << shift;
+                shift += 5;
+            } while (b >= 0x1f);
+            lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+
+            path.add(new LatLng(lat * 1e-5, lng * 1e-5));
+        }
+
+        return new PolylineOptions().addAll(path).width(10).color(Color.BLUE);
     }
 }

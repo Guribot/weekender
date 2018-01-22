@@ -16,12 +16,18 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.katespitzer.android.weekender.managers.PlaceManager;
+import com.katespitzer.android.weekender.managers.RouteManager;
 import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Place;
+import com.katespitzer.android.weekender.models.Route;
 import com.katespitzer.android.weekender.models.Trip;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +35,7 @@ public class TripMapFragment extends Fragment {
 
     MapView mMapView;
     private Trip mTrip;
+    private Route mRoute;
     private List<Place> mPlaces;
     private GoogleMap googleMap;
 
@@ -49,6 +56,7 @@ public class TripMapFragment extends Fragment {
 
         UUID tripId = (UUID) getArguments().getSerializable(TRIP_ID);
         mTrip = TripManager.get(getActivity()).getTrip(tripId);
+        mRoute = RouteManager.get(getActivity()).getRoute(mTrip.getRouteId());
         mPlaces = PlaceManager.get(getActivity()).getPlacesForTrip(mTrip);
     }
 
@@ -88,22 +96,29 @@ public class TripMapFragment extends Fragment {
                 }
                 googleMap.setMyLocationEnabled(true);
 
-                // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
 
                 for (int i = 0; i < mPlaces.size(); i++) {
                     Place place = mPlaces.get(i);
+                    LatLng latlng = place.getLatLng();
+
+                    boundsBuilder.include(latlng);
 
                     googleMap.addMarker(new MarkerOptions()
-                            .position(place.getLatLng())
+                            .position(latlng)
                             .title(place.getName()));
+                }
 
+                LatLngBounds bounds = boundsBuilder.build();
+
+                PolylineOptions plo = mRoute.getPolylineOptions();
+
+                if (plo != null) {
+                    googleMap.addPolyline(mRoute.getPolylineOptions());
                 }
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 400));
             }
         });
 
@@ -133,4 +148,5 @@ public class TripMapFragment extends Fragment {
         super.onLowMemory();
         mMapView.onLowMemory();
     }
+
 }

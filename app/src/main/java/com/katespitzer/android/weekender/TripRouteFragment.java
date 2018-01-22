@@ -32,6 +32,7 @@ import com.katespitzer.android.weekender.api.DirectionsFetcher;
 import com.katespitzer.android.weekender.api.MapFetcher;
 import com.katespitzer.android.weekender.api.PlaceFetcher;
 import com.katespitzer.android.weekender.managers.DestinationManager;
+import com.katespitzer.android.weekender.managers.RouteManager;
 import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Destination;
 import com.katespitzer.android.weekender.models.Route;
@@ -423,6 +424,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                     mPolyline = jsonObject.getJSONObject("overview_polyline").getString("points");
                     Log.i(TAG, "onPostExecute: Polyline Found: " + mPolyline);
                     mRoute.setOverviewPolyline(mPolyline);
+                    RouteManager.get(getActivity()).updateRoute(mRoute);
                 } catch (Exception e) {
                     Log.e(TAG, "onPostExecute: exception", e);
                 }
