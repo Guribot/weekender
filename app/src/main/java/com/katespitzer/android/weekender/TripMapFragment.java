@@ -92,9 +92,14 @@ public class TripMapFragment extends Fragment {
                 LatLng sydney = new LatLng(-34, 151);
                 googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
-//                for (int i = 0; i < mPlaces.size(); i++) {
-//
-//                }
+                for (int i = 0; i < mPlaces.size(); i++) {
+                    Place place = mPlaces.get(i);
+
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(place.getLatLng())
+                            .title(place.getName()));
+
+                }
 
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();

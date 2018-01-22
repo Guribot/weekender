@@ -19,8 +19,6 @@ public class Place {
     private String mName;
     private String mAddress;
     private String mGooglePlaceId;
-    private double mLat;
-    private double mLong;
     private LatLng mLatLng;
     private int mTripId;
 
@@ -95,18 +93,12 @@ public class Place {
         return mLatLng;
     }
 
+    public void setLatLng(LatLng latlng) {
+        mLatLng = latlng;
+    }
+
     public void setLatLng(double latitude, double longitude) {
-        mLat = latitude;
-        mLong = longitude;
         mLatLng = new LatLng(latitude, longitude);
-    }
-
-    public double getLat() {
-        return mLat;
-    }
-
-    public double getLong() {
-        return mLong;
     }
 
     public Bitmap getBitmap() {
@@ -114,6 +106,9 @@ public class Place {
     }
 
     public byte[] getBitmapByteArray() {
+        if (mBitmap == null) {
+            return null;
+        }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         mBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] bytes = baos.toByteArray();
@@ -125,7 +120,9 @@ public class Place {
     }
 
     public void setBitmap(byte[] bytes) {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        mBitmap = bitmap;
+        if (bytes != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            mBitmap = bitmap;
+        }
     }
 }

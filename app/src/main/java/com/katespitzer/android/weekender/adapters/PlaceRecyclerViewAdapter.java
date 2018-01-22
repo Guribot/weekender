@@ -121,27 +121,30 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
                 PlacePhotoMetadataResponse photos = task.getResult();
                 // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
                 PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                // Get the first photo in the list.
-                PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-                // Get the attribution text.
-                CharSequence attribution = photoMetadata.getAttributions();
-                // Get a full-size bitmap for the photo.
-                Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
-                photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-                    @Override
-                    public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                        Log.i(TAG, "onComplete: ");
+                if (photoMetadataBuffer.getCount() > 0) {
 
-                        PlacePhotoResponse photo = task.getResult();
-                        Bitmap bitmap = photo.getBitmap();
+                    // Get the first photo in the list.
+                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                    // Get the attribution text.
+                    CharSequence attribution = photoMetadata.getAttributions();
+                    // Get a full-size bitmap for the photo.
+                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                            Log.i(TAG, "onComplete: ");
 
-                        imageView.setImageBitmap(bitmap);
-                        
-                        place.setBitmap(bitmap);
+                            PlacePhotoResponse photo = task.getResult();
+                            Bitmap bitmap = photo.getBitmap();
 
-                        Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
-                    }
-                });
+                            imageView.setImageBitmap(bitmap);
+
+                            place.setBitmap(bitmap);
+
+                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
+                        }
+                    });
+                }
             }
         });
     }

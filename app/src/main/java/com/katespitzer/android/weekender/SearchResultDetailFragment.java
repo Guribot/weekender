@@ -117,6 +117,7 @@ public class SearchResultDetailFragment extends Fragment {
                     mPlace.setName(result.getName().toString());
                     mPlace.setGooglePlaceId(mGooglePlaceId);
                     mPlace.setAddress(result.getAddress().toString());
+                    mPlace.setLatLng(result.getLatLng());
 
                     places.release();
 
@@ -188,33 +189,37 @@ public class SearchResultDetailFragment extends Fragment {
         photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
             @Override
             public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+
                 // Get the list of photos.
                 PlacePhotoMetadataResponse photos = task.getResult();
+
                 // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
                 final PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                // Get the first photo in the list.
-                PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-                // Get the attribution text.
-                CharSequence attribution = photoMetadata.getAttributions();
-                // Get a full-size bitmap for the photo.
-                Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
-                photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-                    @Override
-                    public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                        Log.i(TAG, "onComplete: ");
+                if (photoMetadataBuffer.getCount() > 0) {
+                    // Get the first photo in the list.
+                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+                    // Get the attribution text.
+                    CharSequence attribution = photoMetadata.getAttributions();
+                    // Get a full-size bitmap for the photo.
+                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+                        @Override
+                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+                            Log.i(TAG, "onComplete: ");
 
-                        PlacePhotoResponse photo = task.getResult();
-                        Bitmap bitmap = photo.getBitmap();
+                            PlacePhotoResponse photo = task.getResult();
+                            Bitmap bitmap = photo.getBitmap();
 
-                        imageView.setImageBitmap(bitmap);
+                            imageView.setImageBitmap(bitmap);
 
-                        place.setBitmap(bitmap);
+                            place.setBitmap(bitmap);
 
-                        photoMetadataBuffer.release();
+                            photoMetadataBuffer.release();
 
-                        Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
-                    }
-                });
+                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
+                        }
+                    });
+                }
             }
         });
     }

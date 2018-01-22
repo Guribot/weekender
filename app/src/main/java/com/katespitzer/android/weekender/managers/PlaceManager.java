@@ -253,8 +253,8 @@ public class PlaceManager {
         values.put(PlaceTable.Cols.IMAGE, place.getBitmapByteArray());
         values.put(PlaceTable.Cols.ADDRESS, place.getAddress());
         values.put(PlaceTable.Cols.GOOGLE_PLACE_ID, place.getGooglePlaceId());
-        values.put(PlaceTable.Cols.LAT, place.getLat());
-        values.put(PlaceTable.Cols.LONG, place.getLong());
+        values.put(PlaceTable.Cols.LAT, place.getLatLng().latitude);
+        values.put(PlaceTable.Cols.LONG, place.getLatLng().longitude);
         values.put(PlaceTable.Cols.TRIP_ID, place.getTripId());
 
         return values;
