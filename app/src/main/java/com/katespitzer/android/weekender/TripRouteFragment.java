@@ -225,7 +225,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         mDestinations = mDestinationManager
                 .getDestinationsForRoute(mRoute);
 
-        // why do I have to rebuild the recyclerview after every load?? 
+        // why do I have to rebuild the recyclerview after every load??
         mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
