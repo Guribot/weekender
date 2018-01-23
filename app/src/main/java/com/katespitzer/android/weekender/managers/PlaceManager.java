@@ -174,10 +174,12 @@ public class PlaceManager {
      * @return
      */
     public List<Place> getPlacesForTrip(Trip trip){
+        String whereString = "\"" + trip.getId() + "\"";
+
         List<Place> places = new ArrayList<>();
         String whereClause = PlaceTable.Cols.TRIP_ID + " = ?";
         String[] whereArgs = new String[] { trip.getId().toString() };
-        PlaceCursorWrapper cursor = queryPlaces(whereClause, null);
+        PlaceCursorWrapper cursor = queryPlaces(whereClause, whereArgs);
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {

@@ -42,7 +42,9 @@ public class NoteCursorWrapper extends CursorWrapper {
         note.setTitle(name);
         note.setContent(content);
         note.setTripId(UUID.fromString(tripId));
-        note.setPlaceId(UUID.fromString(placeId));
+        if (placeId != null){
+            note.setPlaceId(UUID.fromString(placeId));
+        }
         note.setCreatedDate(new Date(createdDate));
 
         return note;

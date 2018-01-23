@@ -244,7 +244,9 @@ public class NoteManager {
         values.put(NoteTable.Cols.CONTENT, note.getContent());
         values.put(NoteTable.Cols.CREATED_DATE, note.getCreatedDate().getTime());
         values.put(NoteTable.Cols.TRIP_ID, note.getTripId().toString());
-        values.put(NoteTable.Cols.PLACE_ID, note.getPlaceId().toString());
+        if (note.getPlaceId() != null) {
+            values.put(NoteTable.Cols.PLACE_ID, note.getPlaceId().toString());
+        }
 
         return values;
     }
