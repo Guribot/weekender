@@ -34,6 +34,8 @@ public class PlaceNoteFragment extends Fragment {
 
     private Place mPlace;
     private List<Note> mNotes;
+    private RecyclerView mRecyclerView;
+    private Context mContext;
 
     private static final String TAG = "PlaceNoteFragment";
     private static final String ARG_PLACE_ID = "place_id";
@@ -76,10 +78,9 @@ public class PlaceNoteFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new PlaceNoteRecyclerViewAdapter(mNotes, mListener));
+            mContext = view.getContext();
+            mRecyclerView = (RecyclerView) view;
+            updateUI();
         }
         return view;
     }
@@ -126,6 +127,19 @@ public class PlaceNoteFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mNotes = NoteManager.get(getActivity()).getNotesForPlace(mPlace);
+        updateUI();
+    }
+
+    private void updateUI() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setAdapter(new PlaceNoteRecyclerViewAdapter(mNotes, mListener));
     }
 
     /**

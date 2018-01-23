@@ -34,6 +34,7 @@ public class TripNoteFragment extends Fragment {
     private List<Note> mNotes;
     private Trip mTrip;
     private NoteRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
 
     private static final String ARG_TRIP_ID = "trip-id";
     private static final String TAG = "TripNoteFragment";
@@ -77,10 +78,9 @@ public class TripNoteFragment extends Fragment {
         Log.i(TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trip_note_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new NoteRecyclerViewAdapter(mNotes, mListener);
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.trip_note_list);
+
+        updateUI();
 
         return view;
     }
@@ -108,6 +108,7 @@ public class TripNoteFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onResume() {
         Log.i(TAG, "onResume()");
@@ -116,6 +117,8 @@ public class TripNoteFragment extends Fragment {
         mNotes = NoteManager.get(getActivity()).getNotesForTrip(mTrip);
         mAdapter.setNotes(mNotes);
         mAdapter.notifyDataSetChanged();
+
+        updateUI();
     }
 
     @Override
@@ -133,6 +136,12 @@ public class TripNoteFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void updateUI() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdapter = new NoteRecyclerViewAdapter(mNotes, mListener);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
