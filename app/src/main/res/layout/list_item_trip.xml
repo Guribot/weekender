@@ -12,25 +12,36 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textSize="24sp"
-        android:textStyle="bold|italic"
-        tools:text="Trip Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Trip Title" />
+
+    <TextView
+        android:id="@+id/trip_list_item_lengths"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trip_list_item_title"
+        tools:text="4 days, 280 miles" />
 
     <TextView
         android:id="@+id/trip_list_item_dates"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        tools:text="12/4/2017 - 12/8/2017"
+        android:textAlignment="textEnd"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trip_list_item_title" />
+        app:layout_constraintStart_toEndOf="@id/trip_list_item_lengths"
+        app:layout_constraintTop_toBottomOf="@id/trip_list_item_title"
+        tools:text="12/4/2017 - 12/8/2017" />
 
 </android.support.constraint.ConstraintLayout>

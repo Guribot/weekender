@@ -38,6 +38,7 @@ import com.katespitzer.android.weekender.models.Destination;
 import com.katespitzer.android.weekender.models.Route;
 import com.katespitzer.android.weekender.models.Trip;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -422,6 +423,11 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                 Log.i(TAG, "doInBackground: result is: " + results);
 
                 try {
+                    JSONArray legs = jsonObject.getJSONArray("legs");
+                    int distance = getLength(legs);
+                    mTrip.setTripLength(distance);
+                    TripManager.get(getActivity()).updateTrip(mTrip);
+
                     mPolyline = jsonObject.getJSONObject("overview_polyline").getString("points");
                     Log.i(TAG, "onPostExecute: Polyline Found: " + mPolyline);
                     mRoute.setOverviewPolyline(mPolyline);
@@ -435,6 +441,21 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 
                 return jsonObject;
             }
+        }
+
+        private int getLength(JSONArray legs) {
+            double total = 0;
+             try {
+                 for (int i = 0; i < legs.length(); i++) {
+                     JSONObject leg = legs.getJSONObject(i).getJSONObject("distance");
+                     double distance = leg.getInt("value");
+                     distance = distance / 1609.34;
+                     total = total + distance;
+                 }
+             } catch (Exception e) {
+                 Log.d(TAG, "getLength: " + e);
+             }
+             return (int) total;
         }
 
         @Override

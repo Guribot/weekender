@@ -71,15 +71,25 @@ public class TripListFragment extends Fragment {
             itemView.setOnClickListener(this);
 
             mTitleTextView = itemView.findViewById(R.id.trip_list_item_title);
+            mLengthsTextView = itemView.findViewById(R.id.trip_list_item_lengths);
             mDatesTextView = itemView.findViewById(R.id.trip_list_item_dates);
         }
 
         public void bind(Trip trip) {
             mTrip = trip;
             mTitleTextView.setText(mTrip.getTitle());
+
+            Date from = mTrip.getStartDate();
+            Date to = mTrip.getEndDate();
+            String fromDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(from);
+            String toDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(to);
             String dateString = getString(R.string.trip_dates_format,
-                    mTrip.getStartDate(),
-                    mTrip.getEndDate());
+                    fromDateString,
+                    toDateString);
+
+
+            mLengthsTextView.setText(getString(R.string.trip_lengths_format, mTrip.getDayLength(), mTrip.getTripLength()));
+
             mDatesTextView.setText(dateString);
         }
 
