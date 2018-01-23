@@ -9,11 +9,10 @@ import java.util.UUID;
 
 public class Note {
     private UUID mId;
-    private int mDbId;
     private String mTitle;
     private String mContent;
-    private int mTripId;
-    private int mPlaceId;
+    private UUID mTripId;
+    private UUID mPlaceId;
     private Date mCreatedDate;
 
     public Note() {
@@ -38,14 +37,6 @@ public class Note {
         mId = id;
     }
 
-    public int getDbId() {
-        return mDbId;
-    }
-
-    public void setDbId(int dbId) {
-        mDbId = dbId;
-    }
-
     public String getTitle() {
         return mTitle;
     }
@@ -62,19 +53,19 @@ public class Note {
         mContent = content;
     }
 
-    public int getTripId() {
+    public UUID getTripId() {
         return mTripId;
     }
 
-    public void setTripId(int tripId) {
+    public void setTripId(UUID tripId) {
         mTripId = tripId;
     }
 
-    public int getPlaceId() {
+    public UUID getPlaceId() {
         return mPlaceId;
     }
 
-    public void setPlaceId(int placeId) {
+    public void setPlaceId(UUID placeId) {
         mPlaceId = placeId;
     }
 

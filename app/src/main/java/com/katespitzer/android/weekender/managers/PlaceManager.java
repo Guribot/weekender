@@ -97,38 +97,6 @@ public class PlaceManager {
     }
 
     /**
-     * Takes in a database ID and returns the corresponding Place
-     *
-     * @param id
-     * @return
-     */
-    public Place getPlace(int id) {
-        Log.i(TAG, "in getPlace()");
-        PlaceCursorWrapper cursor = queryPlaces(
-                "_id = ?",
-                new String[] { "" + id }
-        );
-
-        try {
-            if (cursor.getCount() == 0) {
-                // if there are no results, return null
-                return null;
-            }
-            // if there are results, return the first one
-            // (since search param is UUID, There Can Only Be One
-            cursor.moveToFirst();
-            Place place = cursor.getPlace();
-
-            return place;
-        } finally {
-            // close cursor!
-            cursor.close();
-        }
-
-        // You Should Not Be Here
-    }
-
-    /**
      * Takes in a place and adds it to the db
      *
      * @param place
@@ -207,8 +175,8 @@ public class PlaceManager {
      */
     public List<Place> getPlacesForTrip(Trip trip){
         List<Place> places = new ArrayList<>();
-        String whereClause = PlaceTable.Cols.TRIP_ID + " = " + trip.getDbId();
-//        String[] whereArgs = new String[] {String.valueOf(trip.getDbId())};
+        String whereClause = PlaceTable.Cols.TRIP_ID + " = ?";
+        String[] whereArgs = new String[] { trip.getId().toString() };
         PlaceCursorWrapper cursor = queryPlaces(whereClause, null);
         try {
             cursor.moveToFirst();
@@ -237,7 +205,7 @@ public class PlaceManager {
 
     public void addPlaceToTrip(Place place, Trip trip) {
         Log.i(TAG, "addPlaceToTrip()");
-        place.setTripId(trip.getDbId());
+        place.setTripId(trip.getId());
         addPlace(place);
     }
 
@@ -263,7 +231,7 @@ public class PlaceManager {
         values.put(PlaceTable.Cols.GOOGLE_PLACE_ID, place.getGooglePlaceId());
         values.put(PlaceTable.Cols.LAT, place.getLatLng().latitude);
         values.put(PlaceTable.Cols.LONG, place.getLatLng().longitude);
-        values.put(PlaceTable.Cols.TRIP_ID, place.getTripId());
+        values.put(PlaceTable.Cols.TRIP_ID, place.getTripId().toString());
 
         return values;
     }

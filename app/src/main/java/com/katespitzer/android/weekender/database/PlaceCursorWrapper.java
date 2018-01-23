@@ -38,8 +38,7 @@ public class PlaceCursorWrapper extends CursorWrapper {
         byte[] image = getBlob(getColumnIndex(PlaceTable.Cols.IMAGE));
         double latitude = getDouble(getColumnIndex(PlaceTable.Cols.LAT));
         double longitude = getDouble(getColumnIndex(PlaceTable.Cols.LONG));
-        int tripId = getInt(getColumnIndex(PlaceTable.Cols.TRIP_ID));
-        int dbId = getInt(getColumnIndex("_id"));
+        String tripId = getString(getColumnIndex(PlaceTable.Cols.TRIP_ID));
 
         Place place = new Place(UUID.fromString(uuidString));
         place.setName(name);
@@ -47,8 +46,7 @@ public class PlaceCursorWrapper extends CursorWrapper {
         place.setBitmap(image);
         place.setGooglePlaceId(googlePlaceId);
         place.setLatLng(latitude, longitude);
-        place.setTripId(tripId);
-        place.setDbId(dbId);
+        place.setTripId(UUID.fromString(tripId));
 
         return place;
     }

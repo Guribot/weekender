@@ -120,11 +120,9 @@ public class NoteManager {
      * @param place
      */
     public void deleteNotesForPlace(Place place) {
-        String uuidString = place.getId().toString();
-
         mDatabase.delete(DbSchema.NoteTable.NAME,
-                NoteTable.Cols.PLACE_ID + " = ?",
-                new String[] {uuidString}
+                NoteTable.Cols.PLACE_ID + " = \"" + place.getId() + "\"",
+                null
         );
     }
 
@@ -164,8 +162,8 @@ public class NoteManager {
      */
     public List<Note> getNotesForTrip(Trip trip){
         List<Note> notes = new ArrayList<>();
-        String whereClause = NoteTable.Cols.TRIP_ID + " = " + trip.getDbId();
-//        String[] whereArgs = new String[] {String.valueOf(trip.getDbId())};
+        String whereClause = NoteTable.Cols.TRIP_ID + " = \"" + trip.getId() + "\"";
+//        String[] whereArgs = new String[] { trip.getId().toString() };
         NoteCursorWrapper cursor = queryNotes(whereClause, null);
         try {
             cursor.moveToFirst();
@@ -184,7 +182,8 @@ public class NoteManager {
      */
     public List<Note> getNotesForPlace(Place place){
         List<Note> notes = new ArrayList<>();
-        String whereClause = NoteTable.Cols.PLACE_ID + " = " + place.getDbId();
+        String whereClause = NoteTable.Cols.PLACE_ID + " = \"" + place.getId() + "\"";
+//        String[] whereArgs = new String[] { place.getId().toString() };
         NoteCursorWrapper cursor = queryNotes(whereClause, null);
         try {
             cursor.moveToFirst();
@@ -211,14 +210,14 @@ public class NoteManager {
 
     public void addNoteToTrip(Note note, Trip trip) {
         Log.i(TAG, "addNoteToTrip()");
-        note.setTripId(trip.getDbId());
+        note.setTripId(trip.getId());
         addNote(note);
     }
 
     public void addNoteToPlace(Note note, Place place) {
         Log.i(TAG, "addNoteToPlace()");
         note.setTripId(place.getTripId());
-        note.setPlaceId(place.getDbId());
+        note.setPlaceId(place.getId());
         addNote(note);
     }
 
@@ -244,8 +243,8 @@ public class NoteManager {
         values.put(NoteTable.Cols.TITLE, note.getTitle());
         values.put(NoteTable.Cols.CONTENT, note.getContent());
         values.put(NoteTable.Cols.CREATED_DATE, note.getCreatedDate().getTime());
-        values.put(NoteTable.Cols.TRIP_ID, note.getTripId());
-        values.put(NoteTable.Cols.PLACE_ID, note.getPlaceId());
+        values.put(NoteTable.Cols.TRIP_ID, note.getTripId().toString());
+        values.put(NoteTable.Cols.PLACE_ID, note.getPlaceId().toString());
 
         return values;
     }

@@ -17,6 +17,7 @@ import com.katespitzer.android.weekender.models.Place;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Note} and makes a call to the
@@ -54,9 +55,9 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
         String stringDate = DateFormat.getDateInstance(DateFormat.SHORT).format(noteDate);
         holder.mDateView.setText(stringDate);
 
-        int placeId = mNotes.get(position).getPlaceId();
+        UUID placeId = mNotes.get(position).getPlaceId();
         Log.i(TAG, "onBindViewHolder: place id is " + placeId);
-        if (placeId > 0) {
+        if (placeId != null) {
             Place place = PlaceManager.get(mContext).getPlace(placeId);
             holder.mPlaceView.setText("from " + place.getName());
         } else {

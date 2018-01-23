@@ -35,17 +35,15 @@ public class NoteCursorWrapper extends CursorWrapper {
         String name = getString(getColumnIndex(NoteTable.Cols.TITLE));
         String content = getString(getColumnIndex(NoteTable.Cols.CONTENT));
         long createdDate = getLong(getColumnIndex(NoteTable.Cols.CREATED_DATE));
-        int tripId = getInt(getColumnIndex(NoteTable.Cols.TRIP_ID));
-        int placeId = getInt(getColumnIndex(NoteTable.Cols.PLACE_ID));
-        int dbId = getInt(getColumnIndex("_id"));
+        String tripId = getString(getColumnIndex(NoteTable.Cols.TRIP_ID));
+        String placeId = getString(getColumnIndex(NoteTable.Cols.PLACE_ID));
 
         Note note = new Note(UUID.fromString(uuidString));
         note.setTitle(name);
         note.setContent(content);
-        note.setTripId(tripId);
-        note.setPlaceId(placeId);
+        note.setTripId(UUID.fromString(tripId));
+        note.setPlaceId(UUID.fromString(placeId));
         note.setCreatedDate(new Date(createdDate));
-        note.setDbId(dbId);
 
         return note;
     }

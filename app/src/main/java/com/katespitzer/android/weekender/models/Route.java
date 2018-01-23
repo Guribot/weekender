@@ -24,7 +24,6 @@ public class Route {
     private String mOverviewPolyline;
     private Bitmap mMapImage;
     private Polyline mPolyline;
-    private int mDbId;
 
     public Route() {
         this(UUID.randomUUID());
@@ -63,27 +62,6 @@ public class Route {
         mOverviewPolyline = overviewPolyline;
     }
 
-    public void addTestData(){
-        Destination seattle = new Destination();
-        seattle.setName("Seattle");
-        seattle.setGooglePlaceId("place_id:ChIJVTPokywQkFQRmtVEaUZlJRA");
-
-        Destination portland = new Destination();
-        portland.setName("Portland");
-        portland.setGooglePlaceId("place_id:ChIJXc7PQCellFQRITpZ6kxP_hs");
-
-        Destination cannonBeach = new Destination();
-        cannonBeach.setName("Cannon Beach");
-        cannonBeach.setGooglePlaceId("place_id:ChIJJ3SpfQsLlVQRkYXR9ua5Nhw");
-
-        ArrayList<Destination> destinations = new ArrayList<>();
-        destinations.add(seattle);
-        destinations.add(portland);
-        destinations.add(cannonBeach);
-
-        setDestinations(destinations);
-    }
-
     public Bitmap getMapImage() {
         return mMapImage;
     }
@@ -103,15 +81,6 @@ public class Route {
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         mMapImage = bitmap;
     }
-
-    public int getDbId() {
-        return mDbId;
-    }
-
-    public void setDbId(int dbId) {
-        mDbId = dbId;
-    }
-
 
     /**
      * method to decode polylines into LatLng, enabling a string to be converted into a Polyline object

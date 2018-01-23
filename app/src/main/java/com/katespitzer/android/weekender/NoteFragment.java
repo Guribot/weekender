@@ -88,7 +88,7 @@ public class NoteFragment extends Fragment {
         mTitleView = view.findViewById(R.id.note_title);
 
         mSourceView = view.findViewById(R.id.note_source);
-        if (mNote.getPlaceId() > 0) {
+        if (mNote.getPlaceId() != null) {
             Place place = PlaceManager.get(getActivity()).getPlace(mNote.getPlaceId());
             mSourceView.setText(place.getName());
         } else {

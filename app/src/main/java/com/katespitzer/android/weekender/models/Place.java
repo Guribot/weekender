@@ -15,12 +15,11 @@ import java.util.UUID;
 
 public class Place {
     private UUID mId;
-    private int dbId;
     private String mName;
     private String mAddress;
     private String mGooglePlaceId;
     private LatLng mLatLng;
-    private int mTripId;
+    private UUID mTripId;
 
     private Bitmap mBitmap;
 
@@ -49,14 +48,6 @@ public class Place {
         mId = id;
     }
 
-    public int getDbId() {
-        return dbId;
-    }
-
-    public void setDbId(int dbId) {
-        this.dbId = dbId;
-    }
-
     public String getName() {
         return mName;
     }
@@ -81,11 +72,11 @@ public class Place {
         mGooglePlaceId = googlePlaceId;
     }
 
-    public int getTripId() {
+    public UUID getTripId() {
         return mTripId;
     }
 
-    public void setTripId(int tripId) {
+    public void setTripId(UUID tripId) {
         mTripId = tripId;
     }
 

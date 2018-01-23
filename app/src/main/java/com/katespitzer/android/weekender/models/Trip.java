@@ -10,7 +10,6 @@ import java.util.UUID;
 
 public class Trip {
     private UUID mId;
-    private int mDbId;
     private UUID mRouteId;
     private Route mRoute;
     private String mTitle;
@@ -54,14 +53,6 @@ public class Trip {
 
     public void setId(UUID id) {
         mId = id;
-    }
-
-    public int getDbId() {
-        return mDbId;
-    }
-
-    public void setDbId(int dbId) {
-        this.mDbId = dbId;
     }
 
     public Route getRoute() {

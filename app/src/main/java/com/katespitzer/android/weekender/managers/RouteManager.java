@@ -84,29 +84,6 @@ public class RouteManager {
         // You Should Not Be Here
     }
 
-    public Route getRoute(int dbId) {
-        Log.i(TAG, "in getRoute()");
-        RouteCursorWrapper cursor = queryRoutes(
-                "_id" + " = ?",
-                new String[] { "" + dbId }
-        );
-
-        try {
-            if (cursor.getCount() == 0) {
-                // if there are no results, return null
-                return null;
-            }
-            // if there are results, return the first one
-            cursor.moveToFirst();
-            return cursor.getRoute();
-        } finally {
-            // close cursor!
-            cursor.close();
-        }
-
-        // You Should Not Be Here
-    }
-
     /**
      * Takes in a route and adds it to the db
      *

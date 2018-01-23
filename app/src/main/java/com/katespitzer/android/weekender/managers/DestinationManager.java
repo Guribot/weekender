@@ -165,8 +165,8 @@ public class DestinationManager {
      */
     public List<Destination> getDestinationsForRoute(Route route){
         List<Destination> destinations = new ArrayList<>();
-        String whereClause = DestinationTable.Cols.ROUTE_ID + " = " + route.getDbId();
-//        String[] whereArgs = new String[] {String.valueOf(trip.getDbId())};
+        String whereClause = DestinationTable.Cols.ROUTE_ID + " = \"" + route.getId() + "\"";
+//        String[] whereArgs = new String[] { uuidString };
         DestinationCursorWrapper cursor = queryDestinations(whereClause, null);
         try {
             cursor.moveToFirst();
@@ -195,7 +195,7 @@ public class DestinationManager {
 
     public void restoreDestinationToRoute(Destination destination, Route route) {
         Log.i(TAG, "restoreDestinationToRoute()");
-        destination.setRouteId(route.getDbId());
+        destination.setRouteId(route.getId());
         addDestination(destination);
     }
 
@@ -358,7 +358,7 @@ public class DestinationManager {
         values.put(DestinationTable.Cols.GOOGLE_PLACE_ID, destination.getGooglePlaceId());
         values.put(DestinationTable.Cols.LAT, destination.getLatLng().latitude);
         values.put(DestinationTable.Cols.LONG, destination.getLatLng().longitude);
-        values.put(DestinationTable.Cols.ROUTE_ID, destination.getRouteId());
+        values.put(DestinationTable.Cols.ROUTE_ID, destination.getRouteId().toString());
 
         return values;
     }

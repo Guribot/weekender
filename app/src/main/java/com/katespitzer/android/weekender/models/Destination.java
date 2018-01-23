@@ -17,7 +17,7 @@ public class Destination implements Comparable {
     private String mGooglePlaceId;
     private LatLng mLatLng;
     private int mPosition;
-    private int mRouteId;
+    private UUID mRouteId;
 
     public Destination() {
         this(UUID.randomUUID());
@@ -64,11 +64,11 @@ public class Destination implements Comparable {
         mPosition = position;
     }
 
-    public int getRouteId() {
+    public UUID getRouteId() {
         return mRouteId;
     }
 
-    public void setRouteId(int routeId) {
+    public void setRouteId(UUID routeId) {
         mRouteId = routeId;
     }
 
