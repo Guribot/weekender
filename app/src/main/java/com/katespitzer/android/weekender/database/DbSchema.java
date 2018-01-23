@@ -14,6 +14,7 @@ public class DbSchema {
             public static final String START_DATE = "start_date";
             public static final String END_DATE = "end_date";
             public static final String ROUTE_ID = "route_id";
+            public static final String TRIP_LENGTH = "trip_length";
         }
 
         public static final String CREATE = "create table " + TripTable.NAME + "(" +
@@ -23,6 +24,7 @@ public class DbSchema {
                 Cols.START_DATE + ", " +
                 Cols.END_DATE + ", " +
                 Cols.ROUTE_ID + ", " +
+                Cols.TRIP_LENGTH + ", " +
                 "FOREIGN KEY (" + Cols.ROUTE_ID + ") REFERENCES " + RouteTable.NAME + "(_id) )";
 
     }

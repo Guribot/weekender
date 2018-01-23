@@ -39,12 +39,14 @@ public class TripCursorWrapper extends CursorWrapper {
         long startDate = getLong(getColumnIndex(TripTable.Cols.START_DATE));
         long endDate = getLong(getColumnIndex(TripTable.Cols.END_DATE));
         String routeId = getString(getColumnIndex(TripTable.Cols.ROUTE_ID));
+        int tripLength = getInt(getColumnIndex(TripTable.Cols.TRIP_LENGTH));
 
         Trip trip = new Trip(UUID.fromString(uuidString));
         trip.setTitle(title);
         trip.setStartDate(new Date(startDate));
         trip.setEndDate(new Date(endDate));
         trip.setRouteId(UUID.fromString(routeId));
+        trip.setTripLength(tripLength);
 
         return trip;
     }

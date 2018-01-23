@@ -15,6 +15,8 @@ public class Trip {
     private String mTitle;
     private Date mStartDate;
     private Date mEndDate;
+    private int mDayLength;
+    private int mTripLength;
 
     private static final String TAG = "Trip";
 
@@ -77,5 +79,27 @@ public class Trip {
 
     public void setEndDate(Date endDate) {
         mEndDate = endDate;
+    }
+
+    public int getDayLength() {
+        mDayLength = determineDayLength();
+        return mDayLength;
+    }
+
+    private int determineDayLength() {
+        if (mStartDate != null && mEndDate != null) {
+            long length = mEndDate.getTime() - mStartDate.getTime();
+            return (int) length / (1000 * 60 * 60 * 24);
+        } else {
+            return 0;
+        }
+    }
+
+    public int getTripLength() {
+        return mTripLength;
+    }
+
+    public void setTripLength(int tripLength) {
+        mTripLength = tripLength;
     }
 }

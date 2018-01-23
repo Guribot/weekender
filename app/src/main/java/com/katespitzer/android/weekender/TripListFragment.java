@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Trip;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,6 +62,7 @@ public class TripListFragment extends Fragment {
     private class TripHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mTitleTextView;
+        private TextView mLengthsTextView;
         private TextView mDatesTextView;
         private Trip mTrip;
 
