@@ -17,6 +17,7 @@ public class Trip {
     private Date mEndDate;
     private int mDayLength;
     private int mTripLength;
+    private int mDriveTime;
 
     private static final String TAG = "Trip";
 
@@ -102,4 +103,24 @@ public class Trip {
     public void setTripLength(int tripLength) {
         mTripLength = tripLength;
     }
+
+    public int getDriveTime() {
+        return mDriveTime;
+    }
+
+    public void setDriveTime(int driveTime) {
+        mDriveTime = driveTime;
+    }
+
+    public String getDriveTimeString() {
+        int driveMins = mDriveTime / 60;
+        if (driveMins < 60) {
+            return driveMins + " minutes";
+        } else {
+            int driveHours = driveMins / 60;
+            driveMins = driveMins % 60;
+            return driveHours + " hours " + driveMins + " minutes";
+        }
+    }
+
 }
