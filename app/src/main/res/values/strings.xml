@@ -20,6 +20,7 @@
     <string name="view_place_details">View Place Details</string>
     <string name="open_in_google_maps">Open in Google Maps</string>
 
+    <string name="route_length_format">%1$d miles, %2$s</string>
     <string name="destinations_title">Destinations</string>
     <string name="route_add_destination">Add Destination</string>
 

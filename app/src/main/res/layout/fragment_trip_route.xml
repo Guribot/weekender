@@ -29,17 +29,34 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/trip_length"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textColor="@color/colorAccent"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trip_route_map_holder"
+        tools:text="581 miles, 18 hours 30 minutes" />
+
+    <TextView
         android:id="@+id/destination_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
+        android:text="@string/destinations_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorSecondaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trip_route_map_holder"
-        android:text="@string/destinations_title" />
+        app:layout_constraintTop_toBottomOf="@id/trip_length" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/trip_route_recycler_view"
