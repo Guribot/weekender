@@ -97,7 +97,13 @@ public class TripActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.i(TAG, "onTabSelected: " + tab);
+                super.onTabSelected(tab);
+            }
+        });
     }
 
     public static Intent newIntent(Context context, UUID tripId) {
