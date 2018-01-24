@@ -189,7 +189,7 @@ public class TripMapFragment extends Fragment {
                     }
 
                     // zoom the map in to the bounds, with 400px padding
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 400));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
                 }
             }
         });
