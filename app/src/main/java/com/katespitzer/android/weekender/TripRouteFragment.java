@@ -41,6 +41,7 @@ import com.katespitzer.android.weekender.models.Trip;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -424,8 +425,16 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 
                 try {
                     JSONArray legs = jsonObject.getJSONArray("legs");
-                    int distance = getLength(legs);
-                    mTrip.setTripLength(distance);
+                    HashMap info = getDistanceAndTime(legs);
+
+
+                    // fortunately I have taken the Dual Casting feat
+                    double distance = (double) info.get("distance");
+                    mTrip.setTripLength((int) distance);
+
+                    double time = (double) info.get("time");
+                    mTrip.setDriveTime((int) time);
+
                     TripManager.get(getActivity()).updateTrip(mTrip);
 
                     mPolyline = jsonObject.getJSONObject("overview_polyline").getString("points");
@@ -443,19 +452,42 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
             }
         }
 
-        private int getLength(JSONArray legs) {
-            double total = 0;
+        private HashMap getDistanceAndTime(JSONArray legs) {
+            HashMap<String, Double> info = new HashMap<String, Double>();
+            info.put("distance", 0.0);
+            info.put("time", 0.0);
+
              try {
                  for (int i = 0; i < legs.length(); i++) {
-                     JSONObject leg = legs.getJSONObject(i).getJSONObject("distance");
-                     double distance = leg.getInt("value");
-                     distance = distance / 1609.34;
-                     total = total + distance;
+                     // get current totals
+                     double distance = info.get("distance");
+                     double time = info.get("time");
+
+                     // get current leg
+                     JSONObject leg = legs.getJSONObject(i);
+
+                     // get distance value
+                     JSONObject distanceLeg = leg.getJSONObject("distance");
+                     double newDistance = distanceLeg.getInt("value");
+                     // convert from meters to miles
+                     newDistance = newDistance / 1609.34;
+
+                     // get time value
+                     JSONObject timeLeg = leg.getJSONObject("duration");
+                     double newTime = timeLeg.getInt("value");
+
+                     // update current totals
+                     newDistance = distance + newDistance;
+                     newTime = time + newTime;
+
+                     // update running totals
+                     info.put("distance", newDistance);
+                     info.put("time", newTime);
                  }
              } catch (Exception e) {
                  Log.d(TAG, "getLength: " + e);
              }
-             return (int) total;
+             return info;
         }
 
         @Override
