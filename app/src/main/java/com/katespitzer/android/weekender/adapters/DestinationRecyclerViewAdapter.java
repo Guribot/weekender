@@ -2,6 +2,7 @@ package com.katespitzer.android.weekender.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,14 +31,21 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
     private Context mContext;
     private final OnDestinationListItemInteractionListener mListener;
 
+    private int mSelectedPos;
+
     private Drawable mUpOn;
     private Drawable mUpOff;
     private Drawable mDownOn;
     private Drawable mDownOff;
 
+    private int mActiveColor;
+    private int mDefaultColor;
+
     private static final String TAG = "DestintnRcyclrVwAdptr";
 
     public DestinationRecyclerViewAdapter(List<Destination> destinations, OnDestinationListItemInteractionListener listener) {
+        mSelectedPos = -1;
+
         mDestinations = destinations;
         Collections.sort(mDestinations);
         mListener = listener;
@@ -56,6 +64,9 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         mDownOn = resources.getDrawable(R.drawable.ic_down);
         mDownOff = resources.getDrawable(R.drawable.ic_down_disabled);
 
+        mActiveColor = resources.getColor(R.color.colorAccent);
+        mDefaultColor = resources.getColor(R.color.wallet_hint_foreground_holo_light);
+
         return new ViewHolder(view);
     }
 
@@ -64,54 +75,68 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         holder.mDestination = mDestinations.get(position);
         holder.mNameView.setText(mDestinations.get(position).getName());
 
-        if (holder.mDestination.getPosition() == 0) {
-            holder.mUpArrow.setEnabled(false);
-            holder.mUpArrow.setImageDrawable(mUpOff);
-        } else {
-            holder.mUpArrow.setEnabled(true);
-            holder.mUpArrow.setImageDrawable(mUpOn);
-            holder.mUpArrow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i(TAG, "onClick: up arrow");
-                    if (mListener != null) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                        mListener.onUpArrowClicked(holder.mDestination);
-                    }
-                }
-            });
-        }
-
-        if (holder.mDestination.getPosition() == mDestinations.size() - 1) {
-            holder.mDownArrow.setEnabled(false);
-            holder.mDownArrow.setImageDrawable(mDownOff);
-        } else {
-            holder.mDownArrow.setEnabled(true);
-            holder.mDownArrow.setImageDrawable(mDownOn);
-            holder.mDownArrow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i(TAG, "onClick: down arrow");
-                    if (mListener != null) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                        mListener.onDownArrowClicked(holder.mDestination);
-                    }
-                }
-            });
-        }
-
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-//                    mListener.onArrowClicked(holder.mDestination);
+                    Log.i(TAG, "onClick: " + holder.getAdapterPosition());
+                    mSelectedPos = (mSelectedPos == holder.getAdapterPosition()) ? -1 : holder.getAdapterPosition();
+
+                    mListener.onDestinationClicked(holder.mDestination);
                 }
-            }
+            }g
         });
+
+        if (holder.mDestination.getPosition() == mSelectedPos) {
+            holder.mNameView.setTextColor(mActiveColor);
+
+            if (holder.mDestination.getPosition() == 0) {
+                holder.mUpArrow.setEnabled(false);
+                holder.mUpArrow.setImageDrawable(mUpOff);
+            } else {
+                holder.mUpArrow.setEnabled(true);
+                holder.mUpArrow.setImageDrawable(mUpOn);
+                holder.mUpArrow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i(TAG, "onClick: up arrow");
+                        if (mListener != null) {
+                            // Notify the active callbacks interface (the activity, if the
+                            // fragment is attached to one) that an item has been selected.
+                            mListener.onUpArrowClicked(holder.mDestination);
+                        }
+                        mSelectedPos = mSelectedPos - 1;
+                    }
+                });
+            }
+
+            if (holder.mDestination.getPosition() == mDestinations.size() - 1) {
+                holder.mDownArrow.setEnabled(false);
+                holder.mDownArrow.setImageDrawable(mDownOff);
+            } else {
+                holder.mDownArrow.setEnabled(true);
+                holder.mDownArrow.setImageDrawable(mDownOn);
+                holder.mDownArrow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i(TAG, "onClick: down arrow");
+                        if (mListener != null) {
+                            // Notify the active callbacks interface (the activity, if the
+                            // fragment is attached to one) that an item has been selected.
+                            mListener.onDownArrowClicked(holder.mDestination);
+                        }
+                        mSelectedPos = mSelectedPos + 1;
+                    }
+                });
+            }
+        } else {
+            holder.mNameView.setTextColor(mDefaultColor);
+
+            holder.mUpArrow.setEnabled(false);
+            holder.mUpArrow.setVisibility(View.INVISIBLE);
+            holder.mDownArrow.setEnabled(false);
+            holder.mDownArrow.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

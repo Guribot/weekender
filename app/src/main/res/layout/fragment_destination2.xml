@@ -46,8 +46,9 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
+            android:textColor="@color/wallet_hint_foreground_holo_light"
             android:textSize="17dp"
-            tools:text="Seattle, WA"/>
+            tools:text="Seattle, WA" />
 
 
         <ImageButton

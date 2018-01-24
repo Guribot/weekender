@@ -121,6 +121,13 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 
         mDestinationListener = new OnDestinationListItemInteractionListener() {
             @Override
+            public void onDestinationClicked(Destination destination) {
+                Log.i(TAG, "onDestinationClicked: " + destination);
+
+                updateUI();
+            }
+
+            @Override
             public void onUpArrowClicked(Destination destination) {
                 Log.i(TAG, "onUpArrowClicked: " + destination);
                 mDestinationManager.moveDestinationUp(destination);
@@ -234,7 +241,11 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                 .getDestinationsForRoute(mRoute);
 
         // why do I have to rebuild the recyclerview after every load??
-        mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
+        if (mAdapter == null) {
+            mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
+        } else {
+            mAdapter.setDestinations(mDestinations);
+        }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -313,6 +324,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     }
 
     public interface OnDestinationListItemInteractionListener {
+        void onDestinationClicked(Destination destination);
         void onUpArrowClicked(Destination destination);
         void onDownArrowClicked(Destination destination);
     }
