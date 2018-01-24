@@ -90,6 +90,15 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         if (holder.mDestination.getPosition() == mSelectedPos) {
             holder.mNameView.setTextColor(mActiveColor);
 
+            holder.mNavButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onNavClicked(holder.mDestination);
+                    }
+                }
+            });
+
             if (holder.mDestination.getPosition() == 0) {
                 holder.mUpArrow.setEnabled(false);
                 holder.mUpArrow.setImageDrawable(mUpOff);
@@ -132,6 +141,8 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         } else {
             holder.mNameView.setTextColor(mDefaultColor);
 
+            holder.mNavButton.setEnabled(false);
+            holder.mNavButton.setVisibility(View.INVISIBLE);
             holder.mUpArrow.setEnabled(false);
             holder.mUpArrow.setVisibility(View.INVISIBLE);
             holder.mDownArrow.setEnabled(false);
@@ -148,6 +159,7 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         public final View mView;
         public final TextView mNameView;
         public Destination mDestination;
+        public final ImageButton mNavButton;
         public final ImageButton mUpArrow;
         public final ImageButton mDownArrow;
 
@@ -157,9 +169,11 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mNameView = (TextView) view.findViewById(R.id.trip_destination_name);
+            mNameView = view.findViewById(R.id.trip_destination_name);
             mViewForeground = view.findViewById(R.id.view_foreground);
             mViewBackground = view.findViewById(R.id.view_background);
+
+            mNavButton = view.findViewById(R.id.nav_icon);
 
             mUpArrow = view.findViewById(R.id.up_icon);
             mDownArrow = view.findViewById(R.id.down_icon);

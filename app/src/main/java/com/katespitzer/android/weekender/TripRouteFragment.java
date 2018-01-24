@@ -2,6 +2,7 @@ package com.katespitzer.android.weekender;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.katespitzer.android.weekender.adapters.DestinationRecyclerViewAdapter;
 import com.katespitzer.android.weekender.api.DirectionsFetcher;
 import com.katespitzer.android.weekender.api.MapFetcher;
@@ -125,6 +127,40 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                 Log.i(TAG, "onDestinationClicked: " + destination);
 
                 updateUI();
+            }
+
+            @Override
+            public void onNavClicked(final Destination destination) {
+                Log.i(TAG, "onNavClicked: " + destination);
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+
+                dialog.setTitle(R.string.open_in_google_maps);
+
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // get the lat & lng of the marker
+                        LatLng location = destination.getLatLng();
+
+                        // instantiate an Intent for Google Maps turn-by-turn navigation
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + location.latitude + "," + location.longitude);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+
+                        // send the user to google maps
+                        startActivity(mapIntent);
+                    }
+                });
+
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                dialog.show();
             }
 
             @Override
@@ -327,6 +363,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         void onDestinationClicked(Destination destination);
         void onUpArrowClicked(Destination destination);
         void onDownArrowClicked(Destination destination);
+        void onNavClicked(Destination destination);
     }
 
     private class FetchPlaceTask extends AsyncTask<Void, Void, JSONObject> {

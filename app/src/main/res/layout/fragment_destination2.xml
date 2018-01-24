@@ -15,20 +15,20 @@
             android:id="@+id/delete_icon"
             android:layout_width="@dimen/ic_delete"
             android:layout_height="@dimen/ic_delete"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/padd_10"
+            android:layout_marginEnd="@dimen/padd_10"
             android:src="@drawable/ic_delete" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/padd_10"
-            android:layout_toLeftOf="@id/delete_icon"
+            android:layout_marginEnd="@dimen/padd_10"
+            android:layout_toStartOf="@id/delete_icon"
             android:text="@string/delete"
             android:textColor="#fff"
-            android:textSize="13dp" />
+            android:textSize="13sp" />
 
     </RelativeLayout>
 
@@ -47,7 +47,7 @@
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:textColor="@color/wallet_hint_foreground_holo_light"
-            android:textSize="17dp"
+            android:textSize="17sp"
             tools:text="Seattle, WA" />
 
 
@@ -55,12 +55,12 @@
             android:id="@+id/down_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/padd_10"
+            android:layout_marginEnd="@dimen/padd_10"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_down" />
-
+            android:src="@drawable/ic_down"
+            android:contentDescription="Navigation Button"/>
 
         <ImageButton
             android:id="@+id/up_icon"
@@ -70,8 +70,19 @@
             android:layout_marginEnd="9dp"
             android:layout_toStartOf="@+id/down_icon"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_up" />
+            android:src="@drawable/ic_up"
+            android:contentDescription="Up Arrow" />
 
+        <ImageButton
+            android:id="@+id/nav_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="9dp"
+            android:layout_toStartOf="@+id/up_icon"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_nav"
+            android:contentDescription="Down Arrow" />
     </RelativeLayout>
 
 </FrameLayout>
