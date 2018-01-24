@@ -1,12 +1,9 @@
 package com.katespitzer.android.weekender;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,17 +31,12 @@ import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchResultDetailFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link SearchResultDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class SearchResultDetailFragment extends Fragment {
     private static final String ARG_PLACE_ID = "google_place_id";
     private static final String ARG_TRIP_ID = "trip_id";
-
-    private OnFragmentInteractionListener mListener;
 
     private Place mPlace;
     private Trip mTrip;
@@ -56,8 +48,6 @@ public class SearchResultDetailFragment extends Fragment {
     private ImageView mPlacePhoto;
     private TextView mPlaceAddress;
     private Button mAddButton;
-
-    private static final String TAG = "SearchResultDetlFrgmnt";
 
     public SearchResultDetailFragment() {
         // Required empty public constructor
@@ -111,8 +101,6 @@ public class SearchResultDetailFragment extends Fragment {
                 if (task.isSuccessful()) {
                     PlaceBufferResponse places = task.getResult();
                     com.google.android.gms.location.places.Place result = places.get(0);
-                    Log.i(TAG, "Place found: " + result.getName());
-
                     mPlace = new Place();
                     mPlace.setName(result.getName().toString());
                     mPlace.setGooglePlaceId(mGooglePlaceId);
@@ -134,46 +122,12 @@ public class SearchResultDetailFragment extends Fragment {
                             getActivity().onBackPressed();
                         }
                     });
-                } else {
-                    Log.e(TAG, "Place not found.");
                 }
             }
         });
 
         return view;
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
-
 
     /**
      * Takes in the target imageView and the google place ID,
@@ -184,7 +138,6 @@ public class SearchResultDetailFragment extends Fragment {
      */
 
     private void setImageView(final ImageView imageView, final Place place) {
-        Log.i(TAG, "setImageView: ");
         final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(place.getGooglePlaceId());
         photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
             @Override
@@ -205,8 +158,6 @@ public class SearchResultDetailFragment extends Fragment {
                     photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
                         @Override
                         public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                            Log.i(TAG, "onComplete: ");
-
                             PlacePhotoResponse photo = task.getResult();
                             Bitmap bitmap = photo.getBitmap();
 
@@ -215,8 +166,6 @@ public class SearchResultDetailFragment extends Fragment {
                             place.setBitmap(bitmap);
 
                             photoMetadataBuffer.release();
-
-                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
                         }
                     });
                 }

@@ -28,8 +28,6 @@ public class NoteManager {
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    private static final String TAG = "NoteManager";
-
     /**
      * Constructor: takes in Context and initializes database
      *
@@ -48,8 +46,6 @@ public class NoteManager {
      * @return
      */
     public static NoteManager get(Context context) {
-        Log.i(TAG, "in get()");
-
         if (sNoteManager == null) {
             sNoteManager = new NoteManager(context);
         }
@@ -64,7 +60,6 @@ public class NoteManager {
      * @return
      */
     public Note getNote(UUID id) {
-        Log.i(TAG, "in getNote()");
         NoteCursorWrapper cursor = queryNotes(
                 NoteTable.Cols.UUID + " = ?",
                 new String[] { id.toString() }
@@ -93,7 +88,6 @@ public class NoteManager {
      * @param note
      */
     public void addNote(Note note) {
-        Log.i(TAG, "in addNote()");
         ContentValues values = getContentValues(note);
 
         long r = mDatabase.insert(NoteTable.NAME, null, values);
@@ -105,7 +99,6 @@ public class NoteManager {
      * @param note
      */
     public void updateNote(Note note) {
-        Log.i(TAG, "updateNote()");
         String uuidString = note.getId().toString();
         ContentValues values = getContentValues(note);
 
@@ -134,7 +127,6 @@ public class NoteManager {
      * @return
      */
     public List<Note> getNotes() {
-        Log.i(TAG, "getNotes()");
         List<Note> notes = new ArrayList<>();
 
         // querying with null args = returns everything
@@ -204,25 +196,21 @@ public class NoteManager {
      * @return
      */
     public int size() {
-        Log.i(TAG, "size()");
         return getNotes().size();
     }
 
     public void addNoteToTrip(Note note, Trip trip) {
-        Log.i(TAG, "addNoteToTrip()");
         note.setTripId(trip.getId());
         addNote(note);
     }
 
     public void addNoteToPlace(Note note, Place place) {
-        Log.i(TAG, "addNoteToPlace()");
         note.setTripId(place.getTripId());
         note.setPlaceId(place.getId());
         addNote(note);
     }
 
     public void deleteNote(Note note) {
-        Log.i(TAG, "deleteNote: " + note);
         String uuidString = note.getId().toString();
 
         mDatabase.delete(DbSchema.NoteTable.NAME,

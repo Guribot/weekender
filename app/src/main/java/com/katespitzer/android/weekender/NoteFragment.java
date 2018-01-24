@@ -28,9 +28,6 @@ import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NoteFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link NoteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -42,10 +39,7 @@ public class NoteFragment extends Fragment {
     private TextView mContentView;
     private UUID mNoteId;
 
-    private static final String TAG = "NoteFragment";
     private static final String ARG_NOTE_ID = "note_id";
-
-    private OnFragmentInteractionListener mListener;
 
     public NoteFragment() {
         // Required empty public constructor
@@ -58,7 +52,6 @@ public class NoteFragment extends Fragment {
      * @param noteId
      * @return A new instance of fragment NoteFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static NoteFragment newInstance(UUID noteId) {
         NoteFragment fragment = new NoteFragment();
         Bundle args = new Bundle();
@@ -81,7 +74,6 @@ public class NoteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView: ");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_note, container, false);
 
@@ -136,41 +128,12 @@ public class NoteFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        Log.i(TAG, "onAttach: ");
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public void onResume() {
-        Log.i(TAG, "onResume: ");
         displayNote();
         super.onResume();
     }
 
     private void deleteNoteWithConfirm() {
-        Log.i(TAG, "deleteNoteWithConfirm: ");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Permanently delete this note?");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -190,18 +153,4 @@ public class NoteFragment extends Fragment {
         builder.show();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

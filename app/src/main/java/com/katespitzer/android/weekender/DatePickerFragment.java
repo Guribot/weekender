@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -28,7 +26,6 @@ public class DatePickerFragment extends DialogFragment {
     private String mTag;
 
     private static final String ARG_DATE = "date";
-    private static final String TAG = "DatePickerFragment";
 
     public interface DatePickerListener {
         public void onDateSubmit(Date date, String tag);
@@ -50,13 +47,10 @@ public class DatePickerFragment extends DialogFragment {
     }
 
     public static DatePickerFragment newInstance(String titleString, Date date) {
-        Log.i(TAG, "newInstance()");
-
         mTitleString = titleString;
 
         Bundle args = new Bundle();
         if (date == null) {
-            Log.i(TAG, "newInstance: Date was null!");
             date = new Date();
         }
 

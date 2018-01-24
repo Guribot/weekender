@@ -2,7 +2,6 @@ package com.katespitzer.android.weekender;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Note;
@@ -25,11 +23,8 @@ import java.util.UUID;
 public class TripActivity 
         extends AppCompatActivity 
         implements TripPlaceFragment.OnPlaceInteractionListener,
-        TripRouteFragment.OnFragmentInteractionListener,
-        TripNoteFragment.OnNoteInteractionListener,
-        SearchResultFragment.OnSearchResultInteractionListener {
+        TripNoteFragment.OnNoteInteractionListener {
 
-    private static final String TAG = "TripActivity";
     private static final String EXTRA_TRIP_UUID = "com.katespitzer.android.weekender.trip_uuid";
 
     /**
@@ -76,10 +71,9 @@ public class TripActivity
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.i(TAG, "onTabSelected: " + tab);
                 if (tab.getPosition() == 0) {
                     LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(mContext);
-                    Intent intent = new Intent("REFRESH_MAP");
+                    Intent intent = new Intent(TripMapFragment.RESPONSE_REFRESH);
                     lbm.sendBroadcast(intent);
                 }
                 super.onTabSelected(tab);
@@ -95,31 +89,14 @@ public class TripActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-        Log.i(TAG, "onPlaceClicked: " + uri);
-    }
-
-    @Override
     public void onPlaceClicked(Place place) {
-        Log.i(TAG, "onPlaceClicked: " + place);
-//        Intent intent = PlaceActivity.newIntent(this, place.getId());
-//
-//        startActivity(intent);
-
         Intent intent = PlaceTabbedActivity.newIntent(this, place.getId());
 
         startActivity(intent);
     }
 
     @Override
-    public void onListFragmentInteraction(Place result) {
-
-    }
-
-    @Override
     public void onNoteClicked(Note note) {
-        Log.i(TAG, "onNoteClicked: " + note);
-
         Intent intent = NoteActivity.newIntent(this, note.getId());
 
         startActivity(intent);
@@ -157,8 +134,6 @@ public class TripActivity
                 default:
                     break;
             }
-
-//            return PlaceholderFragment.newInstance(position + 1);
 
             return fragment;
         }

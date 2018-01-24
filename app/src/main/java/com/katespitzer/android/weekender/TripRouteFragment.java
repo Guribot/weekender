@@ -51,9 +51,6 @@ import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TripRouteFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link TripRouteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -67,7 +64,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     private DestinationManager mDestinationManager;
     private Bitmap mRouteBitmap;
 
-    private OnFragmentInteractionListener mListener;
     private DestinationRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private OnDestinationInteractionListener mDestinationListener;
@@ -77,7 +73,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     private TextView mTripLengths;
     private ConstraintLayout mConstraintLayout;
 
-    private static final String TAG = "TripRouteFragment";
     private static final String TRIP_ID = "trip_id";
 
     public TripRouteFragment() {
@@ -124,15 +119,11 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         mDestinationListener = new OnDestinationInteractionListener() {
             @Override
             public void onDestinationClicked(Destination destination) {
-                Log.i(TAG, "onDestinationClicked: " + destination);
-
                 updateUI();
             }
 
             @Override
             public void onNavClicked(final Destination destination) {
-                Log.i(TAG, "onNavClicked: " + destination);
-
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
 
                 dialog.setTitle(R.string.open_in_google_maps);
@@ -165,7 +156,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 
             @Override
             public void onUpArrowClicked(Destination destination) {
-                Log.i(TAG, "onUpArrowClicked: " + destination);
                 mDestinationManager.moveDestinationUp(destination);
 
                 updateUI();
@@ -174,7 +164,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 
             @Override
             public void onDownArrowClicked(Destination destination) {
-                Log.i(TAG, "onDownArrowClicked: " + destination);
                 mDestinationManager.moveDestinationDown(destination);
 
                 updateUI();
@@ -208,7 +197,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.i(TAG, "onClick: input: " + input.getText());
                         // create Destination object based on search input
                         Destination destination = new Destination();
                         destination.setName(input.getText().toString());
@@ -252,23 +240,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 //        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     private void updateUI() {
@@ -351,14 +322,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         }
     }
 
-    /**
-     * Placeholder interaction listener - consider deleting if never used
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     public interface OnDestinationInteractionListener {
         void onDestinationClicked(Destination destination);
         void onUpArrowClicked(Destination destination);
@@ -378,27 +341,22 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         @Override
         protected JSONObject doInBackground(Void... voids) {
             if (mRoute == null) {
-                Log.e(TAG, "doInBackground: No Destination set");
                 return null;
             } else {
                 JSONObject jsonObject = new JSONObject();
                 String results = new PlaceFetcher().getPlaceData(mDestination.getName());
-                Log.i(TAG, "doInBackground: results returned: " + results);
 
                 try {
                     jsonObject = new JSONObject(results);
                 } catch (Exception e) {
-                    Log.d(TAG, "doInBackground: exception: " + e.toString());
                 }
 
-                Log.i(TAG, "doInBackground: result is: " + results);
                 return jsonObject;
             }
         }
 
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
-            Log.i(TAG, "onPostExecute: " + jsonObject);
             try {
                 switch (jsonObject.getString("status")) {
                     case "OK":
@@ -431,7 +389,6 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                             getRoute();
                         } catch (Exception e) {
                             // something broke
-                            Log.e(TAG, "onPostExecute: Exception: ", e);
                         }
                         super.onPostExecute(jsonObject);
                         break;
@@ -441,10 +398,9 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                         break;
                     default:
                         // something else broke
-                        Log.d(TAG, "onPostExecute: something weird happened: " + jsonObject.getString("status"));
                 }
             } catch (Exception e) {
-                Log.e(TAG, "onPostExecute: unexpected JSON response: ", e);
+
             }
 
         }
@@ -461,22 +417,17 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         @Override
         protected JSONObject doInBackground(Void... voids) {
             if (mRoute == null) {
-                Log.e(TAG, "doInBackground: No Route set");
                 return null;
             } else {
                 JSONObject jsonObject = new JSONObject();
                 String results = new DirectionsFetcher().getDirections(mRoute);
-                Log.i(TAG, "doInBackground: results returned: " + results);
 
                 try {
                     jsonObject = new JSONObject(results);
                     jsonObject = jsonObject.getJSONArray("routes")
                             .getJSONObject(0);
                 } catch (Exception e) {
-                    Log.d(TAG, "doInBackground: exception: " + e.toString());
                 }
-
-                Log.i(TAG, "doInBackground: result is: " + results);
 
                 try {
                     JSONArray legs = jsonObject.getJSONArray("legs");
@@ -493,15 +444,12 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                     TripManager.get(getActivity()).updateTrip(mTrip);
 
                     mPolyline = jsonObject.getJSONObject("overview_polyline").getString("points");
-                    Log.i(TAG, "onPostExecute: Polyline Found: " + mPolyline);
                     mRoute.setOverviewPolyline(mPolyline);
                     RouteManager.get(getActivity()).updateRoute(mRoute);
                 } catch (Exception e) {
-                    Log.e(TAG, "onPostExecute: exception", e);
                 }
 
                 mRouteBitmap = MapFetcher.getMapImage(mPolyline);
-                Log.i(TAG, "doInBackground: " + mRouteBitmap);
 
                 return jsonObject;
             }
@@ -540,15 +488,12 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
                      info.put("time", newTime);
                  }
              } catch (Exception e) {
-                 Log.d(TAG, "getLength: " + e);
              }
              return info;
         }
 
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
-            Log.i(TAG, "onPostExecute: " + jsonObject);
-
             mRoute.setMapImage(mRouteBitmap);
             mRouteImageView.setImageBitmap(mRouteBitmap);
 

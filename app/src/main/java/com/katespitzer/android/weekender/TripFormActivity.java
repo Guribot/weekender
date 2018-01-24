@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -28,7 +27,6 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
 
     private Trip mTrip;
 
-    private static final String TAG = "TripFormActivity";
     private static final String DIALOG_START_DATE = "DialogStartDate";
     private static final String DIALOG_END_DATE = "DialogEndDate";
 
@@ -44,7 +42,6 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "in onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_form);
 
@@ -73,9 +70,7 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
             // TODO: make this work
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                Log.i(TAG, "onFocusChange: ");
                 if (!hasFocus) {
-                    Log.i(TAG, "onFocusChange2: ");
                     hideKeyboard(v);
                 }
             }
@@ -124,7 +119,6 @@ public class TripFormActivity extends AppCompatActivity implements DatePickerFra
 
     @Override
     public void onDateSubmit(Date date, String tag) {
-        Log.i(TAG, "onDateSubmit()");
         switch (tag) {
             case DIALOG_START_DATE:
                 mTrip.setStartDate(date);

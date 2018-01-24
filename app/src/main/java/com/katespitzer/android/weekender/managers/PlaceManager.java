@@ -30,8 +30,6 @@ public class PlaceManager {
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    private static final String TAG = "PlaceManager";
-
     /**
      * Constructor: takes in Context and initializes database
      *
@@ -50,8 +48,6 @@ public class PlaceManager {
      * @return
      */
     public static PlaceManager get(Context context) {
-        Log.i(TAG, "in get()");
-
         if (sPlaceManager == null) {
             sPlaceManager = new PlaceManager(context);
         }
@@ -71,7 +67,6 @@ public class PlaceManager {
      * @return
      */
     public Place getPlace(UUID id) {
-        Log.i(TAG, "in getPlace()");
         PlaceCursorWrapper cursor = queryPlaces(
                 PlaceTable.Cols.UUID + " = ?",
                 new String[] { id.toString() }
@@ -102,7 +97,6 @@ public class PlaceManager {
      * @param place
      */
     public void addPlace(Place place) {
-        Log.i(TAG, "in addPlace()");
         ContentValues values = getContentValues(place);
 
         long r = mDatabase.insert(PlaceTable.NAME, null, values);
@@ -114,7 +108,6 @@ public class PlaceManager {
      * @param place
      */
     public void updatePlace(Place place) {
-        Log.i(TAG, "updatePlace()");
         String uuidString = place.getId().toString();
         ContentValues values = getContentValues(place);
 
@@ -147,7 +140,6 @@ public class PlaceManager {
      * @return
      */
     public List<Place> getPlaces() {
-        Log.i(TAG, "getPlaces()");
         List<Place> places = new ArrayList<>();
 
         // querying with null args = returns everything
@@ -201,21 +193,12 @@ public class PlaceManager {
      * @return
      */
     public int size() {
-        Log.i(TAG, "size()");
         return getPlaces().size();
     }
 
     public void addPlaceToTrip(Place place, Trip trip) {
-        Log.i(TAG, "addPlaceToTrip()");
         place.setTripId(trip.getId());
         addPlace(place);
-    }
-
-    public Trip getTripFor(Place place) {
-        Trip trip = TripManager.get(mContext)
-                .getTrip(place.getTripId());
-
-        return trip;
     }
 
     /**

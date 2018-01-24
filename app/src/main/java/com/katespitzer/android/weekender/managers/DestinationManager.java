@@ -27,8 +27,6 @@ public class DestinationManager {
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    private static final String TAG = "DestinationManager";
-
     /**
      * Constructor: takes in Context and initializes database
      *
@@ -47,8 +45,6 @@ public class DestinationManager {
      * @return
      */
     public static DestinationManager get(Context context) {
-        Log.i(TAG, "in get()");
-
         if (sDestinationManager == null) {
             sDestinationManager = new DestinationManager(context);
         }
@@ -63,7 +59,6 @@ public class DestinationManager {
      * @return
      */
     public Destination getDestination(UUID id) {
-        Log.i(TAG, "in getDestination()");
         DestinationCursorWrapper cursor = queryDestinations(
                 DestinationTable.Cols.UUID + " = ?",
                 new String[] { id.toString() }
@@ -92,7 +87,6 @@ public class DestinationManager {
      * @param destination
      */
     public void addDestination(Destination destination) {
-        Log.i(TAG, "in addDestination()");
         ContentValues values = getContentValues(destination);
 
         long r = mDatabase.insert(DestinationTable.NAME, null, values);
@@ -104,7 +98,6 @@ public class DestinationManager {
      * @param destination
      */
     public void updateDestination(Destination destination) {
-        Log.i(TAG, "updateDestination()");
         String uuidString = destination.getId().toString();
         ContentValues values = getContentValues(destination);
 
@@ -120,7 +113,6 @@ public class DestinationManager {
      * @param destination
      */
     public void deleteDestination(Destination destination) {
-        Log.i(TAG, "deleteDestination: " + destination);
         String uuidString = destination.getId().toString();
 
         mDatabase.delete(DestinationTable.NAME,
@@ -137,7 +129,6 @@ public class DestinationManager {
      * @return
      */
     public List<Destination> getDestinations() {
-        Log.i(TAG, "getDestinations()");
         List<Destination> destinations = new ArrayList<>();
 
         // querying with null args = returns everything
@@ -189,12 +180,10 @@ public class DestinationManager {
      * @return
      */
     public int size() {
-        Log.i(TAG, "size()");
         return getDestinations().size();
     }
 
     public void restoreDestinationToRoute(Destination destination, Route route) {
-        Log.i(TAG, "restoreDestinationToRoute()");
         destination.setRouteId(route.getId());
         addDestination(destination);
     }

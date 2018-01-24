@@ -16,16 +16,14 @@ import java.util.UUID;
  *
  */
 
-public class NoteActivity extends AppCompatActivity implements NoteFragment.OnFragmentInteractionListener {
+public class NoteActivity extends AppCompatActivity {
 
     private UUID mNoteId;
 
-    private static final String TAG = "SingleFragmentActivity";
     private static final String EXTRA_NOTE_ID = "com.katespitzer.android.weekender.note_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "in onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
 
@@ -45,10 +43,5 @@ public class NoteActivity extends AppCompatActivity implements NoteFragment.OnFr
         intent.putExtra(EXTRA_NOTE_ID, noteId);
 
         return intent;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }

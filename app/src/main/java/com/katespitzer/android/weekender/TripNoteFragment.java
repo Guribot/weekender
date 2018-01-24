@@ -37,7 +37,6 @@ public class TripNoteFragment extends Fragment {
     private RecyclerView mRecyclerView;
 
     private static final String ARG_TRIP_ID = "trip-id";
-    private static final String TAG = "TripNoteFragment";
 
     private int mColumnCount = 1;
     private OnNoteInteractionListener mListener;
@@ -75,7 +74,6 @@ public class TripNoteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.trip_note_list);
@@ -111,7 +109,6 @@ public class TripNoteFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.i(TAG, "onResume()");
         super.onResume();
 
         mNotes = NoteManager.get(getActivity()).getNotesForTrip(mTrip);
@@ -155,7 +152,6 @@ public class TripNoteFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnNoteInteractionListener {
-        // TODO: Update argument type and name
         void onNoteClicked(Note note);
     }
 }

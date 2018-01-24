@@ -23,15 +23,11 @@ public class Place {
 
     private Bitmap mBitmap;
 
-    private static final String TAG = "Place.java";
-
     public Place() {
         this(UUID.randomUUID());
-        Log.i(TAG, "Place: in constructor");
     }
 
     public Place(UUID id) {
-        Log.i(TAG, "Place: in UUID constructor");
         mId = id;
     }
 

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.katespitzer.android.weekender.PlaceNoteFragment.OnNoteInteractionListener;
 import com.katespitzer.android.weekender.R;
 import com.katespitzer.android.weekender.models.Note;
 
@@ -15,18 +14,15 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Note} and makes a call to the
- * specified {@link OnNoteInteractionListener}.
+ * {@link RecyclerView.Adapter} that can display a {@link Note}
  * TODO: Replace the implementation with code for your data type.
  */
 public class PlaceNoteRecyclerViewAdapter extends RecyclerView.Adapter<PlaceNoteRecyclerViewAdapter.ViewHolder> {
 
     private final List<Note> mNotes;
-    private final OnNoteInteractionListener mListener;
 
-    public PlaceNoteRecyclerViewAdapter(List<Note> notes, OnNoteInteractionListener listener) {
+    public PlaceNoteRecyclerViewAdapter(List<Note> notes) {
         mNotes = notes;
-        mListener = listener;
     }
 
     @Override
@@ -44,17 +40,6 @@ public class PlaceNoteRecyclerViewAdapter extends RecyclerView.Adapter<PlaceNote
         Date noteDate = mNotes.get(position).getCreatedDate();
         String stringDate = DateFormat.getDateInstance(DateFormat.SHORT).format(noteDate);
         holder.mNoteDate.setText(stringDate);
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onNoteClicked(holder.mNote);
-                }
-            }
-        });
     }
 
     @Override

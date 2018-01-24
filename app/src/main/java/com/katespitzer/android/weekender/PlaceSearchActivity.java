@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Place;
@@ -20,19 +19,15 @@ import java.util.UUID;
  *
  */
 
-public class PlaceSearchActivity extends AppCompatActivity implements SearchResultFragment.OnSearchResultInteractionListener,
-SearchResultDetailFragment.OnFragmentInteractionListener {
+public class PlaceSearchActivity extends AppCompatActivity implements SearchResultFragment.OnSearchResultInteractionListener {
 
     private Trip mTrip;
-
-    private static final String TAG = "PlaceSearchActivity";
 
     private static final String EXTRA_TRIP_ID = "com.katespitzer.android.weekender.trip_id";
     private static final String EXTRA_QUERY = "com.katespitzer.android.weekender.query";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "in onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
 
@@ -55,19 +50,13 @@ SearchResultDetailFragment.OnFragmentInteractionListener {
     }
 
     @Override
-    public void onListFragmentInteraction(Place result) {
-        Log.i(TAG, "onPlaceClicked: " + result);
+    public void onSearchResultClicked(Place result) {
         Fragment fragment = SearchResultDetailFragment.newInstance(result.getGooglePlaceId(), mTrip.getId());
         FragmentManager fm = getSupportFragmentManager();
 
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        //
     }
 
     public static Intent newIntent(Context context, String query, UUID tripId) {

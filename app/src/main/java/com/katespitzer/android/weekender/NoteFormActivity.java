@@ -33,7 +33,6 @@ public class NoteFormActivity extends AppCompatActivity {
 
     private boolean isEdit;
 
-    private static final String TAG = "NoteFormActivity";
     private static final String EXTRA_PLACE_ID = "com.katespitzer.android.weekender.place_db_id";
     private static final String EXTRA_TRIP_ID = "com.katespitzer.android.weekender.trip_db_id";
     private static final String EXTRA_NOTE_ID = "com.katespitzer.android.weekender.note_id";

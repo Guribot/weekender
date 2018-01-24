@@ -20,17 +20,13 @@ public class PlaceFetcher {
     private static final String KEY = "key";
     private static final String QUERY = "query";
 
-    private static final String TAG = "PlaceFetcher";
-
 
     public String getPlaceData(String query) {
-        Log.i(TAG, "getPlaceData()");
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
         try {
             URL url = buildTextSearchURL(query);
-            Log.i(TAG, "getPlaceData: URL BUILT: " + url);
 
             urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -69,7 +65,6 @@ public class PlaceFetcher {
         try {
             return new URL(newURL);
         } catch (Exception e) {
-            Log.e(TAG, "buildTextSearchURL: Exception Occurred: ", e);
             return null;
         }
     }

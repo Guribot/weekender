@@ -50,11 +50,7 @@ import java.util.UUID;
  * interface.
  */
 public class TripPlaceFragment extends Fragment {
-
-    private static final String TAG = "TripPlaceFragment";
-//    private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String ARG_TRIP_ID = "trip-id";
-    private static final int MAX_SEARCH_RESULTS = 5;
 
     private int mColumnCount = 2;
     private OnPlaceInteractionListener mListener;
@@ -80,13 +76,11 @@ public class TripPlaceFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
             UUID tripId = (UUID) getArguments().getSerializable(ARG_TRIP_ID);
             mTrip = TripManager.get(getActivity()).getTrip(tripId);
-            Log.i(TAG, "onCreate: Trip Found: " + mTrip);
             mPlaces = PlaceManager.get(getActivity()).getPlacesForTrip(mTrip);
         }
 
@@ -117,7 +111,6 @@ public class TripPlaceFragment extends Fragment {
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.i(TAG, "onClick: input: " + input.getText());
                     String query = input.getText().toString();
 
                     new FetchPlacesTask(getActivity(), query).execute();
@@ -141,7 +134,6 @@ public class TripPlaceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_place_list, container, false);
 
         // Set the adapter
@@ -157,7 +149,6 @@ public class TripPlaceFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.i(TAG, "onResume()");
         super.onResume();
 
         updateUI();
@@ -165,7 +156,6 @@ public class TripPlaceFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        Log.i(TAG, "onAttach()");
         super.onAttach(context);
         if (context instanceof OnPlaceInteractionListener) {
             mListener = (OnPlaceInteractionListener) context;
@@ -177,7 +167,6 @@ public class TripPlaceFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        Log.i(TAG, "onDetach()");
         super.onDetach();
         mListener = null;
     }
@@ -223,20 +212,16 @@ public class TripPlaceFragment extends Fragment {
         @Override
         protected String doInBackground(Void... voids) {
             if (mQuery == null) {
-                Log.e(TAG, "doInBackground: No Query set");
                 return null;
             } else {
                 JSONObject jsonObject = new JSONObject();
-//                JSONArray jsonArray = new JSONArray();
                 String results = new PlaceFetcher().getPlaceData(mQuery);
-                Log.i(TAG, "doInBackground: results returned: " + results);
-//
+
                 try {
                     jsonObject = new JSONObject(results);
                     String status = jsonObject.getString("status");
                     return status;
                 } catch (Exception e) {
-                    Log.d(TAG, "doInBackground: exception: " + e.toString());
                     return null;
                 }
             }
@@ -244,17 +229,14 @@ public class TripPlaceFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String status) {
-            Log.i(TAG, "onPostExecute: " + status);
-
-            if (status.equals("OK")) {
-                Log.i(TAG, "onPostExecute: status ok");
-                Intent intent = PlaceSearchActivity.newIntent(mContext, mQuery, mTrip.getId());
-                startActivity(intent);
-            } else if (status.equals("ZERO_RESULTS")) {
-                Log.i(TAG, "onPostExecute: no results");
-                Toast.makeText(mContext, "No results found", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d(TAG, "onPostExecute: unexpected status: " + status);
+            switch (status) {
+                case "OK":
+                    Intent intent = PlaceSearchActivity.newIntent(mContext, mQuery, mTrip.getId());
+                    startActivity(intent);
+                    break;
+                case "ZERO_RESULTS":
+                    Toast.makeText(mContext, "No results found", Toast.LENGTH_SHORT).show();
+                    break;
             }
             super.onPostExecute(status);
         }
@@ -280,7 +262,6 @@ public class TripPlaceFragment extends Fragment {
                             PlacePhotoResponse photo = task.getResult();
                             Bitmap bitmap = photo.getBitmap();
                             photoMetadataBuffer.release();
-                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
                         }
                     });
 

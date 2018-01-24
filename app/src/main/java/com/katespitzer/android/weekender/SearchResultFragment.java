@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,6 @@ public class SearchResultFragment extends Fragment {
     private RecyclerView mRecyclerView;
 
     private static final int MAX_SEARCH_RESULTS = 20;
-    private static final String TAG = "SearchResultFragment";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,7 +55,6 @@ public class SearchResultFragment extends Fragment {
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static SearchResultFragment newInstance(String query, UUID tripId) {
-        Log.i(TAG, "newInstance: ");
         SearchResultFragment fragment = new SearchResultFragment();
         Bundle args = new Bundle();
         args.putString(ARG_QUERY, query);
@@ -68,11 +65,9 @@ public class SearchResultFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            Log.i(TAG, "onCreate: has arguments");
             mQuery = getArguments().getString(ARG_QUERY);
             UUID tripId = (UUID) getArguments().getSerializable(ARG_TRIP_ID);
             mTrip = TripManager.get(getActivity()).getTrip(tripId);
@@ -84,19 +79,11 @@ public class SearchResultFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
         mResults = new ArrayList<>();
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            Log.i(TAG, "onCreateView: be here please");
-
-//            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trip_route_recycler_view);
-//            mAdapter = new DestinationRecyclerViewAdapter(mDestinations, mDestinationListener);
-//            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-//            recyclerView.setAdapter(mAdapter);
-
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -108,14 +95,10 @@ public class SearchResultFragment extends Fragment {
 
     // TODO: make this work
     private void updateUI() {
-        Log.i(TAG, "updateUI(), mResults is currently " + mResults);
         if (mAdapter == null) {
-            Log.i(TAG, "updateUI: setting new adapter");
             mAdapter = new SearchResultRecyclerViewAdapter(mResults, mListener);
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            Log.i(TAG, "updateUI: updating adapter");
-            // breakpoint
             mAdapter.setValues(mResults);
             mAdapter.notifyDataSetChanged();
         }
@@ -124,7 +107,6 @@ public class SearchResultFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        Log.i(TAG, "onAttach: ");
         super.onAttach(context);
         if (context instanceof OnSearchResultInteractionListener) {
             mListener = (OnSearchResultInteractionListener) context;
@@ -136,7 +118,6 @@ public class SearchResultFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        Log.i(TAG, "onDetach: ");
         super.onDetach();
         mListener = null;
     }
@@ -152,7 +133,7 @@ public class SearchResultFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnSearchResultInteractionListener {
-        void onListFragmentInteraction(Place result);
+        void onSearchResultClicked(Place result);
     }
 
 
@@ -172,13 +153,11 @@ public class SearchResultFragment extends Fragment {
         @Override
         protected List<Place> doInBackground(Void... voids) {
             if (mQuery == null) {
-                Log.e(TAG, "doInBackground: No Query set");
                 return null;
             } else {
                 JSONObject jsonObject = new JSONObject();
                 JSONArray jsonArray = new JSONArray();
                 String results = new PlaceFetcher().getPlaceData(mQuery);
-                Log.i(TAG, "doInBackground: results returned: " + results);
 
                 try {
                     jsonObject = new JSONObject(results);
@@ -199,7 +178,6 @@ public class SearchResultFragment extends Fragment {
 
                     return mPlaces;
                 } catch (Exception e) {
-                    Log.d(TAG, "doInBackground: exception: " + e.toString());
                     return null;
                 }
             }
@@ -207,37 +185,9 @@ public class SearchResultFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Place> places) {
-            Log.i(TAG, "onPostExecute() " + places);
             mResults = mPlaces;
             updateUI();
             super.onPostExecute(places);
         }
-
-//        private void getPhotos(String placeId) {
-//            final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
-//            photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
-//                @Override
-//                public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
-//                    // Get the list of photos.
-//                    PlacePhotoMetadataResponse photos = task.getResult();
-//                    // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
-//                    PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-//                    // Get the first photo in the list.
-//                    PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
-//                    // Get the attribution text.
-//                    CharSequence attribution = photoMetadata.getAttributions();
-//                    // Get a full-size bitmap for the photo.
-//                    Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
-//                    photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-//                            PlacePhotoResponse photo = task.getResult();
-//                            Bitmap bitmap = photo.getBitmap();
-//                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
-//                        }
-//                    });
-//                }
-//            });
-//        }
     }
 }

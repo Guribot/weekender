@@ -25,8 +25,6 @@ public class RouteManager {
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
-    private static final String TAG = "RouteManager";
-
     /**
      * Constructor: takes in Context and initializes database
      *
@@ -45,8 +43,6 @@ public class RouteManager {
      * @return
      */
     public static RouteManager get(Context context) {
-        Log.i(TAG, "in get()");
-
         if (sRouteManager == null) {
             sRouteManager = new RouteManager(context);
         }
@@ -61,7 +57,6 @@ public class RouteManager {
      * @return
      */
     public Route getRoute(UUID id) {
-        Log.i(TAG, "in getRoute()");
         RouteCursorWrapper cursor = queryRoutes(
                 RouteTable.Cols.UUID + " = ?",
                 new String[] { id.toString() }
@@ -90,7 +85,6 @@ public class RouteManager {
      * @param route
      */
     public void addRoute(Route route) {
-        Log.i(TAG, "in addRoute: " + route);
         ContentValues values = getContentValues(route);
 
         long r = mDatabase.insert(RouteTable.NAME, null, values);
@@ -102,7 +96,6 @@ public class RouteManager {
      * @param route
      */
     public void updateRoute(Route route) {
-        Log.i(TAG, "updateRoute: " + route);
         String uuidString = route.getId().toString();
         ContentValues values = getContentValues(route);
 
@@ -117,7 +110,6 @@ public class RouteManager {
      * @param route
      */
     public void deleteRoute(Route route) {
-        Log.i(TAG, "deleteRoute: " + route);
         String uuidString = route.getId().toString();
 
         mDatabase.delete(RouteTable.NAME,
@@ -134,7 +126,6 @@ public class RouteManager {
      * @return
      */
     public List<Route> getRoutes() {
-        Log.i(TAG, "getRoutes()");
         List<Route> routes = new ArrayList<>();
 
         // querying with null args = returns everything
@@ -161,7 +152,6 @@ public class RouteManager {
      * @return
      */
     public int size() {
-        Log.i(TAG, "size()");
         return getRoutes().size();
     }
 

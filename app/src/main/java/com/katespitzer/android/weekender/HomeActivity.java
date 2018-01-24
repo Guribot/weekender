@@ -16,12 +16,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private static final int NEW_TRIP_REQUEST = 0;
 
-    private static final String TAG = "HomeActivity";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "in onCreate()");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -70,13 +66,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void startTripList() {
-        Log.i(TAG, "in startTripList()");
         Intent intent = new Intent(this, TripListActivity.class);
         startActivity(intent);
     }
 
     private void startNewTrip() {
-        Log.i(TAG, "in startNewTrip()");
         Intent intent = new Intent(this, TripFormActivity.class);
         startActivityForResult(intent, NEW_TRIP_REQUEST);
     }

@@ -6,15 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +48,8 @@ public class TripMapFragment extends Fragment {
     private LocalBroadcastManager mLBM;
     private RefreshReceiver mReceiver;
 
-    private static final String TAG = "TripMapFragment";
     private static final String TRIP_ID = "trip_id";
+    public static final String RESPONSE_REFRESH = "REFRESH_MAP";
 
     public static Fragment newInstance(UUID tripId) {
         Fragment fragment = new TripMapFragment();
@@ -114,8 +110,6 @@ public class TripMapFragment extends Fragment {
 
                     @Override
                     public void onInfoWindowClick(final Marker marker) {
-                        Log.i(TAG, "onInfoWindowClick: " + marker);
-
                         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                         dialog.setTitle(marker.getTitle());
 
@@ -213,7 +207,7 @@ public class TripMapFragment extends Fragment {
         super.onResume();
         mMapView.onResume();
 
-        mLBM.registerReceiver(mReceiver, new IntentFilter("REFRESH_MAP"));
+        mLBM.registerReceiver(mReceiver, new IntentFilter(RESPONSE_REFRESH));
     }
 
     @Override

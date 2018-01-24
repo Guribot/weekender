@@ -33,11 +33,9 @@ public class PlaceCreateActivity extends AppCompatActivity {
 
     private static final String EXTRA_TRIP_ID_FOR_PLACE = "com.katespitzer.android.weekender.trip_id_for_place";
     private static final String EXTRA_PLACE_ID = "com.katespitzer.android.weekender.place_id";
-    private static final String TAG = "PlaceCreateActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_form);
 

@@ -29,8 +29,6 @@ public class TripManager {
 
     private RouteManager mRouteManager;
 
-    private static final String TAG = "TripManager";
-
     /**
      * Constructor: takes in Context and initializes database
      *
@@ -51,8 +49,6 @@ public class TripManager {
      * @return
      */
     public static TripManager get(Context context) {
-        Log.i(TAG, "in get()");
-
         if (sTripManager == null) {
             sTripManager = new TripManager(context);
         }
@@ -67,7 +63,6 @@ public class TripManager {
      * @return
      */
     public Trip getTrip(UUID id) {
-        Log.i(TAG, "in getTrip()");
         TripCursorWrapper cursor = queryTrips(
                 TripTable.Cols.UUID + " = ?",
                 new String[] { id.toString() }
@@ -100,8 +95,6 @@ public class TripManager {
      * @param trip
      */
     public void addTrip(Trip trip) {
-        Log.i(TAG, "in addTrip()");
-
         Route route = new Route();
         mRouteManager.addRoute(route);
         trip.setRoute(route);
@@ -215,8 +208,6 @@ public class TripManager {
      * @param qty
      */
     private void populateTrip(int qty) {
-        Log.i(TAG, "in populateTrip()");
-
         for (int i = 1; i <= qty; i++) {
             Trip trip = new Trip();
             trip.setTitle("Trip #" + i);

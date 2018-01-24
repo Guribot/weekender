@@ -28,16 +28,12 @@ public class DirectionsFetcher {
     private static final String ENDDEST = "destination";
     private static final String WAYPOINTS = "waypoints";
 
-    private static final String TAG = "DirectionsFetcher";
-
     public String getDirections(Route route) {
-        Log.i(TAG, "getDirections()");
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
         try {
             URL url = buildURL(route.getDestinations());
-            Log.i(TAG, "getDirections: URL BUILT: " + url);
 
             urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -97,7 +93,6 @@ public class DirectionsFetcher {
             URL url = new URL(builtURL.toString());
             return url;
         } catch (MalformedURLException mue) {
-            Log.e(TAG, "MalformedURLException", mue);
             return null;
         }
     }

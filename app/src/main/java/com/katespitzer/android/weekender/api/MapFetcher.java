@@ -18,7 +18,6 @@ import java.net.URL;
  */
 
 public class MapFetcher {
-    private static final String TAG = "MapFetcher";
     private static final Uri ENDPOINT = Uri.parse("https://maps.googleapis.com/maps/api/staticmap?");
     private static final String SIZE = "size";
     private static final String PATH = "path";
@@ -51,9 +50,7 @@ public class MapFetcher {
             out.close();
             byte[] outBytes = out.toByteArray();
             bitmap = BitmapFactory.decodeByteArray(outBytes, 0, outBytes.length);
-//            return out.toByteArray();
         } catch (Exception e) {
-            Log.e(TAG, "getMapImage: exception: ", e);
             return null;
         } finally {
             connection.disconnect();
@@ -71,10 +68,8 @@ public class MapFetcher {
                 .toString();
 
         try {
-            Log.i(TAG, "buildURL: built URL " + urlString);
             return new URL(urlString);
         } catch (Exception e) {
-            Log.e(TAG, "buildURL: exception: ", e);
             return null;
         }
     }

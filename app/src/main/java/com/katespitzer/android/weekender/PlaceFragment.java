@@ -1,23 +1,17 @@
 package com.katespitzer.android.weekender;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +23,6 @@ import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.katespitzer.android.weekender.adapters.PlaceNoteRecyclerViewAdapter;
 import com.katespitzer.android.weekender.managers.PlaceManager;
 import com.katespitzer.android.weekender.models.Place;
 
@@ -38,28 +31,19 @@ import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PlaceFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link PlaceFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class PlaceFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
     private GeoDataClient mGeoDataClient;
     private Place mPlace;
 
     private TextView mPlaceName;
     private ImageView mPlaceImage;
     private TextView mPlaceAddress;
-    private Button mAddNoteButton;
-    private RecyclerView mRecyclerView;
     private PlaceManager mPlaceManager;
-    
 
-
-    private static final String TAG = "PlaceFragment";
     private static final String ARG_PLACE_ID = "place_id";
 
     public PlaceFragment() {
@@ -152,40 +136,6 @@ public class PlaceFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-
-        // use this for adding note?
-        void onFragmentInteraction(Uri uri);
-    }
-
     /**
      * Takes in the target imageView and the google place ID,
      * finds first image and sets it to the image view
@@ -193,9 +143,7 @@ public class PlaceFragment extends Fragment {
      * @param imageView
      * @param placeId
      */
-
     private void setImageView(final ImageView imageView, String placeId) {
-        Log.i(TAG, "setImageView: ");
         final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
         photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
             @Override
@@ -214,16 +162,12 @@ public class PlaceFragment extends Fragment {
                     photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
                         @Override
                         public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                            Log.i(TAG, "onComplete: ");
-
                             PlacePhotoResponse photo = task.getResult();
                             Bitmap bitmap = photo.getBitmap();
 
                             imageView.setImageBitmap(bitmap);
 
                             photoMetadataBuffer.release();
-
-                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
                         }
                     });
                 }

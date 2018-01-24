@@ -2,7 +2,6 @@ package com.katespitzer.android.weekender;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,13 +18,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.managers.PlaceManager;
-import com.katespitzer.android.weekender.models.Note;
 import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.models.Trip;
 
 import java.util.UUID;
 
-public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragment.OnFragmentInteractionListener, PlaceNoteFragment.OnNoteInteractionListener {
+public class PlaceTabbedActivity extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -45,7 +43,6 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
     private Place mPlace;
     private Trip mTrip;
 
-    private static final String TAG = "PlaceTabbedActivity";
     private static final String EXTRA_PLACE_ID = "com.katespitzer.android.weekender.place_id";
 
     @Override
@@ -78,16 +75,6 @@ public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragm
         intent.putExtra(EXTRA_PLACE_ID, placeId);
 
         return intent;
-    }
-
-    @Override
-    public void onNoteClicked(Note note) {
-        //
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     /**
