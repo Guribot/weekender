@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.R;
-import com.katespitzer.android.weekender.SearchResultFragment.OnListFragmentInteractionListener;
+import com.katespitzer.android.weekender.SearchResultFragment.OnSearchResultInteractionListener;
 import com.katespitzer.android.weekender.models.Place;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Place} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link OnSearchResultInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class SearchResultRecyclerViewAdapter extends RecyclerView.Adapter<SearchResultRecyclerViewAdapter.ViewHolder> {
@@ -23,9 +23,9 @@ public class SearchResultRecyclerViewAdapter extends RecyclerView.Adapter<Search
     private static final String TAG = "SrchResultRcyclrVwAdptr";
 
     private List<Place> mResults;
-    private final OnListFragmentInteractionListener mListener;
+    private final OnSearchResultInteractionListener mListener;
 
-    public SearchResultRecyclerViewAdapter(List<Place> items, OnListFragmentInteractionListener listener) {
+    public SearchResultRecyclerViewAdapter(List<Place> items, OnSearchResultInteractionListener listener) {
         Log.i(TAG, "SearchResultRecyclerViewAdapter: ");
         mResults = items;
         mListener = listener;

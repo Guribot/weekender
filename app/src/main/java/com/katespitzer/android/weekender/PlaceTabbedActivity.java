@@ -12,10 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,7 +25,7 @@ import com.katespitzer.android.weekender.models.Trip;
 
 import java.util.UUID;
 
-public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragment.OnFragmentInteractionListener, PlaceNoteFragment.OnListFragmentInteractionListener {
+public class PlaceTabbedActivity extends AppCompatActivity implements PlaceFragment.OnFragmentInteractionListener, PlaceNoteFragment.OnNoteInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide

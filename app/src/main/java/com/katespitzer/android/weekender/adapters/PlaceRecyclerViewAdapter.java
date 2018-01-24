@@ -3,7 +3,6 @@ package com.katespitzer.android.weekender.adapters;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.katespitzer.android.weekender.R;
-import com.katespitzer.android.weekender.TripPlaceFragment.OnListFragmentInteractionListener;
+import com.katespitzer.android.weekender.TripPlaceFragment.OnPlaceInteractionListener;
 import com.katespitzer.android.weekender.models.Place;
 
 import java.util.List;
@@ -27,19 +26,16 @@ import java.util.List;
 public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecyclerViewAdapter.ViewHolder> {
 
     private List<Place> mPlaces;
-    private final OnListFragmentInteractionListener mListener;
+    private final OnPlaceInteractionListener mListener;
     private GeoDataClient mGeoDataClient;
 
-    private static final String TAG = "PlaceRecyclerViewAdaptr";
-
-    public PlaceRecyclerViewAdapter(List<Place> places, OnListFragmentInteractionListener listener) {
+    public PlaceRecyclerViewAdapter(List<Place> places, OnPlaceInteractionListener listener) {
         mPlaces = places;
         mListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.i(TAG, "onCreateViewHolder: ");
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_place_listitem, parent, false);
 
@@ -50,17 +46,14 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.i(TAG, "onBindViewHolder: " + position);
         holder.mPlace = mPlaces.get(position);
         holder.mPlaceNameView.setText(mPlaces.get(position).getName());
         holder.mPlaceAddressView.setText(mPlaces.get(position).getAddress());
         
         // download Bitmap if it does not exist, display existing bitmap if it does
         if (mPlaces.get(position).getBitmap() == null) {
-            Log.i(TAG, "onBindViewHolder: bitmap does not exist; obtaining bitmap");
             setImageView(holder.mPlacePhotoView, mPlaces.get(position));
         } else {
-            Log.i(TAG, "onBindViewHolder: bitmap exists");
             holder.mPlacePhotoView.setImageBitmap(mPlaces.get(position).getBitmap());
         }
 
@@ -112,7 +105,6 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
      *
      */
     private void setImageView(final ImageView imageView, final Place place) {
-        Log.i(TAG, "setImageView: ");
         final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(place.getGooglePlaceId());
         photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
             @Override
@@ -132,7 +124,6 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
                     photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
                         @Override
                         public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
-                            Log.i(TAG, "onComplete: ");
 
                             PlacePhotoResponse photo = task.getResult();
                             Bitmap bitmap = photo.getBitmap();
@@ -140,8 +131,6 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
                             imageView.setImageBitmap(bitmap);
 
                             place.setBitmap(bitmap);
-
-                            Log.i(TAG, "onComplete: result found: \n bitmap: " + bitmap + "\n photo: " + photo);
                         }
                     });
                 }

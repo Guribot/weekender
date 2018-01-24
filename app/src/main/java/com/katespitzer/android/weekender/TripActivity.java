@@ -24,10 +24,10 @@ import java.util.UUID;
 
 public class TripActivity 
         extends AppCompatActivity 
-        implements TripPlaceFragment.OnListFragmentInteractionListener,
+        implements TripPlaceFragment.OnPlaceInteractionListener,
         TripRouteFragment.OnFragmentInteractionListener,
-        TripNoteFragment.OnNoteListItemClickedListener,
-        SearchResultFragment.OnListFragmentInteractionListener {
+        TripNoteFragment.OnNoteInteractionListener,
+        SearchResultFragment.OnSearchResultInteractionListener {
 
     private static final String TAG = "TripActivity";
     private static final String EXTRA_TRIP_UUID = "com.katespitzer.android.weekender.trip_uuid";

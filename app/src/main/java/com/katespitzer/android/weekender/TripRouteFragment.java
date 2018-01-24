@@ -70,7 +70,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
     private OnFragmentInteractionListener mListener;
     private DestinationRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private OnDestinationListItemInteractionListener mDestinationListener;
+    private OnDestinationInteractionListener mDestinationListener;
 
     private Button mAddDestinationButton;
     private ImageView mRouteImageView;
@@ -121,7 +121,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         String tripLengthsString = getString(R.string.route_length_format, mTrip.getTripLength(), mTrip.getDriveTimeString());
         mTripLengths.setText(tripLengthsString);
 
-        mDestinationListener = new OnDestinationListItemInteractionListener() {
+        mDestinationListener = new OnDestinationInteractionListener() {
             @Override
             public void onDestinationClicked(Destination destination) {
                 Log.i(TAG, "onDestinationClicked: " + destination);
@@ -359,7 +359,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         void onFragmentInteraction(Uri uri);
     }
 
-    public interface OnDestinationListItemInteractionListener {
+    public interface OnDestinationInteractionListener {
         void onDestinationClicked(Destination destination);
         void onUpArrowClicked(Destination destination);
         void onDownArrowClicked(Destination destination);

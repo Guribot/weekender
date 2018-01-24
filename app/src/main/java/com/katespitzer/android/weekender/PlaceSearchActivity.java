@@ -20,7 +20,7 @@ import java.util.UUID;
  *
  */
 
-public class PlaceSearchActivity extends AppCompatActivity implements SearchResultFragment.OnListFragmentInteractionListener,
+public class PlaceSearchActivity extends AppCompatActivity implements SearchResultFragment.OnSearchResultInteractionListener,
 SearchResultDetailFragment.OnFragmentInteractionListener {
 
     private Trip mTrip;

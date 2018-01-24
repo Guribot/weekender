@@ -2,20 +2,17 @@ package com.katespitzer.android.weekender.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.R;
-import com.katespitzer.android.weekender.TripRouteFragment.OnDestinationListItemInteractionListener;
+import com.katespitzer.android.weekender.TripRouteFragment.OnDestinationInteractionListener;
 import com.katespitzer.android.weekender.models.Destination;
 
 import java.util.Collections;
@@ -23,7 +20,7 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Destination} and makes a call to the
- * specified {@link OnDestinationListItemInteractionListener}.
+ * specified {@link OnDestinationInteractionListener}.
  */
 public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<DestinationRecyclerViewAdapter.ViewHolder> {
 
@@ -31,7 +28,7 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
 
     private List<Destination> mDestinations;
     private Context mContext;
-    private final OnDestinationListItemInteractionListener mListener;
+    private final OnDestinationInteractionListener mListener;
 
     private int mSelectedPos;
 
@@ -50,7 +47,7 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
      * @param destinations list of Destinations to display
      * @param listener listener for interface with TripRouteFragment to handle interaction with Destination menu
      */
-    public DestinationRecyclerViewAdapter(List<Destination> destinations, OnDestinationListItemInteractionListener listener) {
+    public DestinationRecyclerViewAdapter(List<Destination> destinations, OnDestinationInteractionListener listener) {
         // set selected destination to -1 (nonexistent)
         mSelectedPos = -1;
 

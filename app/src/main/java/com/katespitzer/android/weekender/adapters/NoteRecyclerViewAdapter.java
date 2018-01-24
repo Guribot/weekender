@@ -2,14 +2,13 @@ package com.katespitzer.android.weekender.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.R;
-import com.katespitzer.android.weekender.TripNoteFragment.OnNoteListItemClickedListener;
+import com.katespitzer.android.weekender.TripNoteFragment.OnNoteInteractionListener;
 import com.katespitzer.android.weekender.managers.PlaceManager;
 import com.katespitzer.android.weekender.models.Note;
 import com.katespitzer.android.weekender.models.Place;
@@ -21,17 +20,15 @@ import java.util.UUID;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Note} and makes a call to the
- * specified {@link OnNoteListItemClickedListener}.
+ * specified {@link OnNoteInteractionListener}.
  */
 public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerViewAdapter.ViewHolder> {
 
     private Context mContext;
     private List<Note> mNotes;
-    private final OnNoteListItemClickedListener mListener;
+    private final OnNoteInteractionListener mListener;
 
-    private static final String TAG = "NoteRecyclerViewAdapter";
-
-    public NoteRecyclerViewAdapter(List<Note> notes, OnNoteListItemClickedListener listener) {
+    public NoteRecyclerViewAdapter(List<Note> notes, OnNoteInteractionListener listener) {
         mNotes = notes;
         mListener = listener;
     }

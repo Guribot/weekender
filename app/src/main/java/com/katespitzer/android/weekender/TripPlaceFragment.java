@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -47,7 +46,7 @@ import java.util.UUID;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnPlaceInteractionListener}
  * interface.
  */
 public class TripPlaceFragment extends Fragment {
@@ -58,7 +57,7 @@ public class TripPlaceFragment extends Fragment {
     private static final int MAX_SEARCH_RESULTS = 5;
 
     private int mColumnCount = 2;
-    private OnListFragmentInteractionListener mListener;
+    private OnPlaceInteractionListener mListener;
     private PlaceRecyclerViewAdapter mAdapter;
 
     private Trip mTrip;
@@ -168,11 +167,11 @@ public class TripPlaceFragment extends Fragment {
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach()");
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnPlaceInteractionListener) {
+            mListener = (OnPlaceInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnDestinationListItemInteractionListener");
+                    + " must implement OnDestinationInteractionListener");
         }
     }
 
@@ -199,7 +198,7 @@ public class TripPlaceFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface OnPlaceInteractionListener {
         void onPlaceClicked(Place place);
     }
 

@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.katespitzer.android.weekender.PlaceNoteFragment.OnListFragmentInteractionListener;
+import com.katespitzer.android.weekender.PlaceNoteFragment.OnNoteInteractionListener;
 import com.katespitzer.android.weekender.R;
 import com.katespitzer.android.weekender.models.Note;
 
@@ -16,15 +16,15 @@ import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Note} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link OnNoteInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class PlaceNoteRecyclerViewAdapter extends RecyclerView.Adapter<PlaceNoteRecyclerViewAdapter.ViewHolder> {
 
     private final List<Note> mNotes;
-    private final OnListFragmentInteractionListener mListener;
+    private final OnNoteInteractionListener mListener;
 
-    public PlaceNoteRecyclerViewAdapter(List<Note> notes, OnListFragmentInteractionListener listener) {
+    public PlaceNoteRecyclerViewAdapter(List<Note> notes, OnNoteInteractionListener listener) {
         mNotes = notes;
         mListener = listener;
     }

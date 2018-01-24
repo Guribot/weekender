@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnSearchResultInteractionListener}
  * interface.
  */
 public class SearchResultFragment extends Fragment {
@@ -40,7 +40,7 @@ public class SearchResultFragment extends Fragment {
     private String mQuery;
     private Trip mTrip;
     private List<Place> mResults;
-    private OnListFragmentInteractionListener mListener;
+    private OnSearchResultInteractionListener mListener;
     private SearchResultRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
 
@@ -126,11 +126,11 @@ public class SearchResultFragment extends Fragment {
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach: ");
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnSearchResultInteractionListener) {
+            mListener = (OnSearchResultInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnDestinationListItemInteractionListener");
+                    + " must implement OnDestinationInteractionListener");
         }
     }
 
@@ -151,7 +151,7 @@ public class SearchResultFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface OnSearchResultInteractionListener {
         void onListFragmentInteraction(Place result);
     }
 

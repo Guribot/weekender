@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,7 +26,7 @@ import java.util.UUID;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnNoteInteractionListener}
  * interface.
  */
 public class PlaceNoteFragment extends Fragment {
@@ -37,9 +36,8 @@ public class PlaceNoteFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private Context mContext;
 
-    private static final String TAG = "PlaceNoteFragment";
     private static final String ARG_PLACE_ID = "place_id";
-    private OnListFragmentInteractionListener mListener;
+    private OnNoteInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,7 +63,6 @@ public class PlaceNoteFragment extends Fragment {
             UUID placeId = (UUID) getArguments().getSerializable(ARG_PLACE_ID);
             mPlace = PlaceManager.get(getActivity()).getPlace(placeId);
             mNotes = NoteManager.get(getActivity()).getNotesForPlace(mPlace);
-            Log.i(TAG, "onCreate: notes are " + mNotes);
         }
 
         setHasOptionsMenu(true);
@@ -99,7 +96,6 @@ public class PlaceNoteFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.place_menu_add_note) {
-            Log.i(TAG, "onOptionsItemSelected: Write note");
 
             Intent intent = NoteFormActivity.newIntent(getActivity(), mPlace);
 
@@ -115,11 +111,11 @@ public class PlaceNoteFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnNoteInteractionListener) {
+            mListener = (OnNoteInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnDestinationListItemInteractionListener");
+                    + " must implement OnDestinationInteractionListener");
         }
     }
 
@@ -152,7 +148,7 @@ public class PlaceNoteFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface OnNoteInteractionListener {
         void onNoteClicked(Note note);
     }
 }
