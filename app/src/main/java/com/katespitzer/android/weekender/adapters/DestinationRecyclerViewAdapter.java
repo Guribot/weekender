@@ -84,7 +84,7 @@ public class DestinationRecyclerViewAdapter extends RecyclerView.Adapter<Destina
 
                     mListener.onDestinationClicked(holder.mDestination);
                 }
-            }g
+            }
         });
 
         if (holder.mDestination.getPosition() == mSelectedPos) {
