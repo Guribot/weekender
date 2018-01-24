@@ -30,7 +30,6 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.katespitzer.android.weekender.adapters.PlaceNoteRecyclerViewAdapter;
-import com.katespitzer.android.weekender.dummy.DummyContent;
 import com.katespitzer.android.weekender.managers.PlaceManager;
 import com.katespitzer.android.weekender.models.Place;
 
