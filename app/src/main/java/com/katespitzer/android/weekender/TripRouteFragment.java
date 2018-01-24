@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.katespitzer.android.weekender.adapters.DestinationRecyclerViewAdapter;
@@ -71,6 +72,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 
     private Button mAddDestinationButton;
     private ImageView mRouteImageView;
+    private TextView mTripLengths;
     private ConstraintLayout mConstraintLayout;
 
     private static final String TAG = "TripRouteFragment";
@@ -113,6 +115,10 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
         final Context context = view.getContext();
         mDestinationManager = DestinationManager.get(getActivity());
 
+        mTripLengths = view.findViewById(R.id.trip_length);
+        String tripLengthsString = getString(R.string.route_length_format, mTrip.getTripLength(), mTrip.getDriveTimeString());
+        mTripLengths.setText(tripLengthsString);
+
         mDestinationListener = new OnDestinationListItemInteractionListener() {
             @Override
             public void onUpArrowClicked(Destination destination) {
@@ -133,7 +139,7 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
             }
         };
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.trip_route_recycler_view);
+        mRecyclerView = view.findViewById(R.id.trip_route_recycler_view);
         updateUI();
 
         // setting swipe callback for destination list
@@ -496,6 +502,9 @@ public class TripRouteFragment extends Fragment implements RecyclerItemTouchHelp
 
             mRoute.setMapImage(mRouteBitmap);
             mRouteImageView.setImageBitmap(mRouteBitmap);
+
+            String tripLengthsString = getString(R.string.route_length_format, mTrip.getTripLength(), mTrip.getDriveTimeString());
+            mTripLengths.setText(tripLengthsString);
 
             super.onPostExecute(jsonObject);
         }
