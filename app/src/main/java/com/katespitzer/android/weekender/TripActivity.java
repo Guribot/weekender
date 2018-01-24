@@ -1,15 +1,10 @@
 package com.katespitzer.android.weekender;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -18,40 +13,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
-import com.google.android.gms.location.places.PlacePhotoResponse;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.katespitzer.android.weekender.api.PlaceFetcher;
-import com.katespitzer.android.weekender.managers.DestinationManager;
 import com.katespitzer.android.weekender.managers.TripManager;
-import com.katespitzer.android.weekender.models.Destination;
 import com.katespitzer.android.weekender.models.Note;
 import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.models.Trip;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class TripActivity 
         extends AppCompatActivity 
         implements TripPlaceFragment.OnListFragmentInteractionListener,
         TripRouteFragment.OnFragmentInteractionListener,
-        TripNoteFragment.OnListFragmentInteractionListener,
+        TripNoteFragment.OnNoteListItemClickedListener,
         SearchResultFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "TripActivity";

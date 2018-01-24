@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * A fragment representing a list of Notes.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnNoteListItemClickedListener}
  * interface.
  */
 public class TripNoteFragment extends Fragment {
@@ -40,7 +40,7 @@ public class TripNoteFragment extends Fragment {
     private static final String TAG = "TripNoteFragment";
 
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private OnNoteListItemClickedListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -124,8 +124,8 @@ public class TripNoteFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnNoteListItemClickedListener) {
+            mListener = (OnNoteListItemClickedListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnDestinationListItemInteractionListener");
@@ -154,7 +154,7 @@ public class TripNoteFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface OnNoteListItemClickedListener {
         // TODO: Update argument type and name
         void onNoteClicked(Note note);
     }

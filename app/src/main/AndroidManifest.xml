@@ -56,9 +56,6 @@
             android:label="@string/title_activity_place_tabbed"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".NoteActivity" />
-        <activity
-            android:name=".TripMapActivity"
-            android:label="@string/title_activity_trip_map"></activity>
     </application>
 
 </manifest>

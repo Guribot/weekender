@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.R;
-import com.katespitzer.android.weekender.TripNoteFragment.OnListFragmentInteractionListener;
+import com.katespitzer.android.weekender.TripNoteFragment.OnNoteListItemClickedListener;
 import com.katespitzer.android.weekender.managers.PlaceManager;
 import com.katespitzer.android.weekender.models.Note;
 import com.katespitzer.android.weekender.models.Place;
@@ -21,18 +21,17 @@ import java.util.UUID;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Note} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
+ * specified {@link OnNoteListItemClickedListener}.
  */
 public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerViewAdapter.ViewHolder> {
 
     private Context mContext;
     private List<Note> mNotes;
-    private final OnListFragmentInteractionListener mListener;
+    private final OnNoteListItemClickedListener mListener;
 
     private static final String TAG = "NoteRecyclerViewAdapter";
 
-    public NoteRecyclerViewAdapter(List<Note> notes, OnListFragmentInteractionListener listener) {
+    public NoteRecyclerViewAdapter(List<Note> notes, OnNoteListItemClickedListener listener) {
         mNotes = notes;
         mListener = listener;
     }
@@ -49,14 +48,12 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mNote = mNotes.get(position);
         holder.mTitleView.setText(mNotes.get(position).getTitle());
-        // TODO: implement getContentSnippet()
         holder.mContentView.setText(mNotes.get(position).getContent());
         Date noteDate = mNotes.get(position).getCreatedDate();
         String stringDate = DateFormat.getDateInstance(DateFormat.SHORT).format(noteDate);
         holder.mDateView.setText(stringDate);
 
         UUID placeId = mNotes.get(position).getPlaceId();
-        Log.i(TAG, "onBindViewHolder: place id is " + placeId);
         if (placeId != null) {
             Place place = PlaceManager.get(mContext).getPlace(placeId);
             holder.mPlaceView.setText("from " + place.getName());
