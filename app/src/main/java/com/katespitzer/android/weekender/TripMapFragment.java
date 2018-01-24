@@ -1,8 +1,11 @@
 package com.katespitzer.android.weekender;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +49,8 @@ public class TripMapFragment extends Fragment {
     private List<Place> mPlaces;
     private List<Destination> mDestinations;
     private GoogleMap googleMap;
+    private LocalBroadcastManager mLBM;
+    private RefreshReceiver mReceiver;
 
     private static final String TAG = "TripMapFragment";
     private static final String TRIP_ID = "trip_id";
@@ -66,6 +72,9 @@ public class TripMapFragment extends Fragment {
         mRoute = RouteManager.get(getActivity()).getRoute(mTrip.getRouteId());
         mDestinations = DestinationManager.get(getActivity()).getDestinationsForRoute(mRoute);
         mPlaces = PlaceManager.get(getActivity()).getPlacesForTrip(mTrip);
+
+        mLBM = LocalBroadcastManager.getInstance(getActivity());
+        mReceiver = new RefreshReceiver();
     }
 
     @Override
@@ -97,6 +106,9 @@ public class TripMapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
+
+                googleMap.clear();
+
                 googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     private int mSelection;
 
@@ -200,12 +212,16 @@ public class TripMapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+
+        mLBM.registerReceiver(mReceiver, new IntentFilter("REFRESH_MAP"));
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mMapView.onPause();
+
+        mLBM.unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -218,6 +234,13 @@ public class TripMapFragment extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    private class RefreshReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateMap();
+        }
     }
 
 }

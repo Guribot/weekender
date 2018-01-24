@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -101,6 +102,11 @@ public class TripActivity
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.i(TAG, "onTabSelected: " + tab);
+                if (tab.getPosition() == 0) {
+                    LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(mContext);
+                    Intent intent = new Intent("REFRESH_MAP");
+                    lbm.sendBroadcast(intent);
+                }
                 super.onTabSelected(tab);
             }
         });
