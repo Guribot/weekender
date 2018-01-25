@@ -9,6 +9,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.katespitzer.android.weekender.managers.NoteManager;
+import com.katespitzer.android.weekender.managers.TripManager;
+import com.katespitzer.android.weekender.models.Note;
+import com.katespitzer.android.weekender.models.Trip;
+
 import java.util.UUID;
 
 /**
@@ -19,6 +24,8 @@ import java.util.UUID;
 public class NoteActivity extends AppCompatActivity {
 
     private UUID mNoteId;
+    private Note mNote;
+    private Trip mTrip;
 
     private static final String EXTRA_NOTE_ID = "com.katespitzer.android.weekender.note_id";
 
@@ -28,6 +35,11 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fragment);
 
         mNoteId = (UUID) getIntent().getSerializableExtra(EXTRA_NOTE_ID);
+
+        mNote = NoteManager.get(this).getNote(mNoteId);
+        mTrip = TripManager.get(this).getTrip(mNote.getTripId());
+
+        getSupportActionBar().setTitle(mTrip.getTitle());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = NoteFragment.newInstance(mNoteId);

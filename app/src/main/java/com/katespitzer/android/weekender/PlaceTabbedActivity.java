@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.managers.PlaceManager;
+import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Place;
 import com.katespitzer.android.weekender.models.Trip;
 
@@ -52,8 +53,10 @@ public class PlaceTabbedActivity extends AppCompatActivity {
 
         mPlaceId = (UUID) getIntent().getSerializableExtra(EXTRA_PLACE_ID);
         mPlace = PlaceManager.get(this).getPlace(mPlaceId);
+        mTrip = TripManager.get(this).getTrip(mPlace.getTripId());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(mTrip.getTitle());
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.

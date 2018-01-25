@@ -55,7 +55,10 @@ public class TripActivity
         UUID tripId = (UUID) getIntent().getSerializableExtra(EXTRA_TRIP_UUID);
         mTrip = TripManager.get(this).getTrip(tripId);
 
+        String tripTitle = mTrip.getTitle();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(tripTitle);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.

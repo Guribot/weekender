@@ -20,8 +20,10 @@ import android.widget.Toast;
 
 import com.katespitzer.android.weekender.managers.NoteManager;
 import com.katespitzer.android.weekender.managers.PlaceManager;
+import com.katespitzer.android.weekender.managers.TripManager;
 import com.katespitzer.android.weekender.models.Note;
 import com.katespitzer.android.weekender.models.Place;
+import com.katespitzer.android.weekender.models.Trip;
 
 import java.util.UUID;
 
@@ -33,6 +35,7 @@ import java.util.UUID;
  */
 public class NoteFragment extends Fragment {
     private Note mNote;
+    private Trip mTrip;
 
     private TextView mTitleView;
     private TextView mSourceView;
