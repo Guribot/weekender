@@ -14,7 +14,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button mNewTripButton;
     private Button mFindTripsButton;
 
-    private static final int NEW_TRIP_REQUEST = 0;
+    public static final int NEW_TRIP_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

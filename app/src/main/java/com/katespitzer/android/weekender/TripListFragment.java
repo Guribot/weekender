@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.katespitzer.android.weekender.managers.TripManager;
@@ -29,6 +30,9 @@ public class TripListFragment extends Fragment {
     private RecyclerView mTripRecyclerView;
     private TripAdapter mAdapter;
 
+    private TextView mEmptyMessage;
+    private Button mNewTripButton;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,6 +40,16 @@ public class TripListFragment extends Fragment {
 
         mTripRecyclerView = (RecyclerView) view.findViewById(R.id.trip_recycler_view);
         mTripRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mEmptyMessage = view.findViewById(R.id.empty_trip_message);
+        mNewTripButton = view.findViewById(R.id.new_trip_button);
+        mNewTripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TripFormActivity.class);
+                startActivityForResult(intent, HomeActivity.NEW_TRIP_REQUEST);
+            }
+        });
 
         updateUI();
 
@@ -46,13 +60,27 @@ public class TripListFragment extends Fragment {
         TripManager tripManager = TripManager.get(getActivity());
         List<Trip> trips = tripManager.getTrips();
 
-        if (mAdapter == null) {
-            mAdapter = new TripAdapter(trips);
-            mTripRecyclerView.setAdapter(mAdapter);
+        if (trips.size() > 0) {
+            mEmptyMessage.setVisibility(View.GONE);
+            mNewTripButton.setEnabled(false);
+            mNewTripButton.setVisibility(View.GONE);
+
+            if (mAdapter == null) {
+                mAdapter = new TripAdapter(trips);
+                mTripRecyclerView.setAdapter(mAdapter);
+            } else {
+                mAdapter.setTrips(trips);
+                mAdapter.notifyDataSetChanged();
+            }
         } else {
-            mAdapter.setTrips(trips);
-            mAdapter.notifyDataSetChanged();
+            mTripRecyclerView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
     }
 
     /**
