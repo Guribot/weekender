@@ -64,6 +64,7 @@ public class TripListFragment extends Fragment {
             mEmptyMessage.setVisibility(View.GONE);
             mNewTripButton.setEnabled(false);
             mNewTripButton.setVisibility(View.GONE);
+            mTripRecyclerView.setVisibility(View.VISIBLE);
 
             if (mAdapter == null) {
                 mAdapter = new TripAdapter(trips);
@@ -74,6 +75,10 @@ public class TripListFragment extends Fragment {
             }
         } else {
             mTripRecyclerView.setVisibility(View.GONE);
+
+            mEmptyMessage.setVisibility(View.VISIBLE);
+            mNewTripButton.setEnabled(true);
+            mNewTripButton.setVisibility(View.VISIBLE);
         }
     }
 
